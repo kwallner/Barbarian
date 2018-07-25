@@ -17,9 +17,9 @@ Barbarian also contains:
 
 *Barbarian brings all you need to start with conan.io, cmake and git contained in a single installation package.*
 
-## Name Barbarian
+## Naming of Barbarian
 
-The project name Barbarian was choosen for two reasons.   
+[Conan](https:://conan.io) is also the principal character in [Conan the Barbarian](https://www.imdb.com/title/tt0082198/).
 
 ## Install Barbarian
 
