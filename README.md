@@ -1,3 +1,5 @@
+# <font color="red">Work in Progress</font>
+
 # Barbarian - A Software Development Environment for Conan.io
 
 Barbarian is an all in one package for everybody developing software with:
@@ -11,8 +13,13 @@ Barbarian is based on:
 Barbarian also contains:
 * [WinPython](https://winpython.github.io): Python-distribution for Windows platform
 * [Visual Studio Code](https://code.visualstudio.com): IDE and Code Editor
+* [Vim](https://www.vim.org): vi Text Editor
 
 *Barbarian brings all you need to start with conan.io, cmake and git contained in a single installation package.*
+
+## Name Barbarian
+
+The project name Barbarian was choosen for two reasons.   
 
 ## Install Barbarian
 
@@ -54,8 +61,9 @@ The options used are:
     * with_python (default True)
     * with_conanio (default True)
     * with_vscode (default False)
+    * with_vim (default False)
 
-To build with VSCode included use
+To build with VSCode and VI included use
 ```
-# conan create . user/channel -o with_vscode=True
+# conan create . user/channel -o with_vscode=True -o with_vim=True
 ```
