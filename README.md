@@ -11,7 +11,7 @@ Barbarian is based on:
 * [Cmder](http://cmder.net/): Console emulator for Windows
 
 Barbarian also contains:
-* [WinPython](https://winpython.github.io): Python-distribution for Windows platform
+* [Miniconda3](https://conda.io/miniconda.html): Conda is an open source package management system and environment management.
 * [Visual Studio Code](https://code.visualstudio.com): IDE and Code Editor
 * [Vim](https://www.vim.org): vi Text Editor
 
@@ -56,14 +56,11 @@ And build it
 
 You can include and exclude packages. Default is a full build containing all packages except VSCode available.
 The options used are:
-    * with_git (default True)
     * with_cmake (default True)
-    * with_python (default True)
     * with_conanio (default True)
-    * with_vscode (default False)
     * with_vim (default False)
 
 To build with VSCode and VI included use
 ```
-# conan create . user/channel -o with_vscode=True -o with_vim=True
+# conan create . user/channel -o with_vim=True
 ```
