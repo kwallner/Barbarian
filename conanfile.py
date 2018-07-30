@@ -13,7 +13,7 @@ class BarbarianConan(ConanFile):
 	no_copy_source = True
 	#options = {"with_git": [True, False], "with_cmake": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_vim": [True, False]}
 	#default_options = "with_git=True", "with_cmake=True", "with_python=True", "with_conanio=True", "with_vscode=True", "with_vim=True"
-	options = {"with_cmake": [True, False],  "with_conanio": [True, False], "with_vim": [True, False], "with_vscode": [True, False]}
+	options = {"with_cmake": [True, False],  "with_conanio": [True, False], "with_vim": [True, False]}
 	default_options = "with_cmake=True", "with_conanio=True", "with_vim=True"
 
 	def build_requirements(self):
@@ -36,8 +36,8 @@ class BarbarianConan(ConanFile):
 		# 3. CMake
 		if self.options.with_cmake:
 			tools.unzip(os.path.join(self.source_folder, "cmake-win64.zip"), destination = "vendor")
-			os.rename(os.path.join(self.build_folder, "vendor", "cmake-3.12.0-win64-x64"), os.path.join(self.build_folder, "vendor", "cmake-for-windows"))
-
+			#os.rename(os.path.join(self.build_folder, "vendor", "cmake-3.12.0-win64-x64"), os.path.join(self.build_folder, "vendor", "cmake-for-windows"))
+			shutil.move(os.path.join(self.build_folder, "vendor", "cmake-3.12.0-win64-x64"), os.path.join(self.build_folder, "vendor", "cmake-for-windows"))
 			with open(os.path.join(self.build_folder, "config", "profile.d", "cmake-for-windows.cmd"), 'w') as f:
 				f.write(':: Vendor: cmake support\n')
 				path = os.path.join("%CMDER_ROOT%", "vendor", "cmake-for-windows", "bin")
@@ -45,6 +45,7 @@ class BarbarianConan(ConanFile):
 
 		# 4. Python
 		call([os.path.join(self.source_folder, "Miniconda3.exe"), "/InstallationType=JustMe", "/RegisterPython=0", "/S", "/AddToPath=0", "/D=%s" %(os.path.join(self.build_folder, "vendor", "Miniconda3")) ])
+		call([os.path.join(self.build_folder, "vendor", "Miniconda3", "python.exe"), "-m", "pip", "install", "--upgrade", "pip", "--no-warn-script-location"])
 
 		# 5. Conan.io
 		if self.options.with_conanio:
