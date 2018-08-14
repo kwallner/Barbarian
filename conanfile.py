@@ -9,7 +9,7 @@ class BarbarianConan(ConanFile):
 	generators = "txt", "virtualenv"
 	url = "http://github.com/kwallner/Barbarian"
 	settings = {"os": ["Windows"], "arch": ["x86_64"]}
-	exports_sources = [ "LICENSE.txt", "README.md" ]
+	exports_sources = [ "LICENSE.txt", "README.md", "install/*" ]
 	no_copy_source = True
 	#options = {"with_git": [True, False], "with_cmake": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_vim": [True, False]}
 	#default_options = "with_git=True", "with_cmake=True", "with_python=True", "with_conanio=True", "with_vscode=True", "with_vim=True"
@@ -32,6 +32,12 @@ class BarbarianConan(ConanFile):
 
 		# Create profile directory
 		tools.mkdir(os.path.join(self.build_folder, "config", "profile.d"))
+
+		with open(os.path.join(self.build_folder, "config", "profile.d", "git-for-windows.cmd"), 'w') as f:
+			f.write(':: Vendor: git support\n')
+			path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows")
+			f.write('set "PATH={0};%PATH%"\n'.format(path))
+			f.write('set "PATH={0};%PATH%"'.format(os.path.join(path, "bin")))
 		
 		# 3. CMake
 		if self.options.with_cmake:
@@ -45,17 +51,29 @@ class BarbarianConan(ConanFile):
 
 		# 4. Python
 		call([os.path.join(self.source_folder, "Miniconda3.exe"), "/InstallationType=JustMe", "/RegisterPython=0", "/S", "/AddToPath=0", "/D=%s" %(os.path.join(self.build_folder, "vendor", "Miniconda3")) ])
-		call([os.path.join(self.build_folder, "vendor", "Miniconda3", "python.exe"), "-m", "pip", "install", "--upgrade", "pip", "--no-warn-script-location"])
+		
 
+		with open(os.path.join(self.build_folder, "config", "profile.d", "miniconda-for-windows.cmd"), 'w') as f:
+			f.write(':: Vendor: Miniconda 3 support\n')
+			path = os.path.join("%CMDER_ROOT%", "vendor", "Miniconda3")
+			f.write('set "PATH={0};%PATH%"\n'.format(path))
+			f.write('set "PATH={0};%PATH%"'.format(os.path.join(path, "Scripts")))
 		# 5. Conan.io
 		if self.options.with_conanio:
-			# If a specific version of conan should be used change "conan" to e.g. "conan==1.4.4"
-			call([os.path.join(self.build_folder, "vendor", "Miniconda3", "python.exe"), "-m", "pip", "install", "conan", "--no-warn-script-location"])
-
+			path = os.path.join(self.build_folder, "config", "profile.d", "python_third_party.cmd")
+			print(path)
+			with(open(path, "w")) as f:
+				f.write(r'''if not exist %CMDER_ROOT%\config\profile.d\python_third_party_installed (  
+    python.exe -m pip install --index-url https://artifactory.wob.vw.vwg:8443/artifactory/api/pypi/pypi/simple --trusted-host artifactory.wob.vw.vwg:8443 --upgrade pip
+    pip install --index-url https://artifactory.wob.vw.vwg:8443/artifactory/api/pypi/pypi/simple --trusted-host artifactory.wob.vw.vwg:8443 conan
+    conan remote add conan-repo https://devstack.vwgroup.com/artifactory/api/conan/phpve
+    bash Conan_Setup_Small.sh
+    copy "" > %CMDER_ROOT%\config\profile.d\python_third_party_installed
+)''')
+			
 		# 6. vim 
 		if self.options.with_vim:
 			call(["7z", "x", os.path.join(self.source_folder, "vim7.4.2207_x64.exe"), "-aoa", "-o%s" % (os.path.join(self.build_folder, "vendor", "vim-for-windows"))])
-			
 			with open(os.path.join(self.build_folder, "config", "profile.d", "vim-for-windows.cmd"), 'w') as f:
 				f.write(':: Vendor: vim support\n')
 				path = os.path.join("%CMDER_ROOT%", "vendor", "vim-for-windows", "vim74")
