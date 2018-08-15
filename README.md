@@ -13,7 +13,8 @@ Barbarian is based on:
 Barbarian also contains:
 * [WinPython](https://winpython.github.io): Python-distribution for Windows platform
 * [Visual Studio Code](https://code.visualstudio.com): IDE and Code Editor
-* [Vim](https://www.vim.org): vi Text Editor
+* [KDiff3](http://kdiff3.sourceforge.net/): Diff and Merge Tool
+* [GitExtension](http://gitextensions.github.io/): Graphical User Interface for Git
 
 *Barbarian brings all you need to start with conan.io, cmake and git contained in a single installation package.*
 
@@ -61,9 +62,10 @@ The options used are:
     * with_python (default True)
     * with_conanio (default True)
     * with_vscode (default False)
-    * with_vim (default False)
+    * with_kdiff3 (default False)
+    * with_gitext (default False)
 
 To build with VSCode and VI included use
 ```
-# conan create . user/channel -o with_vscode=True -o with_vim=True
+# conan create . user/channel -o with_vscode=True -o with_kdiff3=True -o with_gitext=True
 ```
