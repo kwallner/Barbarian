@@ -13,8 +13,8 @@ Barbarian is based on:
 Barbarian also contains:
 * [WinPython](https://winpython.github.io): Python-distribution for Windows platform
 * [Visual Studio Code](https://code.visualstudio.com): IDE and Code Editor
-* [KDiff3](http://kdiff3.sourceforge.net/): Diff and Merge Tool
-* [GitExtension](http://gitextensions.github.io/): Graphical User Interface for Git
+* [KDiff3](http://kdiff3.sourceforge.net): Diff and Merge Tool
+* [GitExtension](http://gitextensions.github.io): Graphical User Interface for Git
 
 *Barbarian brings all you need to start with conan.io, cmake and git contained in a single installation package.*
 

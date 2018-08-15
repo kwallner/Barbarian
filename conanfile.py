@@ -18,7 +18,7 @@ class BarbarianConan(ConanFile):
     url = "http://github.com/kwallner/Barbarian"
     author = "Karl Wallner <kwallner@mail.de>"
     settings = {"os": ["Windows"], "arch": ["x86_64"]}
-    exports_sources = [ "LICENSE.txt", "README.md" ]
+    exports_sources = [ "LICENSE.txt", "README.md", "packaging/package.iss" ]
     no_copy_source = True
     options = {"with_git": [True, False], "with_cmake": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_gitext": [True, False]}
     default_options = "with_git=True", "with_cmake=True", "with_python=True", "with_conanio=True", "with_vscode=False", "with_kdiff3=False", "with_gitext=False"
@@ -29,6 +29,7 @@ class BarbarianConan(ConanFile):
 
     def build_requirements(self):
         self.build_requires("7z_installer/1.0@conan/stable")
+        #self.build_requires("InnoSetup/5.6.1@kwallner/testing")
 
     def source(self):
         tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self.cmder_version), "cmder_mini.zip")
@@ -45,6 +46,8 @@ class BarbarianConan(ConanFile):
         
         # 1. Create profile directory
         tools.mkdir(os.path.join(self.build_folder, self.name, "config", "profile.d"))
+        shutil.copyfile(os.path.join(self.source_folder, "LICENSE.txt"), os.path.join(self.build_folder, self.name,"LICENSE.txt"))
+        shutil.copyfile(os.path.join(self.source_folder, "README.md"), os.path.join(self.build_folder, self.name,"README.md"))
 
         # 2. Git
         if self.options.with_git:
@@ -118,3 +121,13 @@ class BarbarianConan(ConanFile):
                 
         # 9. Pack it: ZIP-File
         call(["7z", "a", os.path.join(self.package_folder, "%s-%s.zip" % (self.name, self.version)), self.name])
+        
+        # 10. ToDO: Installer-File ... not working yet
+        #shutil.copyfile(os.path.join(self.source_folder, "packaging", "package.iss"), "package.iss")
+        #tools.replace_in_file("package.iss", '@name@', self.name)
+        #tools.replace_in_file("package.iss", '@version@', self.version)
+        #tools.replace_in_file("package.iss", '@author@', self.author)
+        #tools.replace_in_file("package.iss", '@url@', self.url)
+        #call(["iscc", "package.iss"])
+        #shutil.move("%s-%s.exe" % (self.name, self.version), os.path.join(self.package_folder, "%s-%s.exe" % (self.name, self.version)) )
+        
