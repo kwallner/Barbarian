@@ -69,3 +69,8 @@ To build with VSCode and VI included use
 ```
 # conan create . user/channel -o with_vscode=True -o with_kdiff3=True -o with_gitext=True
 ```
+
+To build a minimal version
+```
+conan create . kwallner/testing  -o with_git=False -o with_cmake=False -o with_python=False -o with_conanio=False
+```
