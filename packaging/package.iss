@@ -92,6 +92,7 @@ Type: files; Name: "{app}\config\user-aliases.cmd"
 Type: files; Name: "{app}\config\user-ConEmu.xml"
 Type: files; Name: "{app}\config\user-profile.cmd"
 Type: files; Name: "{app}\vendor\conemu-maximus5\ConEmu.xml"
+Type: dirifempty; Name: "{app}\config\profile.d"
 
 [Icons]
 Name: "{group}\Cmder";                Filename: "{app}\Cmder.exe";                                    Parameters: ""; WorkingDir: "{app}"

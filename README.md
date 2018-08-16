@@ -11,10 +11,13 @@ Barbarian is based on:
 * [Cmder](http://cmder.net/): Console emulator for Windows
 
 Barbarian also contains:
-* [WinPython](https://winpython.github.io): Python-distribution for Windows platform
+* [WinPython3](https://winpython.github.io): Python-distribution for Windows platform
 * [Visual Studio Code](https://code.visualstudio.com): IDE and Code Editor
 * [KDiff3](http://kdiff3.sourceforge.net): Diff and Merge Tool
 * [GitExtension](http://gitextensions.github.io): Graphical User Interface for Git
+
+Barbarian can be configured to:
+* Use [Miniconda3](https://conda.io/miniconda.html) instead of [WinPython3](https://winpython.github.io): Conda is an open source package management system and environment management
 
 *Barbarian brings all you need to start with conan.io, cmake and git contained in a single installation package.*
 
@@ -65,12 +68,17 @@ The options used are:
     * with_kdiff3 (default False)
     * with_gitext (default False)
 
-To build with VSCode and VI included use
+To build with VSCode and KDiff3 and GitExtensions
 ```
 # conan create . user/channel -o with_vscode=True -o with_kdiff3=True -o with_gitext=True
 ```
 
 To build a minimal version
 ```
-conan create . kwallner/testing  -o with_git=False -o with_cmake=False -o with_python=False -o with_conanio=False
+conan create . user/channel -o with_git=False -o with_cmake=False -o with_python=False -o with_conanio=False
+```
+
+To build with Miniconda3 instead of WinPython
+```
+# conan create . user/channel -o python_flavor=MiniConda3
 ```

@@ -3,6 +3,7 @@ from conans.errors import ConanException
 from subprocess import call
 import os
 import shutil
+import pathlib
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
@@ -10,7 +11,8 @@ class BarbarianConan(ConanFile):
     cmder_version = "1.3.6"
     git_version = "2.18.0"
     cmake_version = "3.12.1"
-    python_version = "3.7.0.1"
+    winpython3_version = "3.7.0.1"
+    miniconda3_version = "4.5.4"
     conan_version = "1.6.1"
     vscode_version = "1.26.0"
     kdiff_version = "0.9.98"
@@ -22,8 +24,8 @@ class BarbarianConan(ConanFile):
     exports_sources = [ "LICENSE.txt", "README.txt",  "README.md", "packaging/package.iss" ]
     no_copy_source = True
     short_paths = True
-    options = {"with_git": [True, False], "with_cmake": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_gitext": [True, False]}
-    default_options = "with_git=True", "with_cmake=True", "with_python=True", "with_conanio=True", "with_vscode=False", "with_kdiff3=False", "with_gitext=False"
+    options = {"with_git": [True, False], "with_cmake": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_gitext": [True, False], "python_flavor": [ "WinPython3", "MiniConda3" ]}
+    default_options = "with_git=True", "with_cmake=True", "with_python=True", "with_conanio=True", "with_vscode=False", "with_kdiff3=False", "with_gitext=False", "python_flavor=WinPython3"
 
     def configure(self):
         if self.options.with_conanio and not self.options.with_python:
@@ -35,18 +37,13 @@ class BarbarianConan(ConanFile):
 
     def source(self):
         tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self.cmder_version), "cmder_mini.zip")
-        if self.options.with_git:
-            tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.1/PortableGit-%s-64-bit.7z.exe" % (self.git_version, self.git_version), "git-for-windows.7z.exe")
-        if self.options.with_cmake:
-            tools.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self.cmake_version.split(".")[0], self.cmake_version.split(".")[1], self.cmake_version), "cmake-win64.zip")
-        if self.options.with_python:
-            tools.download("https://github.com/winpython/winpython/releases/download/1.10.20180624/WinPython64-%s.exe" % (self.python_version), "python-win64.exe")
-        if self.options.with_vscode:
-            tools.download("https://go.microsoft.com/fwlink/?Linkid=850641", "vscode-win64.zip")
-        if self.options.with_kdiff3:
-            tools.download("https://netcologne.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self.kdiff_version, self.kdiff_version), "kdiff3-win64.exe")
-        if self.options.with_gitext:
-            tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self.gitext_version, self.gitext_version), "gitext.exe")
+        tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.1/PortableGit-%s-64-bit.7z.exe" % (self.git_version, self.git_version), "git-for-windows.7z.exe")
+        tools.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self.cmake_version.split(".")[0], self.cmake_version.split(".")[1], self.cmake_version), "cmake-win64.zip")
+        tools.download("https://github.com/winpython/winpython/releases/download/1.10.20180624/WinPython64-%s.exe" % (self.winpython3_version), "winpython3-win64.exe")
+        tools.download("https://repo.continuum.io/miniconda/Miniconda3-%s-Windows-x86_64.exe" % (self.miniconda3_version), "miniconda3-win64.exe")
+        tools.download("https://go.microsoft.com/fwlink/?Linkid=850641", "vscode-win64.zip")
+        tools.download("https://netcologne.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self.kdiff_version, self.kdiff_version), "kdiff3-win64.exe")
+        tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self.gitext_version, self.gitext_version), "gitext.exe")
 
     def build(self):
         # 0. Cmder
@@ -75,11 +72,14 @@ class BarbarianConan(ConanFile):
 
         # 4. Python
         if self.options.with_python:
-            call(["7z", "x", os.path.join(self.source_folder, "python-win64.exe"), "-o.", "-ir!python-3.7.0.amd64" ])
-            os.rename("python-3.7.0.amd64", os.path.join(self.name, "vendor", "python-for-windows"))
-            # Upgrade pip
-            # call(["vendor/python-for-windows/python.exe", "-m", "pip", "install", "--upgrade", "pip", "--no-warn-script-location"])
-            # Create install script
+            if self.options.python_flavor == "WinPython3":
+                call(["7z", "x", os.path.join(self.source_folder, "winpython3-win64.exe"), "-o.", "-ir!python-3.7.0.amd64" ])
+                os.rename("python-3.7.0.amd64", os.path.join(self.name, "vendor", "python-for-windows"))
+            elif self.options.python_flavor == "MiniConda3":
+                #call([os.path.join(self.source_folder, "miniconda3-win64.exe"), "/InstallationType=JustMe", "/RegisterPython=0", "/S", "/AddToPath=0", "/D=%s" % (os.path.join(self.build_folder, self.name, "vendor", "python-for-windows")) ])
+                call([os.path.join(self.source_folder, "miniconda3-win64.exe"), "/InstallationType=JustMe", "/RegisterPython=0", "/S", "/AddToPath=0", "/D=%s" % (pathlib.PureWindowsPath(self.build_folder, self.name, "vendor", "python-for-windows")) ])
+            else:
+                raise ConanException("Invalid python flavor \"%s\"" % self.options.python_flavor)
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: python support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows")
