@@ -16,16 +16,19 @@ class BarbarianConan(ConanFile):
     conan_version = "1.6.1"
     vscode_version = "1.26.0"
     kdiff_version = "0.9.98"
+    winmerge_version = "2.14.0"
     gitext_version = "2.51.04"
     generators = "txt"
     url = "http://github.com/kwallner/Barbarian"
     author = "Karl Wallner <kwallner@mail.de>"
+    license = "https://raw.githubusercontent.com/kwallner/Barbarian/develop/LICENSE.txt"
+    description = "Software Development Environment for Conan.io"
     settings = {"os": ["Windows"], "arch": ["x86_64"]}
     exports_sources = [ "LICENSE.txt", "README.txt",  "README.md", "packaging/package.iss" ]
     no_copy_source = True
     short_paths = True
-    options = {"with_git": [True, False], "with_cmake": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_gitext": [True, False], "python_flavor": [ "WinPython3", "MiniConda3" ]}
-    default_options = "with_git=True", "with_cmake=True", "with_python=True", "with_conanio=True", "with_vscode=False", "with_kdiff3=False", "with_gitext=False", "python_flavor=WinPython3"
+    options = {"with_git": [True, False], "with_cmake": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_winmerge": [True, False], "with_gitext": [True, False], "python_flavor": [ "WinPython3", "MiniConda3" ]}
+    default_options = "with_git=True", "with_cmake=True", "with_python=True", "with_conanio=True", "with_vscode=False", "with_kdiff3=False", "with_winmerge=False", "with_gitext=False", "python_flavor=MiniConda3"
 
     def configure(self):
         if self.options.with_conanio and not self.options.with_python:
@@ -42,12 +45,14 @@ class BarbarianConan(ConanFile):
         tools.download("https://github.com/winpython/winpython/releases/download/1.10.20180624/WinPython64-%s.exe" % (self.winpython3_version), "winpython3-win64.exe")
         tools.download("https://repo.continuum.io/miniconda/Miniconda3-%s-Windows-x86_64.exe" % (self.miniconda3_version), "miniconda3-win64.exe")
         tools.download("https://go.microsoft.com/fwlink/?Linkid=850641", "vscode-win64.zip")
-        tools.download("https://netcologne.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self.kdiff_version, self.kdiff_version), "kdiff3-win64.exe")
+        tools.download("https://datapacket.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self.kdiff_version, self.kdiff_version), "kdiff3-win64.exe")
+        tools.download("https://datapacket.dl.sourceforge.net/project/winmerge/stable/%s/WinMerge-%s-exe.zip" % (self.winmerge_version, self.winmerge_version), "winmerge.exe.zip")
         tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self.gitext_version, self.gitext_version), "gitext.exe")
 
     def build(self):
         # 0. Cmder
         tools.unzip(os.path.join(self.source_folder, "cmder_mini.zip"), destination = self.name)
+        os.remove(os.path.join(self.build_folder, self.name, "LICENSE"))
 
         # 1. Create profile directory
         tools.mkdir(os.path.join(self.build_folder, self.name, "config", "profile.d"))
@@ -103,11 +108,12 @@ class BarbarianConan(ConanFile):
             call(["code.cmd", "--install-extension", "MS-CEINTL.vscode-language-pack-de"])
             call(["code.cmd", "--install-extension", "PeterJausovec.vscode-docker"])
             call(["code.cmd", "--install-extension", "twxs.cmake"])
+            call(["code.cmd", "--install-extension", "vector-of-bool.cmake-tools"])
             os.chdir(old)
             # Create install script
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "vscode-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: vscode support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "vscode-for-windows")
+                path = os.path.join("%CMDER_ROOT%", "vendor", "vscode-for-windows", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
 
         # 7. KDiff
@@ -119,7 +125,17 @@ class BarbarianConan(ConanFile):
                 path = os.path.join("%CMDER_ROOT%", "vendor", "kdiff3-for-windows")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
 
-        # 8. GitExt
+        # 8. WinMerge
+        if self.options.with_winmerge:
+            tools.unzip(os.path.join(self.source_folder, "winmerge.exe.zip"))
+            os.rename("WinMerge-%s-exe" % self.winmerge_version, os.path.join(self.name, "vendor", "winmerge-for-windows"))
+            # Create install script
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.cmd"), 'w') as f:
+                f.write(':: Vendor: winmerge support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "winmerge-for-windows")
+                f.write('set "PATH={0};%PATH%"\n'.format(path))
+
+        # 9. GitExt
         if self.options.with_gitext:
             call(["7z", "x", os.path.join(self.source_folder, "gitext.exe"), "-o%s/%s" % (self.name, "vendor/gitext-for-windows") ])
             # Create install script
@@ -128,10 +144,10 @@ class BarbarianConan(ConanFile):
                 path = os.path.join("%CMDER_ROOT%", "vendor", "gitext-for-windows")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
 
-        # 9. Pack it: ZIP-File
+        # 10. Pack it: ZIP-File
         call(["7z", "a", os.path.join(self.package_folder, "%s-%s.zip" % (self.name, self.version)), self.name])
 
-        # 10. ToDO: Installer-File ... not working yet
+        # 11. Installer file: EXE-File
         shutil.copyfile(os.path.join(self.source_folder, "packaging", "package.iss"), "package.iss")
         tools.replace_in_file("package.iss", '@name@', self.name)
         tools.replace_in_file("package.iss", '@version@', self.version)
@@ -150,6 +166,8 @@ class BarbarianConan(ConanFile):
             iscc_command.append("/Dwith_vscode")
         if self.options.with_kdiff3:
             iscc_command.append("/Dwith_kdiff3")
+        if self.options.with_winmerge:
+            iscc_command.append("/Dwith_winmerge")
         if self.options.with_gitext:
             iscc_command.append("/Dwith_gitext")
         iscc_command.append("package.iss")

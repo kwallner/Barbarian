@@ -11,13 +11,15 @@ Barbarian is based on:
 * [Cmder](http://cmder.net/): Console emulator for Windows
 
 Barbarian also contains:
+* [Miniconda3](https://conda.io/miniconda.html): Python-distribution for Windows platform
 * [WinPython3](https://winpython.github.io): Python-distribution for Windows platform
 * [Visual Studio Code](https://code.visualstudio.com): IDE and Code Editor
 * [KDiff3](http://kdiff3.sourceforge.net): Diff and Merge Tool
+* [WinMerge](http://winmerge.org): Diff and Merge Tool
 * [GitExtension](http://gitextensions.github.io): Graphical User Interface for Git
 
-Barbarian can be configured to:
-* Use [Miniconda3](https://conda.io/miniconda.html) instead of [WinPython3](https://winpython.github.io): Conda is an open source package management system and environment management
+Barbarian can be configured to
+* Use [Miniconda3](https://conda.io/miniconda.html) instead of [WinPython3](https://winpython.github.io)
 
 *Barbarian brings all you need to start with conan.io, cmake and git contained in a single installation package.*
 
@@ -27,11 +29,9 @@ Barbarian can be configured to:
 
 ## Install Barbarian
 
-Not yet done.
+Barbarian is delivered as installer. This installer does not require admin priviledges and is installable as user.
 
-TODO: Should provide zip-files.
-
-Unzip the Bavarian installation zip-file.
+Building the installer required [InnoSetup](http://www.jrsoftware.org/isinfo.php).
 
 ## Using Barbarian
 
@@ -70,7 +70,7 @@ The options used are:
 
 To build with VSCode and KDiff3 and GitExtensions
 ```
-# conan create . user/channel -o with_vscode=True -o with_kdiff3=True -o with_gitext=True
+# conan create . user/channel -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True
 ```
 
 To build a minimal version
@@ -78,7 +78,7 @@ To build a minimal version
 conan create . user/channel -o with_git=False -o with_cmake=False -o with_python=False -o with_conanio=False
 ```
 
-To build with Miniconda3 instead of WinPython
+To build with WinPython3 instead of Miniconda3
 ```
-# conan create . user/channel -o python_flavor=MiniConda3
+# conan create . user/channel -o python_flavor=WinPython3
 ```
