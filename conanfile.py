@@ -146,10 +146,15 @@ class BarbarianConan(ConanFile):
         if self.options.with_winmerge:
             tools.unzip(os.path.join(self.source_folder, "winmerge.exe.zip"))
             os.rename("WinMerge-%s-exe" % self.winmerge_version, os.path.join(self.name, "vendor", "winmerge-for-windows"))
+            tools.mkdir(os.path.join(self.build_folder, self.name, "vendor", "winmerge-for-windows", "bin"))
+            # Create run script
+            with open(os.path.join(self.build_folder, self.name, "vendor", "winmerge-for-windows", "bin", "winmerge.cmd"), 'w') as f:
+                f.write('@echo off\n')
+                f.write('call "%~dp0..\WinMergeU.exe" %*\n')
             # Create install script
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: winmerge support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "winmerge-for-windows")
+                path = os.path.join("%CMDER_ROOT%", "vendor", "winmerge-for-windows", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
 
         # 9. GitExt
