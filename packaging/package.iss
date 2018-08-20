@@ -48,7 +48,7 @@ Source: "@name@\LICENSE.txt";                              DestDir: "{app}";    
 Source: "@name@\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion isreadme
 Source: "@name@\README.md";                                DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\Version*";                                 DestDir: "{app}";                                           Flags: ignoreversion
-Source: "@name@\bin\*";                                    DestDir: "{app}\bin";                                       Flags: recursesubdirs ignoreversion
+Source: "@name@\bin\*";                                    DestDir: "{app}\bin";                                       Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\config\*.*";                               DestDir: "{app}\config";                                    Flags: ignoreversion;    Permissions: users-modify
 #ifdef with_cmake
 Source: "@name@\config\profile.d\cmake-for-windows.cmd";   DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: cmake
@@ -68,38 +68,40 @@ Source: "@name@\config\profile.d\python-for-windows.cmd";  DestDir: "{app}\confi
 #ifdef with_vscode
 Source: "@name@\config\profile.d\vscode-for-windows.cmd";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: vscode
 #endif
-Source: "@name@\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs ignoreversion
+Source: "@name@\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion
-Source: "@name@\vendor\clink\*";                           DestDir: "{app}\vendor\clink";                              Flags: recursesubdirs ignoreversion;
-Source: "@name@\vendor\conemu-maximus5\*";                 DestDir: "{app}\vendor\conemu-maximus5";                    Flags: recursesubdirs ignoreversion;
-Source: "@name@\vendor\lib\*";                             DestDir: "{app}\vendor\lib";                                Flags: recursesubdirs ignoreversion;
-Source: "@name@\vendor\psmodules\*";                       DestDir: "{app}\vendor\psmodules";                          Flags: recursesubdirs ignoreversion;
-Source: "@name@\vendor\clink-completions\*";               DestDir: "{app}\vendor\clink-completions";                  Flags: recursesubdirs ignoreversion;
+Source: "@name@\vendor\clink\*";                           DestDir: "{app}\vendor\clink";                              Flags: recursesubdirs createallsubdirs ignoreversion;
+Source: "@name@\vendor\conemu-maximus5\*";                 DestDir: "{app}\vendor\conemu-maximus5";                    Flags: recursesubdirs createallsubdirs ignoreversion;
+Source: "@name@\vendor\lib\*";                             DestDir: "{app}\vendor\lib";                                Flags: recursesubdirs createallsubdirs ignoreversion;
+Source: "@name@\vendor\psmodules\*";                       DestDir: "{app}\vendor\psmodules";                          Flags: recursesubdirs createallsubdirs ignoreversion;
+Source: "@name@\vendor\clink-completions\*";               DestDir: "{app}\vendor\clink-completions";                  Flags: recursesubdirs createallsubdirs ignoreversion;
 #ifdef with_cmake
-Source: "@name@\vendor\cmake-for-windows\*";               DestDir: "{app}\vendor\cmake-for-windows";                  Flags: recursesubdirs ignoreversion;    Components: cmake
+Source: "@name@\vendor\cmake-for-windows\*";               DestDir: "{app}\vendor\cmake-for-windows";                  Flags: recursesubdirs createallsubdirs ignoreversion;    Components: cmake
 #endif
 #ifdef with_git
-Source: "@name@\vendor\git-for-windows\*";                 DestDir: "{app}\vendor\git-for-windows";                    Flags: recursesubdirs ignoreversion;    Components: git
+Source: "@name@\vendor\git-for-windows\*";                 DestDir: "{app}\vendor\git-for-windows";                    Flags: recursesubdirs createallsubdirs  ignoreversion;    Components: git
 #endif
 #ifdef with_gitext
-Source: "@name@\vendor\gitext-for-windows\*";              DestDir: "{app}\vendor\gitext-for-windows";                 Flags: recursesubdirs ignoreversion;    Components: gitext
+Source: "@name@\vendor\gitext-for-windows\*";              DestDir: "{app}\vendor\gitext-for-windows";                 Flags: recursesubdirs createallsubdirs  ignoreversion;    Components: gitext
 #endif
 #ifdef with_kdiff3
-Source: "@name@\vendor\kdiff3-for-windows\*";              DestDir: "{app}\vendor\kdiff3-for-windows";                 Flags: recursesubdirs ignoreversion;    Components: kdiff3
+Source: "@name@\vendor\kdiff3-for-windows\*";              DestDir: "{app}\vendor\kdiff3-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: kdiff3
 #endif
 #ifdef with_winmerge
-Source: "@name@\vendor\winmerge-for-windows\*";            DestDir: "{app}\vendor\winmerge-for-windows";                 Flags: recursesubdirs ignoreversion;    Components: kdiff3
+Source: "@name@\vendor\winmerge-for-windows\*";            DestDir: "{app}\vendor\winmerge-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: kdiff3
 #endif
 #ifdef with_python
 #ifdef with_conanio
-Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs ignoreversion;    Components: python and python/conanio;        Permissions: users-modify;    Excludes: "__pycache__,conans,conan*"
-Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs ignoreversion;    Components: python and not python/conanio;    Permissions: users-modify;    Excludes: "__pycache__"
+Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;        Permissions: users-modify;    Excludes: "__pycache__,conans,conan*"
+Source: "@name@\vendor\python-for-windows\Scripts\conan*"; DestDir: "{app}\vendor\python-for-windows\Scripts";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;    Excludes: "__pycache__"
+Source: "@name@\vendor\python-for-windows\Lib\site-packages\conan-@conan_version@.dist-info\*"; DestDir: "{app}\vendor\python-for-windows\Lib\site-packages\conan-@conan_version@.dist-info";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;
+Source: "@name@\vendor\python-for-windows\Lib\site-packages\conans\*"; DestDir: "{app}\vendor\python-for-windows\Lib\site-packages\conans";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;    Excludes: "__pycache__"
 #else
-Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs ignoreversion;    Components: python;                           Permissions: users-modify;    Excludes: "__pycache__"
+Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;                           Permissions: users-modify;    Excludes: "__pycache__"
 #endif
 #endif
 #ifdef with_vscode
-Source: "@name@\vendor\vscode-for-windows\*";              DestDir: "{app}\vendor\vscode-for-windows";                 Flags: recursesubdirs ignoreversion;    Components: vscode;    Permissions: users-modify
+Source: "@name@\vendor\vscode-for-windows\*";              DestDir: "{app}\vendor\vscode-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: vscode;    Permissions: users-modify
 #endif
 
 [Dirs]

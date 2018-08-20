@@ -30,6 +30,23 @@ class BarbarianConan(ConanFile):
     options = {"with_git": [True, False], "with_cmake": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_winmerge": [True, False], "with_gitext": [True, False], "python_flavor": [ "WinPython3", "MiniConda3" ]}
     default_options = "with_git=True", "with_cmake=True", "with_python=True", "with_conanio=True", "with_vscode=False", "with_kdiff3=False", "with_winmerge=False", "with_gitext=False", "python_flavor=MiniConda3"
 
+    @property
+    def installertype_set(self):
+        if self.options.with_git and self.options.with_cmake and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext:
+            return "complete"
+        if not self.options.with_git and not self.options.with_cmake and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext:
+            return "minimal"
+        if self.options.with_git and self.options.with_cmake and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext:
+            return "default"
+        return "custom"
+
+    @property
+    def installertype(self):
+        if self.options.python_flavor == "MiniConda3":
+            return self.installertype_set
+        else:
+            return "%s+%s" % (self.installertype_set, self.options.python_flavor)
+
     def configure(self):
         if self.options.with_conanio and not self.options.with_python:
             raise ConanException("Invalid configuration: Python is required when using Conan.io")
@@ -77,12 +94,12 @@ class BarbarianConan(ConanFile):
 
         # 4. Python
         if self.options.with_python:
-            if self.options.python_flavor == "WinPython3":
-                call(["7z", "x", os.path.join(self.source_folder, "winpython3-win64.exe"), "-o.", "-ir!python-3.7.0.amd64" ])
-                os.rename("python-3.7.0.amd64", os.path.join(self.name, "vendor", "python-for-windows"))
-            elif self.options.python_flavor == "MiniConda3":
+            if self.options.python_flavor == "MiniConda3":
                 #call([os.path.join(self.source_folder, "miniconda3-win64.exe"), "/InstallationType=JustMe", "/RegisterPython=0", "/S", "/AddToPath=0", "/D=%s" % (os.path.join(self.build_folder, self.name, "vendor", "python-for-windows")) ])
                 call([os.path.join(self.source_folder, "miniconda3-win64.exe"), "/InstallationType=JustMe", "/RegisterPython=0", "/S", "/AddToPath=0", "/D=%s" % (pathlib.PureWindowsPath(self.build_folder, self.name, "vendor", "python-for-windows")) ])
+            elif self.options.python_flavor == "WinPython3":
+                call(["7z", "x", os.path.join(self.source_folder, "winpython3-win64.exe"), "-o.", "-ir!python-3.7.0.amd64" ])
+                os.rename("python-3.7.0.amd64", os.path.join(self.name, "vendor", "python-for-windows"))
             else:
                 raise ConanException("Invalid python flavor \"%s\"" % self.options.python_flavor)
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.cmd"), 'w') as f:
@@ -145,7 +162,7 @@ class BarbarianConan(ConanFile):
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
 
         # 10. Pack it: ZIP-File
-        call(["7z", "a", os.path.join(self.package_folder, "%s-%s.zip" % (self.name, self.version)), self.name])
+        call(["7z", "a", os.path.join(self.package_folder, "%s-%s-%s.zip" % (self.name, self.version, self.installertype)), self.name])
 
         # 11. Installer file: EXE-File
         shutil.copyfile(os.path.join(self.source_folder, "packaging", "package.iss"), "package.iss")
@@ -153,6 +170,7 @@ class BarbarianConan(ConanFile):
         tools.replace_in_file("package.iss", '@version@', self.version)
         tools.replace_in_file("package.iss", '@author@', self.author)
         tools.replace_in_file("package.iss", '@url@', self.url)
+        tools.replace_in_file("package.iss", '@conan_version@', self.conan_version)
         iscc_command= ["iscc", "/Q"]
         if self.options.with_git:
             iscc_command.append("/Dwith_git")
@@ -172,4 +190,4 @@ class BarbarianConan(ConanFile):
             iscc_command.append("/Dwith_gitext")
         iscc_command.append("package.iss")
         call(iscc_command)
-        shutil.move("%s-%s.exe" % (self.name, self.version), os.path.join(self.package_folder, "%s-%s.exe" % (self.name, self.version)) )
+        shutil.move("%s-%s.exe" % (self.name, self.version), os.path.join(self.package_folder, "%s-%s-%s.exe" % (self.name, self.version, self.installertype)) )
