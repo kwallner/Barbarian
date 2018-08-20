@@ -33,7 +33,7 @@ class BarbarianConan(ConanFile):
     @property
     def installertype_set(self):
         if self.options.with_git and self.options.with_cmake and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext:
-            return "complete"
+            return "full"
         if not self.options.with_git and not self.options.with_cmake and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext:
             return "minimal"
         if self.options.with_git and self.options.with_cmake and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext:
