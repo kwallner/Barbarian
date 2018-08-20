@@ -150,7 +150,7 @@ class BarbarianConan(ConanFile):
             # Create run script
             with open(os.path.join(self.build_folder, self.name, "vendor", "winmerge-for-windows", "bin", "winmerge.cmd"), 'w') as f:
                 f.write('@echo off\n')
-                f.write('call "%~dp0..\WinMergeU.exe" %*\n')
+                f.write('call "%~dp0..\\WinMergeU.exe" %*\n')
             # Create install script
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: winmerge support\n')
@@ -167,7 +167,7 @@ class BarbarianConan(ConanFile):
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
 
         # 10. Pack it: ZIP-File
-        call(["7z", "a", os.path.join(self.package_folder, "%s-%s-%s.zip" % (self.name, self.version, self.installertype)), self.name])
+        call(["7z", "a", os.path.join(self.package_folder, "%s-%s-%s-%s.zip" % (self.name, self.version, settings.arch, self.installertype)), self.name])
 
         # 11. Installer file: EXE-File
         shutil.copyfile(os.path.join(self.source_folder, "packaging", "package.iss"), "package.iss")
@@ -195,4 +195,4 @@ class BarbarianConan(ConanFile):
             iscc_command.append("/Dwith_gitext")
         iscc_command.append("package.iss")
         call(iscc_command)
-        shutil.move("%s-%s.exe" % (self.name, self.version), os.path.join(self.package_folder, "%s-%s-%s.exe" % (self.name, self.version, self.installertype)) )
+        shutil.move("%s-%s.exe" % (self.name, self.version), os.path.join(self.package_folder, "%s-%s-%s-%s.exe" % (self.name, self.version, settings.arch, self.installertype)) )
