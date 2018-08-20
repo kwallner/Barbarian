@@ -160,10 +160,15 @@ class BarbarianConan(ConanFile):
         # 9. GitExt
         if self.options.with_gitext:
             call(["7z", "x", os.path.join(self.source_folder, "gitext.exe"), "-o%s/%s" % (self.name, "vendor/gitext-for-windows") ])
+            tools.mkdir(os.path.join(self.build_folder, self.name, "vendor", "gitext-for-windows", "bin"))
+            # Create run script
+            with open(os.path.join(self.build_folder, self.name, "vendor", "gitext-for-windows", "bin", "gitext.cmd"), 'w') as f:
+                f.write('@echo off\n')
+                f.write('call "%~dp0..\\GitExtensions.exe" %*\n')
             # Create install script
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: gitext support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "gitext-for-windows")
+                path = os.path.join("%CMDER_ROOT%", "vendor", "gitext-for-windows", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
 
         # 10. Pack it: ZIP-File
