@@ -9,7 +9,7 @@ Barbarian is based on:
 * [Cmder](http://cmder.net/): Console emulator for Windows
 
 Barbarian also contains:
-* [Miniconda3](https://conda.io/miniconda.html): Python-distribution for Windows platform
+* [MiniConda3](https://conda.io/miniconda.html): Python-distribution for Windows platform
 * [WinPython3](https://winpython.github.io): Python-distribution for Windows platform
 * [Visual Studio Code](https://code.visualstudio.com): IDE and Code Editor
 * [KDiff3](http://kdiff3.sourceforge.net): Diff and Merge Tool
