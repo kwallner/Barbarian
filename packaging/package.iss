@@ -13,7 +13,10 @@ Compression=lzma2
 PrivilegesRequired=lowest
 AlwaysUsePersonalGroup=yes
 OutputDir=.
-OutputBaseFilename=@name@-@version@
+OutputBaseFilename=@output_base_name@
+
+[Messages]
+WelcomeLabel1=Barbarian - A Software Development Environment for Conan.io
 
 [Components]
 Name: cmder;                                    Description: "Cmder (http://cmder.net/): Console emulator for Windows";                             Types: full compact custom;           Flags: fixed
@@ -43,6 +46,7 @@ Name: gitext;                                   Description: "GitExtensions (htt
 #endif
 
 [Files]
+Source: "patchistxt.dll"; Flags: dontcopy
 Source: "@name@\Cmder.exe";                                DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\LICENSE.txt";                              DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion isreadme
@@ -122,6 +126,7 @@ Type: files;            Name: "{app}\config\user-ConEmu.xml"
 Type: files;            Name: "{app}\config\user-profile.cmd"
 Type: filesandordirs;   Name: "{app}\vendor"
 Type: dirifempty;       Name: "{app}\config\profile.d"
+Type: dirifempty;       Name: "{app}"
 
 [Icons]
 Name: "{group}\Cmder";                Filename: "{app}\Cmder.exe";                                    Parameters: ""; WorkingDir: "{userdocs}"
@@ -138,3 +143,71 @@ Name: "{group}\WinMerge";             Filename: "{app}\vendor\winmerge-for-windo
 Name: "{group}\GitExtensions";        Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: gitext
 #endif
 Name: "{group}\Uninstall @name@";     Filename: "{uninstallexe}"
+
+[Code]
+procedure patchispth(replaceFile, findString, replaceString: AnsiString);
+external 'patchispth@files:patchistxt.dll cdecl setuponly';
+
+procedure patchispth_file(file: String);
+begin
+      patchispth(file, 'X:/__BARBARIAN_REPLACE_THIS_LONG_UNIQUE_PATH__/__AND_FILENAME_BARBARIAN_/', ExpandConstant('{app}\'));
+end;
+
+procedure patchispth_dir(dir: String);
+var
+  FindRec: TFindRec;
+begin
+  if FindFirst(dir + '\*', FindRec) then begin
+    try
+      repeat
+        patchispth_file(dir + '\' + FindRec.Name); 
+      until not FindNext(FindRec);
+    finally
+      FindClose(FindRec);
+    end;
+  end;
+end; 
+
+procedure patchispth_ext(dir, ext: String);
+var
+  FindRec: TFindRec;
+begin
+  if FindFirst(dir + '\*', FindRec) then begin
+    try
+      repeat
+        if ExtractFileExt(FindRec.Name) = ext then
+          patchispth_file(dir + '\' + FindRec.Name); 
+      until not FindNext(FindRec);
+    finally
+      FindClose(FindRec);
+    end;
+  end;
+end; 
+
+procedure patchispth_nam(dir, nam: String);
+var        
+  FindRec: TFindRec;
+begin
+  if FindFirst(dir + '\*', FindRec) then begin
+    try
+      repeat
+        if ExtractFileName(FindRec.Name) = nam then
+          patchispth_file(dir + '\' + FindRec.Name); 
+      until not FindNext(FindRec);
+    finally
+      FindClose(FindRec);
+    end;
+  end;
+end; 
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if curStep = ssPostInstall then
+  begin
+    patchispth_dir(ExpandConstant('{app}\vendor\python-for-windows\etc\fish\conf.d'));
+    patchispth_dir(ExpandConstant('{app}\vendor\python-for-windows\etc\profile.d'));
+    patchispth_dir(ExpandConstant('{app}\vendor\python-for-windows\Lib\site-packages\xonsh'));
+    patchispth_ext(ExpandConstant('{app}\vendor\python-for-windows\conda-meta'), '.json');
+    patchispth_dir(ExpandConstant('{app}\vendor\python-for-windows\Scripts'));
+ end;
+end;

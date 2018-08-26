@@ -2,6 +2,7 @@ from conans import ConanFile, tools
 from conans.errors import ConanException
 from subprocess import call
 import os
+import re
 import shutil
 import pathlib
 
@@ -54,6 +55,7 @@ class BarbarianConan(ConanFile):
     def build_requirements(self):
         self.build_requires("7z_installer/1.0@conan/stable")
         self.build_requires("InnoSetup/5.6.1@kwallner/testing")
+        self.build_requires("iss_patch_dll/0.0.1@kwallner/testing")
 
     def source(self):
         tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self.cmder_version), "cmder_mini.zip")
@@ -171,16 +173,37 @@ class BarbarianConan(ConanFile):
                 path = os.path.join("%CMDER_ROOT%", "vendor", "gitext-for-windows", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
 
-        # 10. Pack it: ZIP-File
-        call(["7z", "a", os.path.join(self.package_folder, "%s-%s-%s-%s.zip" % (self.name, self.version, self.settings.arch, self.installertype)), self.name])
+        # 10. Replace pathes
+        barbarian_dir= os.path.join(self.build_folder, self.name).replace("\\", "/") 
+        barbarian_str= barbarian_dir + "/"
+        replace_str = "X:/__BARBARIAN_REPLACE_THIS_LONG_UNIQUE_PATH__/__AND_FILENAME_BARBARIAN_/"
+        conda_files = re.compile(r"^conda\..*sh$")
+        for root, dirs, files in os.walk(os.path.join(barbarian_dir, "vendor", "python-for-windows", "etc"), topdown=False):
+            for name in files:
+                if conda_files.match(name):
+                    call(["patchispthexe", barbarian_str, replace_str, os.path.join(root,name).replace("\\", "/")])
+        for root, dirs, files in os.walk(os.path.join(barbarian_dir, "vendor", "python-for-windows", "Lib"), topdown=False):
+            for name in files:
+                if conda_files.match(name):
+                    call(["patchispthexe", barbarian_str, replace_str, os.path.join(root,name).replace("\\", "/")])
+        json_files = re.compile(r"^.*\.json$")
+        for root, dirs, files in os.walk(os.path.join(barbarian_dir, "vendor", "python-for-windows", "conda-meta"), topdown=False):
+            for name in files:
+                if json_files.match(name):
+                    call(["patchispthexe", barbarian_str, replace_str, os.path.join(root,name).replace("\\", "/")])
+        for root, dirs, files in os.walk(os.path.join(barbarian_dir, "vendor", "python-for-windows", "Scripts"), topdown=False):
+            for name in files:
+                call(["patchispthexe", barbarian_str, replace_str, os.path.join(root,name).replace("\\", "/")])
 
         # 11. Installer file: EXE-File
+        shutil.copyfile(os.path.join(self.deps_cpp_info["iss_patch_dll"].rootpath, "bin", "patchistxt.dll"), "patchistxt.dll")
         shutil.copyfile(os.path.join(self.source_folder, "packaging", "package.iss"), "package.iss")
         tools.replace_in_file("package.iss", '@name@', self.name)
         tools.replace_in_file("package.iss", '@version@', self.version)
         tools.replace_in_file("package.iss", '@author@', self.author)
         tools.replace_in_file("package.iss", '@url@', self.url)
         tools.replace_in_file("package.iss", '@conan_version@', self.conan_version)
+        tools.replace_in_file("package.iss", '@output_base_name@', "%s-%s-%s-%s" % (self.name, self.version, self.settings.arch, self.installertype))
         iscc_command= ["iscc", "/Q"]
         if self.options.with_git:
             iscc_command.append("/Dwith_git")
@@ -200,4 +223,6 @@ class BarbarianConan(ConanFile):
             iscc_command.append("/Dwith_gitext")
         iscc_command.append("package.iss")
         call(iscc_command)
-        shutil.move("%s-%s.exe" % (self.name, self.version), os.path.join(self.package_folder, "%s-%s-%s-%s.exe" % (self.name, self.version, self.settings.arch, self.installertype)) )
+        
+    def package(self):
+        self.copy("%s-%s-%s-%s.exe" % (self.name, self.version, self.settings.arch, self.installertype))
