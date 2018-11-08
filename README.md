@@ -19,7 +19,7 @@ Barbarian also contains:
 * [GitExtension](http://gitextensions.github.io): Graphical User Interface for Git
 
 Barbarian can be configured to
-* Use [Miniconda3](https://conda.io/miniconda.html) instead of [WinPython3](https://winpython.github.io)
+* Use [WinPython3](https://winpython.github.io) instead of [Miniconda3](https://conda.io/miniconda.html)
 
 *Barbarian brings all you need to start with conan.io, cmake and git contained in a single installation package.*
 
@@ -78,7 +78,7 @@ To build a minimal version
 conan create . user/channel -o with_git=False -o with_cmake=False -o with_python=False -o with_conanio=False
 ```
 
-To build with WinPython3 instead of MiniConda3
+To build with MiniConda3 instead of WinPython3
 ```
-# conan create . user/channel -o python_flavor=WinPython3
+# conan create . user/channel -o python_flavor=MiniConda3
 ```
