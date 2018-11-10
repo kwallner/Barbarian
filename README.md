@@ -5,6 +5,7 @@
 Barbarian is an all in one package for everybody developing software with:
 * [Conan.io](https:://conan.io):  C/C++ Package Manager
 * [CMake](https:://cmake.org): Cross-Plattform Build System
+* [Bazel](https:://bazel.build): Build Automation Tool
 * [Git](https://git-scm.com): Distributed version control system
 
 Barbarian is based on:
@@ -62,6 +63,7 @@ You can include and exclude packages. Default is a full build containing all pac
 The options used are:
     * with_git (default True)
     * with_cmake (default True)
+    * with_bazel (default True)
     * with_python (default True)
     * with_conanio (default True)
     * with_vscode (default False)
@@ -75,7 +77,7 @@ To build with VSCode and KDiff3 and GitExtensions
 
 To build a minimal version
 ```
-conan create . user/channel -o with_git=False -o with_cmake=False -o with_python=False -o with_conanio=False
+conan create . user/channel -o with_git=False -o with_cmake=False -o with_bazel=False -o with_python=False -o with_conanio=False
 ```
 
 To build with MiniConda3 instead of WinPython3

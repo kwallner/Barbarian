@@ -26,6 +26,9 @@ Name: git;                                      Description: "Git (https://git-s
 #ifdef with_cmake
 Name: cmake;                                    Description: "CMake (https:://cmake.org): Cross-Plattform Build System";                            Types: full custom
 #endif
+#ifdef with_bazel
+Name: bazel;                                    Description: "Bazel (https:://bazel.build): Build Automation Tool";                                 Types: full custom
+#endif
 #ifdef with_python
 Name: python;                                   Description: "Python (https:://python.org): Python Programming Language";                           Types: full custom
 #ifdef with_conanio
@@ -57,6 +60,9 @@ Source: "@name@\config\*.*";                               DestDir: "{app}\confi
 #ifdef with_cmake
 Source: "@name@\config\profile.d\cmake-for-windows.cmd";   DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: cmake
 #endif
+#ifdef with_bazel
+Source: "@name@\config\profile.d\bazel-for-windows.cmd";   DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: bazel
+#endif
 #ifdef with_gitext
 Source: "@name@\config\profile.d\gitext-for-windows.cmd";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: gitext
 #endif
@@ -81,6 +87,9 @@ Source: "@name@\vendor\psmodules\*";                       DestDir: "{app}\vendo
 Source: "@name@\vendor\clink-completions\*";               DestDir: "{app}\vendor\clink-completions";                  Flags: recursesubdirs createallsubdirs ignoreversion;
 #ifdef with_cmake
 Source: "@name@\vendor\cmake-for-windows\*";               DestDir: "{app}\vendor\cmake-for-windows";                  Flags: recursesubdirs createallsubdirs ignoreversion;    Components: cmake
+#endif
+#ifdef with_bazel
+Source: "@name@\vendor\bazel-for-windows\*";               DestDir: "{app}\vendor\bazel-for-windows";                  Flags: recursesubdirs createallsubdirs ignoreversion;    Components: bazel
 #endif
 #ifdef with_git
 Source: "@name@\vendor\git-for-windows\*";                 DestDir: "{app}\vendor\git-for-windows";                    Flags: recursesubdirs createallsubdirs  ignoreversion;    Components: git

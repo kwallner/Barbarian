@@ -8,10 +8,11 @@ import pathlib
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.3.7"
+    version = "1.3.8"
     cmder_version = "1.3.6"
     git_version = "2.19.1"
     cmake_version = "3.12.4"
+    bazel_version = "0.18.1"
     winpython3_version = "3.7.1.0"
     miniconda3_version = "4.5.11"
     conan_version = "1.9.1"
@@ -28,16 +29,16 @@ class BarbarianConan(ConanFile):
     exports_sources = [ "LICENSE.txt", "README.txt",  "README.md", "packaging/package-with_patching.iss", "packaging/package-without_patching.iss" ]
     no_copy_source = True
     short_paths = True
-    options = {"with_git": [True, False], "with_cmake": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_winmerge": [True, False], "with_gitext": [True, False], "python_flavor": [ "WinPython3", "MiniConda3" ]}
-    default_options = "with_git=True", "with_cmake=True", "with_python=True", "with_conanio=True", "with_vscode=False", "with_kdiff3=False", "with_winmerge=False", "with_gitext=False", "python_flavor=WinPython3"
+    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_winmerge": [True, False], "with_gitext": [True, False], "python_flavor": [ "WinPython3", "MiniConda3" ]}
+    default_options = { "with_git": True, "with_cmake" : True, "with_bazel" : True, "with_python" : True, "with_conanio" : True, "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "python_flavor" : "WinPython3" }
 
     @property
     def installertype_set(self):
-        if self.options.with_git and self.options.with_cmake and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext:
+        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext:
             return "full"
-        if not self.options.with_git and not self.options.with_cmake and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext:
+        if not self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext:
             return "minimal"
-        if self.options.with_git and self.options.with_cmake and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext:
+        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext:
             return "default"
         return "custom"
 
@@ -65,25 +66,27 @@ class BarbarianConan(ConanFile):
                 
     def source(self):
         tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self.cmder_version), "cmder_mini.zip")
-        tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.1/PortableGit-%s-64-bit.7z.exe" % (self.git_version, self.git_version), "git-for-windows.7z.exe")
-        tools.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self.cmake_version.split(".")[0], self.cmake_version.split(".")[1], self.cmake_version), "cmake-win64.zip")
+        if self.options.with_git:
+            tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.1/PortableGit-%s-64-bit.7z.exe" % (self.git_version, self.git_version), "git-for-windows.7z.exe")
+        if self.options.with_cmake:
+            tools.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self.cmake_version.split(".")[0], self.cmake_version.split(".")[1], self.cmake_version), "cmake-win64.zip")
+        if self.options.with_bazel:
+            tools.download("https://github.com/bazelbuild/bazel/releases/download/%s/bazel-%s-windows-x86_64.zip" % (self.bazel_version, self.bazel_version), "bazel-win64.zip")
         if self.options.with_python:
             if self.options.python_flavor == "MiniConda3":
                 tools.download("https://repo.continuum.io/miniconda/Miniconda3-%s-Windows-x86_64.exe" % (self.miniconda3_version), "miniconda3-win64.exe")
             elif self.options.python_flavor == "WinPython3":
                 tools.download("https://github.com/winpython/winpython/releases/download/1.11.20181031/WinPython64-%s.exe" % (self.winpython3_version), "winpython3-win64.exe")
             else:
-                raise ConanException("Invalid python flavor \"%s\"" % self.options.python_flavor)        
-        tools.download("https://go.microsoft.com/fwlink/?Linkid=850641", "vscode-win64.zip")
-        tools.download("https://datapacket.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self.kdiff_version, self.kdiff_version), "kdiff3-win64.exe")
-        tools.download("https://datapacket.dl.sourceforge.net/project/winmerge/stable/%s/WinMerge-%s-exe.zip" % (self.winmerge_version, self.winmerge_version), "winmerge.exe.zip")
-        tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self.gitext_version, self.gitext_version), "gitext.exe")
-        
-        # Innounp (needed to unpack winpython3)
-        if self.options.with_python:
-            if self.options.python_flavor == "WinPython3":
-                tools.download("https://sourceforge.net/projects/innounp/files/innounp/innounp%200.47/innounp047.rar/download", "innounp047.rar")
-        
+                raise ConanException("Invalid python flavor \"%s\"" % self.options.python_flavor)
+        if self.options.with_vscode:
+            tools.download("https://go.microsoft.com/fwlink/?Linkid=850641", "vscode-win64.zip")
+        if self.options.with_kdiff3:
+            tools.download("https://datapacket.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self.kdiff_version, self.kdiff_version), "kdiff3-win64.exe")
+        if self.options.with_winmerge:
+            tools.download("https://datapacket.dl.sourceforge.net/project/winmerge/stable/%s/WinMerge-%s-exe.zip" % (self.winmerge_version, self.winmerge_version), "winmerge.exe.zip")
+        if self.options.with_gitext:
+            tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self.gitext_version, self.gitext_version), "gitext.exe")
         
     def build(self):
         # 0. Cmder
@@ -100,8 +103,12 @@ class BarbarianConan(ConanFile):
         if self.options.with_git:
             call(["7z", "x", os.path.join(self.source_folder, "git-for-windows.7z.exe"), "-o%s/%s" % (self.name, "vendor/git-for-windows") ])
             # No need for install script. Git is already included (so do not change name)
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.cmd"), 'w') as f:
+                f.write(':: Vendor: git support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "usr", "bin")
+                f.write('set "PATH={0};%PATH%"\n'.format(path))
 
-        # 3. CMake
+        # 3a. CMake
         if self.options.with_cmake:
             tools.unzip(os.path.join(self.source_folder, "cmake-win64.zip"), destination = os.path.join(self.name, "vendor"))
             os.rename(os.path.join(self.name, "vendor", "cmake-%s-win64-x64" % (self.cmake_version)), os.path.join(self.name, "vendor", "cmake-for-windows"))
@@ -109,6 +116,15 @@ class BarbarianConan(ConanFile):
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "cmake-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: cmake support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "cmake-for-windows", "bin")
+                f.write('set "PATH={0};%PATH%"\n'.format(path))
+
+        # 3b. Bazel
+        if self.options.with_bazel:
+            tools.unzip(os.path.join(self.source_folder, "bazel-win64.zip"), destination = os.path.join(self.name, "vendor", "bazel-for-windows"))
+            # Create install script
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "bazel-for-windows.cmd"), 'w') as f:
+                f.write(':: Vendor: bazel support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "bazel-for-windows", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
 
         # 4. Python
@@ -144,6 +160,7 @@ class BarbarianConan(ConanFile):
             call(["code.cmd", "--install-extension", "PeterJausovec.vscode-docker"])
             call(["code.cmd", "--install-extension", "twxs.cmake"])
             call(["code.cmd", "--install-extension", "vector-of-bool.cmake-tools"])
+            call(["code.cmd", "--install-extension", "DevonDCarew.bazel-code"])
             os.chdir(old)
             # Create install script
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "vscode-for-windows.cmd"), 'w') as f:
@@ -230,6 +247,8 @@ class BarbarianConan(ConanFile):
             iscc_command.append("/Dwith_git")
         if self.options.with_cmake:
             iscc_command.append("/Dwith_cmake")
+        if self.options.with_bazel:
+            iscc_command.append("/Dwith_bazel")
         if self.options.with_python:
             iscc_command.append("/Dwith_python")
         if self.options.with_conanio:
