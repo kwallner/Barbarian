@@ -124,7 +124,7 @@ class BarbarianConan(ConanFile):
             # Create install script
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "bazel-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: bazel support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "bazel-for-windows", "bin")
+                path = os.path.join("%CMDER_ROOT%", "vendor", "bazel-for-windows")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
 
         # 4. Python
@@ -142,6 +142,9 @@ class BarbarianConan(ConanFile):
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
                 path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "Scripts")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
+            # Additional python packages
+            call(["%s/vendor/python-for-windows/python.exe" % self.name, "-m", "pip", "install", "openpyxl", "--no-warn-script-location"])
+            
 
         # 5. Conan.io
         if self.options.with_conanio:
@@ -154,13 +157,13 @@ class BarbarianConan(ConanFile):
             # Some useful extensions
             old = os.getcwd()
             os.chdir(os.path.join(self.name, "vendor", "vscode-for-windows", "bin"))
-            call(["code.cmd", "--install-extension", "ms-vscode.cpptools"])
-            call(["code.cmd", "--install-extension", "ms-python.python"])
-            call(["code.cmd", "--install-extension", "MS-CEINTL.vscode-language-pack-de"])
-            call(["code.cmd", "--install-extension", "PeterJausovec.vscode-docker"])
-            call(["code.cmd", "--install-extension", "twxs.cmake"])
-            call(["code.cmd", "--install-extension", "vector-of-bool.cmake-tools"])
-            call(["code.cmd", "--install-extension", "DevonDCarew.bazel-code"])
+            call(["./code.cmd", "--install-extension", "--force", "ms-vscode.cpptools"])
+            call(["./code.cmd", "--install-extension", "--force", "ms-python.python"])
+            call(["./code.cmd", "--install-extension", "--force", "MS-CEINTL.vscode-language-pack-de"])
+            call(["./code.cmd", "--install-extension", "--force", "PeterJausovec.vscode-docker"])
+            call(["./code.cmd", "--install-extension", "--force", "twxs.cmake"])
+            call(["./code.cmd", "--install-extension", "--force", "vector-of-bool.cmake-tools"])
+            call(["./code.cmd", "--install-extension", "--force", "DevonDCarew.bazel-code"])
             os.chdir(old)
             # Create install script
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "vscode-for-windows.cmd"), 'w') as f:

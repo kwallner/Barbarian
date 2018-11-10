@@ -56,6 +56,9 @@ Source: "@name@\README.md";                                DestDir: "{app}";    
 Source: "@name@\Version*";                                 DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\bin\*";                                    DestDir: "{app}\bin";                                       Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\config\*.*";                               DestDir: "{app}\config";                                    Flags: ignoreversion;    Permissions: users-modify
+#ifdef with_git
+Source: "@name@\config\profile.d\git-for-windows.cmd";     DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: git
+#endif
 #ifdef with_cmake
 Source: "@name@\config\profile.d\cmake-for-windows.cmd";   DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: cmake
 #endif
