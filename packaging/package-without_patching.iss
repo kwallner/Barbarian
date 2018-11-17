@@ -12,6 +12,7 @@ DefaultGroupName=@name@
 Compression=lzma2
 PrivilegesRequired=lowest
 AlwaysUsePersonalGroup=yes
+AllowNetworkDrive=no
 OutputDir=.
 OutputBaseFilename=@output_base_name@
 
@@ -51,7 +52,7 @@ Name: gitext;                                   Description: "GitExtensions (htt
 [Files]
 Source: "@name@\Cmder.exe";                                DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\LICENSE.txt";                              DestDir: "{app}";                                           Flags: ignoreversion
-Source: "@name@\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion isreadme
+Source: "@name@\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion 
 Source: "@name@\README.md";                                DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\Version*";                                 DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\bin\*";                                    DestDir: "{app}\bin";                                       Flags: recursesubdirs createallsubdirs ignoreversion
@@ -117,6 +118,12 @@ Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendo
 #endif
 #ifdef with_vscode
 Source: "@name@\vendor\vscode-for-windows\*";              DestDir: "{app}\vendor\vscode-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: vscode;    Permissions: users-modify
+#endif
+
+[Run]
+Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent
+#ifdef with_gitext
+Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Description: "Start GitExtensions"; Flags: postinstall skipifsilent
 #endif
 
 [Dirs]
