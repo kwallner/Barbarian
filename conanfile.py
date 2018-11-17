@@ -10,6 +10,7 @@ class BarbarianConan(ConanFile):
     name = "Barbarian"
     version = "1.3.9"
     _cmder_version = "1.3.8"
+    _cmder_version_build = "1.3.8.793"
     _git_version = "2.19.1"
     _cmake_version = "3.12.4"
     _bazel_version = "0.18.1"
@@ -72,98 +73,162 @@ class BarbarianConan(ConanFile):
             tools.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self._cmake_version.split(".")[0], self._cmake_version.split(".")[1], self._cmake_version), "cmake-win64.zip")
         if self.options.with_bazel:
             tools.download("https://github.com/bazelbuild/bazel/releases/download/%s/bazel-%s-windows-x86_64.zip" % (self._bazel_version, self._bazel_version), "bazel-win64.zip")
+            tools.download("https://raw.githubusercontent.com/bazelbuild/bazel/master/LICENSE", "bazel-LICENSE.txt")
         if self.options.with_python:
             if self.options.python_flavor == "MiniConda3":
                 tools.download("https://repo.continuum.io/miniconda/Miniconda3-%s-Windows-x86_64.exe" % (self._miniconda3_version), "miniconda3-win64.exe")
+                tools.download("https://raw.githubusercontent.com/conda/conda/master/LICENSE.txt", "miniconda3-LICENSE.txt")
             elif self.options.python_flavor == "WinPython3":
                 tools.download("https://github.com/winpython/winpython/releases/download/1.11.20181031/WinPython64-%s.exe" % (self._winpython3_version), "winpython3-win64.exe")
+                tools.download("https://raw.githubusercontent.com/winpython/winpython/master/LICENSE", "winpython3-LICENSE.txt")
             else:
                 raise ConanException("Invalid python flavor \"%s\"" % self.options.python_flavor)
+            tools.download("https://raw.githubusercontent.com/python/cpython/master/LICENSE", "cpython-LICENSE.txt")
+            tools.download("https://bitbucket.org/openpyxl/openpyxl/raw/1234131eb33fc7191a554afdd092ee368f7b1fc9/LICENCE.rst", "openpyxl-LICENSE.txt")
+        if self.options.with_conanio:
+            tools.download("https://raw.githubusercontent.com/conan-io/conan/develop/LICENSE.md", "conanio-LICENSE.txt")
         if self.options.with_vscode:
             tools.download("https://go.microsoft.com/fwlink/?Linkid=850641", "vscode-win64.zip")
         if self.options.with_kdiff3:
             tools.download("https://datapacket.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self._kdiff_version, self._kdiff_version), "kdiff3-win64.exe")
         if self.options.with_winmerge:
             tools.download("https://datapacket.dl.sourceforge.net/project/winmerge/stable/%s/WinMerge-%s-exe.zip" % (self._winmerge_version, self._winmerge_version), "winmerge.exe.zip")
+            tools.download("https://bitbucket.org/winmerge/winmerge/raw/c1164661fef83403f91e93e4919801b3e7804df3/Docs/Users/GPL.rtf.txt", "winmerge-LICENSE.txt")
         if self.options.with_gitext:
             tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version), "gitext.exe")
-        
+            tools.download("https://raw.githubusercontent.com/gitextensions/gitextensions/master/LICENSE.md", "gitext-LICENSE.txt")
+    
+    def _append_to_license_txt(self, name, url, description, license_file):
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "LICENSE.txt"), "a") as f:
+                f.write("\n")
+                f.write("=" * 80 + "\n")
+                f.write("=" * 2  + "\n")
+                f.write("=" * 2 + "%s: %s" % (name, description)  + "\n")
+                f.write("=" * 2 + "%s" % (url)  + "\n")
+                f.write("=" * 2  + "\n")
+                f.write("=" * 2 + "%s is covered by the following licensed terms (LICENSE.txt):" % (name)  + "\n")
+                f.write("=" * 2  + "\n")
+                f.write("\n")
+                with open(license_file, 'r') as f2:
+                    for line in f2:
+                        f.write(line)
+                f.write("\n")
+
     def build(self):
         # 0. Cmder
         tools.unzip(os.path.join(self.source_folder, "cmder_mini.zip"), destination = self.name)
-        os.remove(os.path.join(self.build_folder, self.name, "LICENSE"))
+
+        # 0b. Setup docs
+        os.remove(os.path.join(self.build_folder, self.name, "Version %s" % self._cmder_version_build))
+        os.rename(os.path.join(self.build_folder, self.name, "LICENSE"), os.path.join(self.build_folder, self.name, "LICENSE-cmder.txt"))
 
         # 1. Create profile directory
         tools.mkdir(os.path.join(self.build_folder, self.name, "config", "profile.d"))
-        shutil.copyfile(os.path.join(self.source_folder, "LICENSE.txt"), os.path.join(self.build_folder, self.name,"LICENSE.txt"))
-        shutil.copyfile(os.path.join(self.source_folder, "README.txt"), os.path.join(self.build_folder, self.name,"README.txt"))
-        shutil.copyfile(os.path.join(self.source_folder, "README.md"), os.path.join(self.build_folder, self.name,"README.md"))
+
+        # 1b. Copy LICENSE and README files
+        shutil.copyfile(os.path.join(self.source_folder, "LICENSE.txt"), os.path.join(self.build_folder, self.name, "LICENSE-barbarian.txt"))
+        shutil.copyfile(os.path.join(self.source_folder, "README.txt"), os.path.join(self.build_folder, self.name, "README.txt"))
+        shutil.copyfile(os.path.join(self.source_folder, "README.md"), os.path.join(self.build_folder, self.name, "README.md"))
+
+        # 1c. Append to license
+        self._append_to_license_txt("Barbarian", "https://github.com/kwallner/Barbarian", "A Software Development Environment for Conan.io", os.path.join(self.build_folder, self.name, "LICENSE-barbarian.txt"))
+        os.remove(os.path.join(self.build_folder, self.name, "LICENSE-barbarian.txt"))
+
+        # 1c. Append License of cmder
+        self._append_to_license_txt("Cmder", "http://cmder.net/", "Console emulator for Windows", os.path.join(self.build_folder, self.name, "LICENSE-cmder.txt"))
+        os.remove(os.path.join(self.build_folder, self.name, "LICENSE-cmder.txt"))
+        self._append_to_license_txt("Clink", "http://mridgers.github.io/clink/", "Powerful Bash-style command line editing for cmd.exe", os.path.join(self.build_folder, self.name, "vendor", "clink", "LICENSE"))
+        self._append_to_license_txt("clink-completions", "https://github.com/vladimir-kotikov/clink-completions", "Completion files to clink util", os.path.join(self.build_folder, self.name, "vendor", "clink-completions", "LICENSE"))
+        self._append_to_license_txt("ConEmu", "https://conemu.github.io/", "Handy Windows Terminal", os.path.join(self.build_folder, self.name, "vendor", "conemu-maximus5", "ConEmu", "License.txt"))
 
         # 2. Git
         if self.options.with_git:
             call(["7z", "x", os.path.join(self.source_folder, "git-for-windows.7z.exe"), "-o%s/%s" % (self.name, "vendor/git-for-windows") ])
             # No need for install script. Git is already included (so do not change name)
+            os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: git support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "usr", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
+            self._append_to_license_txt("Git", "https://git-scm.com", "Distributed version control system", os.path.join(self.build_folder, self.name, "vendor", "git-for-windows", "LICENSE.txt"))
 
         # 3a. CMake
         if self.options.with_cmake:
             tools.unzip(os.path.join(self.source_folder, "cmake-win64.zip"), destination = os.path.join(self.name, "vendor"))
             os.rename(os.path.join(self.name, "vendor", "cmake-%s-win64-x64" % (self._cmake_version)), os.path.join(self.name, "vendor", "cmake-for-windows"))
             # Create install script
+            os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "cmake-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: cmake support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "cmake-for-windows", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "cmake-for-windows.sh"), 'wb') as f:
+            os.linesep= '\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "cmake-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: cmake support\n')
                 path = os.path.join("$CMDER_ROOT", "vendor", "cmake-for-windows", "bin")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
+            self._append_to_license_txt("CMake", "https://cmake.org/", "Cross-Plattform Build System", os.path.join(self.build_folder, self.name, "vendor", "cmake-for-windows", "doc", "cmake", "Copyright.txt"))
 
         # 3b. Bazel
         if self.options.with_bazel:
             tools.unzip(os.path.join(self.source_folder, "bazel-win64.zip"), destination = os.path.join(self.name, "vendor", "bazel-for-windows"))
+            shutil.copyfile(os.path.join(self.source_folder, "bazel-LICENSE.txt"), os.path.join(self.name, "vendor", "bazel-for-windows", "LICENSE.txt"))
             # Create install script
+            os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "bazel-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: bazel support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "bazel-for-windows")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "bazel-for-windows.sh"), 'wb') as f:
+            os.linesep= '\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "bazel-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: bazel support\n')
                 path = os.path.join("$CMDER_ROOT", "vendor", "bazel-for-windows")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
+            self._append_to_license_txt("Bazel", "https://bazel.build/", "Build and test software of any size, quickly and reliably", os.path.join(self.name, "vendor", "bazel-for-windows", "LICENSE.txt"))
 
         # 4. Python
         if self.options.with_python:
             if self.options.python_flavor == "MiniConda3":
                 call([os.path.join(self.source_folder, "miniconda3-win64.exe"), "/InstallationType=JustMe", "/RegisterPython=0", "/S", "/AddToPath=0", "/D=%s" % (pathlib.PureWindowsPath(self.build_folder, self.name, "vendor", "python-for-windows")) ])
+                shutil.copyfile(os.path.join(self.source_folder, "miniconda3-LICENSE.txt"), os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
             elif self.options.python_flavor == "WinPython3":
                 call(["innounp", "-q", "-x", os.path.join(self.source_folder, "winpython3-win64.exe")])
                 os.rename("{app}/python-3.7.1.amd64", os.path.join(self.name, "vendor", "python-for-windows"))
+                shutil.rmtree("{app}")
+                shutil.copyfile(os.path.join(self.source_folder, "winpython3-LICENSE.txt"), os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
             else:
                 raise ConanInvalidConfiguration("Invalid python flavor \"%s\"" % self.options.python_flavor)
+            os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: python support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
                 path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "Scripts")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.sh"), 'wb') as f:
+            os.linesep= '\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: python support\n')
                 path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
                 path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", "Scripts")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
+            
+            if self.options.python_flavor == "MiniConda3":
+                self._append_to_license_txt("Miniconda", "https://conda.io/miniconda.html", "Distribution of the Python programming language for Windows", os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
+            elif self.options.python_flavor == "WinPython3":
+                self._append_to_license_txt("WinPython", "http://winpython.github.io/", "Portable distribution of the Python programming language for Windows", os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
+            self._append_to_license_txt("Python", "https://www.python.org/", "Python programming language", os.path.join(self.source_folder, "cpython-LICENSE.txt"))
+
             # Additional python packages
             call(["%s/vendor/python-for-windows/python.exe" % self.name, "-m", "pip", "install", "openpyxl", "--no-warn-script-location"])
-            
+            self._append_to_license_txt("openpyxl", "https://openpyxl.readthedocs.io/", "Python programming language", os.path.join(self.source_folder, "openpyxl-LICENSE.txt"))
 
         # 5. Conan.io
         if self.options.with_conanio:
             call(["%s/vendor/python-for-windows/python.exe" % self.name, "-m", "pip", "install", "conan==%s" % self._conan_version, "--no-warn-script-location"])
             # No install script needed ... installed with python
+            self._append_to_license_txt("Conan.io", "https://conan.io/", "A Python library to read/write Excel 2010 xlsx/xlsm files", os.path.join(self.source_folder, "conanio-LICENSE.txt"))
 
         # 6. VS Code + Extensions
         if self.options.with_vscode:
@@ -171,36 +236,42 @@ class BarbarianConan(ConanFile):
             # Some useful extensions
             old = os.getcwd()
             os.chdir(os.path.join(self.name, "vendor", "vscode-for-windows", "bin"))
-            call(["./code.cmd", "--install-extension", "--force", "ms-vscode.cpptools"])
-            call(["./code.cmd", "--install-extension", "--force", "ms-python.python"])
-            call(["./code.cmd", "--install-extension", "--force", "MS-CEINTL.vscode-language-pack-de"])
-            call(["./code.cmd", "--install-extension", "--force", "PeterJausovec.vscode-docker"])
-            call(["./code.cmd", "--install-extension", "--force", "twxs.cmake"])
-            call(["./code.cmd", "--install-extension", "--force", "vector-of-bool.cmake-tools"])
-            call(["./code.cmd", "--install-extension", "--force", "DevonDCarew.bazel-code"])
+            call(["code.cmd", "--install-extension", "--force", "ms-vscode.cpptools"])
+            call(["code.cmd", "--install-extension", "--force", "ms-python.python"])
+            call(["code.cmd", "--install-extension", "--force", "MS-CEINTL.vscode-language-pack-de"])
+            call(["code.cmd", "--install-extension", "--force", "PeterJausovec.vscode-docker"])
+            call(["code.cmd", "--install-extension", "--force", "twxs.cmake"])
+            call(["code.cmd", "--install-extension", "--force", "vector-of-bool.cmake-tools"])
+            call(["code.cmd", "--install-extension", "--force", "DevonDCarew.bazel-code"])
             os.chdir(old)
             # Create install script
+            os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "vscode-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: vscode support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "vscode-for-windows", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "vscode-for-windows.sh"), 'wb') as f:
+            os.linesep= '\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "vscode-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: vscode support\n')
                 path = os.path.join("$CMDER_ROOT", "vendor", "vscode-for-windows", "bin")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
+            self._append_to_license_txt("Visual Studio Code", "https://code.visualstudio.com/", "Code editing Redefined", os.path.join(self.name, "vendor", "vscode-for-windows", "resources", "app", "LICENSE.txt"))
 
-        # 7. KDiff
+        # 7. KDiff3
         if self.options.with_kdiff3:
             call(["7z", "x", os.path.join(self.source_folder, "kdiff3-win64.exe"), "-o%s/%s" % (self.name, "vendor/kdiff3-for-windows"), '-x!$PLUGINSDIR', '-x!Uninstall.exe' ])
             # Create install script
+            os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "kdiff3-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: kdiff3 support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "kdiff3-for-windows")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "kdiff3-for-windows.sh"), 'wb') as f:
+            os.linesep= '\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "kdiff3-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: kdiff3 support\n')
                 path = os.path.join("$CMDER_ROOT", "vendor", "kdiff3-for-windows")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
+            self._append_to_license_txt("KDiff3", "http://kdiff3.sourceforge.net/", "Diff and Merge Program", os.path.join(self.name, "vendor", "kdiff3-for-windows", "COPYING.txt"))
 
         # 8. WinMerge
         if self.options.with_winmerge:
@@ -212,15 +283,18 @@ class BarbarianConan(ConanFile):
                 f.write('@echo off\n')
                 f.write('call "%~dp0..\\WinMergeU.exe" %*\n')
             # Create install script
+            os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: winmerge support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "winmerge-for-windows", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.sh"), 'wb') as f:
+            os.linesep= '\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: winmerge support\n')
                 path = os.path.join("$CMDER_ROOT", "vendor", "winmerge-for-windows", "bin")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
                 f.write('alias winmerge=WinMergeU.exe\n'.format(path))
+            self._append_to_license_txt("WinMerge", "http://winmerge.org/", "Open Source differencing and merging tool for Windows", os.path.join(self.build_folder, self.name, "LICENSE-winmerge.txt"))
 
         # 9. GitExt
         if self.options.with_gitext:
@@ -231,14 +305,17 @@ class BarbarianConan(ConanFile):
                 f.write('@echo off\n')
                 f.write('call "%~dp0..\\GitExtensions.exe" %*\n')
             # Create install script
+            os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: gitext support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "gitext-for-windows", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.sh"), 'wb') as f:
+            os.linesep= '\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: gitext support\n')
                 path = os.path.join("$CMDER_ROOT", "vendor", "gitext-for-windows", "bin")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
+            self._append_to_license_txt("Git Extensions", "http://gitextensions.github.io/", "Graphical user interface for Git", os.path.join(self.build_folder, self.name, "LICENSE-gitext.txt"))
 
         # 10. Replace pathes
         if self.options.with_python:
@@ -274,7 +351,7 @@ class BarbarianConan(ConanFile):
         tools.replace_in_file("package.iss", '@version@', self.version)
         tools.replace_in_file("package.iss", '@author@', self.author)
         tools.replace_in_file("package.iss", '@url@', self.url)
-        tools.replace_in_file("package.iss", '@_conan_version@', self._conan_version)
+        tools.replace_in_file("package.iss", '@conan_version@', self._conan_version)
         tools.replace_in_file("package.iss", '@output_base_name@', "%s-%s-%s-%s" % (self.name, self.version, self.settings.arch, self._installertype))
         iscc_command= ["iscc", "/Q"]
         if self.options.with_git:

@@ -28,7 +28,7 @@ Name: git;                                      Description: "Git (https://git-s
 Name: cmake;                                    Description: "CMake (https:://cmake.org): Cross-Plattform Build System";                            Types: full custom
 #endif
 #ifdef with_bazel
-Name: bazel;                                    Description: "Bazel (https:://bazel.build): Build Automation Tool";                                 Types: full custom
+Name: bazel;                                    Description: "Bazel (https:://bazel.build): Build and test software of any size, quickly and reliably";                                 Types: full custom
 #endif
 #ifdef with_python
 Name: python;                                   Description: "Python (https:://python.org): Python Programming Language";                           Types: full custom
@@ -123,6 +123,7 @@ Source: "@name@\vendor\vscode-for-windows\*";              DestDir: "{app}\vendo
 
 [Run]
 Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent
+Filename: "{app}\LICENSE.txt"; Description: "View the LICENSE file"; Flags: postinstall shellexec skipifsilent
 #ifdef with_gitext
 Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Description: "Start GitExtensions"; Flags: postinstall skipifsilent
 #endif
