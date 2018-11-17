@@ -236,13 +236,13 @@ class BarbarianConan(ConanFile):
             # Some useful extensions
             old = os.getcwd()
             os.chdir(os.path.join(self.name, "vendor", "vscode-for-windows", "bin"))
-            call(["code.cmd", "--install-extension", "--force", "ms-vscode.cpptools"])
-            call(["code.cmd", "--install-extension", "--force", "ms-python.python"])
-            call(["code.cmd", "--install-extension", "--force", "MS-CEINTL.vscode-language-pack-de"])
-            call(["code.cmd", "--install-extension", "--force", "PeterJausovec.vscode-docker"])
-            call(["code.cmd", "--install-extension", "--force", "twxs.cmake"])
-            call(["code.cmd", "--install-extension", "--force", "vector-of-bool.cmake-tools"])
-            call(["code.cmd", "--install-extension", "--force", "DevonDCarew.bazel-code"])
+            call(["code.cmd", "--install-extension", "ms-vscode.cpptools", "--force", "--extensions-dir", "resources/app/extensions"])
+            call(["code.cmd", "--install-extension", "ms-python.python", "--force", "--extensions-dir", "resources/app/extensions"])
+            call(["code.cmd", "--install-extension", "MS-CEINTL.vscode-language-pack-de", "--force", "--extensions-dir", "resources/app/extensions"])
+            call(["code.cmd", "--install-extension", "PeterJausovec.vscode-docker", "--force", "--extensions-dir", "resources/app/extensions"])
+            call(["code.cmd", "--install-extension", "twxs.cmake", "--force", "--extensions-dir", "resources/app/extensions"])
+            call(["code.cmd", "--install-extension", "vector-of-bool.cmake-tools", "--force", "--extensions-dir", "resources/app/extensions"])
+            call(["code.cmd", "--install-extension", "DevonDCarew.bazel-code", "--force", "--extensions-dir", "resources/app/extensions"])
             os.chdir(old)
             # Create install script
             os.linesep= '\r\n'
@@ -294,7 +294,7 @@ class BarbarianConan(ConanFile):
                 path = os.path.join("$CMDER_ROOT", "vendor", "winmerge-for-windows", "bin")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
                 f.write('alias winmerge=WinMergeU.exe\n'.format(path))
-            self._append_to_license_txt("WinMerge", "http://winmerge.org/", "Open Source differencing and merging tool for Windows", os.path.join(self.build_folder, self.name, "LICENSE-winmerge.txt"))
+            self._append_to_license_txt("WinMerge", "http://winmerge.org/", "Open Source differencing and merging tool for Windows", os.path.join(self.source_folder, "winmerge-LICENSE.txt"))
 
         # 9. GitExt
         if self.options.with_gitext:
@@ -315,7 +315,7 @@ class BarbarianConan(ConanFile):
                 f.write('# Vendor: gitext support\n')
                 path = os.path.join("$CMDER_ROOT", "vendor", "gitext-for-windows", "bin")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
-            self._append_to_license_txt("Git Extensions", "http://gitextensions.github.io/", "Graphical user interface for Git", os.path.join(self.build_folder, self.name, "LICENSE-gitext.txt"))
+            self._append_to_license_txt("Git Extensions", "http://gitextensions.github.io/", "Graphical user interface for Git", os.path.join(self.source_folder, "gitext-LICENSE.txt"))
 
         # 10. Replace pathes
         if self.options.with_python:
