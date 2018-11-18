@@ -131,12 +131,17 @@ Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Description: "St
 Name: "{app}\config";                          Permissions: users-modify
 Name: "{app}\config\profile.d";                Permissions: users-modify
 #ifdef with_python
-Name: "{app}\vendor\python-for-windows";       Permissions: users-modify
+Name: "{app}\vendor\python-for-windows";       Permissions: users-modify;    Components: python
 #endif
 #ifdef with_vscode
-Name: "{app}\vendor\vscode-for-windows";       Permissions: users-modify
+Name: "{app}\vendor\vscode-for-windows";       Permissions: users-modify;    Components: vscode
 #endif
 
+[UninstallRun] 
+#ifdef with_gitext
+Filename: "{sys}\regsvr32.exe"; Parameters: "/s /u GitExtensionsShellEx64.dll"; WorkingDir: "{app}\vendor\gitext-for-windows"; Flags: runhidden;  Components: gitext
+#endif
+ 
 [UninstallDelete]
 Type: files;            Name: "{app}\config\.history"
 Type: files;            Name: "{app}\config\settings"
