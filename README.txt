@@ -1,7 +1,7 @@
 Barbarian - A Software Development Environment for Conan.io
 
 Barbarian is an all in one package for everybody developing software with:
-* [Conan.io](https:://conan.io):  C/C++ Package Manager
+* [Conan.io](https:://conan.io): C/C++ Package Manager
 * [CMake](https:://cmake.org): Cross-Plattform Build System
 * [Bazel](https:://bazel.build): Build Automation Tool
 * [Git](https://git-scm.com): Distributed version control system

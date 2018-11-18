@@ -12,6 +12,7 @@ DefaultGroupName=@name@
 Compression=lzma2
 PrivilegesRequired=lowest
 AlwaysUsePersonalGroup=yes
+AllowNetworkDrive=no
 OutputDir=.
 OutputBaseFilename=@output_base_name@
 
@@ -27,7 +28,7 @@ Name: git;                                      Description: "Git (https://git-s
 Name: cmake;                                    Description: "CMake (https:://cmake.org): Cross-Plattform Build System";                            Types: full custom
 #endif
 #ifdef with_bazel
-Name: bazel;                                    Description: "Bazel (https:://bazel.build): Build Automation Tool";                                 Types: full custom
+Name: bazel;                                    Description: "Bazel (https:://bazel.build): Build and test software of any size, quickly and reliably";                                 Types: full custom
 #endif
 #ifdef with_python
 Name: python;                                   Description: "Python (https:://python.org): Python Programming Language";                           Types: full custom
@@ -48,45 +49,50 @@ Name: winmerge;                                 Description: "WinMerge (http://w
 Name: gitext;                                   Description: "GitExtensions (http://gitextensions.github.io): Graphical User Interface for Git";    Types: full
 #endif
 
+; [Tasks]
+; Name: cmder_vstasks;                            Description: "Create Cmder Tasks for Microsoft Visual Studio"
+; Name: cmder_vstasks/vs15;                       Description: "Create Cmder Tasks for Microsoft Visual Studio 2015"                         
+
 [Files]
 Source: "@name@\Cmder.exe";                                DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\LICENSE.txt";                              DestDir: "{app}";                                           Flags: ignoreversion
-Source: "@name@\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion isreadme
+Source: "@name@\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion 
 Source: "@name@\README.md";                                DestDir: "{app}";                                           Flags: ignoreversion
-Source: "@name@\Version*";                                 DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\bin\*";                                    DestDir: "{app}\bin";                                       Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\config\*.*";                               DestDir: "{app}\config";                                    Flags: ignoreversion;    Permissions: users-modify
 #ifdef with_git
-Source: "@name@\config\profile.d\git-for-windows.cmd";     DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: git
+Source: "@name@\config\profile.d\git-for-windows.*";       DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: git
 #endif
 #ifdef with_cmake
-Source: "@name@\config\profile.d\cmake-for-windows.cmd";   DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: cmake
+Source: "@name@\config\profile.d\cmake-for-windows.*";     DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: cmake
 #endif
 #ifdef with_bazel
-Source: "@name@\config\profile.d\bazel-for-windows.cmd";   DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: bazel
+Source: "@name@\config\profile.d\bazel-for-windows.*";     DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: bazel
 #endif
 #ifdef with_gitext
-Source: "@name@\config\profile.d\gitext-for-windows.cmd";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: gitext
+Source: "@name@\config\profile.d\gitext-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: gitext
 #endif
 #ifdef with_kdiff3
-Source: "@name@\config\profile.d\kdiff3-for-windows.cmd";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: kdiff3
+Source: "@name@\config\profile.d\kdiff3-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: kdiff3
 #endif
 #ifdef with_winmerge
-Source: "@name@\config\profile.d\winmerge-for-windows.cmd"; DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: winmerge
+Source: "@name@\config\profile.d\winmerge-for-windows.*";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: winmerge
 #endif
 #ifdef with_python
-Source: "@name@\config\profile.d\python-for-windows.cmd";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: python
+Source: "@name@\config\profile.d\python-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: python
 #endif
 #ifdef with_vscode
-Source: "@name@\config\profile.d\vscode-for-windows.cmd";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: vscode
+Source: "@name@\config\profile.d\vscode-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: vscode
 #endif
 Source: "@name@\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion
+Source: "@name@\vendor\bin\*";                             DestDir: "{app}\vendor\bin";                                Flags: recursesubdirs createallsubdirs ignoreversion;
 Source: "@name@\vendor\clink\*";                           DestDir: "{app}\vendor\clink";                              Flags: recursesubdirs createallsubdirs ignoreversion;
 Source: "@name@\vendor\conemu-maximus5\*";                 DestDir: "{app}\vendor\conemu-maximus5";                    Flags: recursesubdirs createallsubdirs ignoreversion;
 Source: "@name@\vendor\lib\*";                             DestDir: "{app}\vendor\lib";                                Flags: recursesubdirs createallsubdirs ignoreversion;
 Source: "@name@\vendor\psmodules\*";                       DestDir: "{app}\vendor\psmodules";                          Flags: recursesubdirs createallsubdirs ignoreversion;
 Source: "@name@\vendor\clink-completions\*";               DestDir: "{app}\vendor\clink-completions";                  Flags: recursesubdirs createallsubdirs ignoreversion;
+Source: "@name@\vendor\barbarian-extra\*";                 DestDir: "{app}\vendor\barbarian-extra";                  Flags: recursesubdirs createallsubdirs ignoreversion;
 #ifdef with_cmake
 Source: "@name@\vendor\cmake-for-windows\*";               DestDir: "{app}\vendor\cmake-for-windows";                  Flags: recursesubdirs createallsubdirs ignoreversion;    Components: cmake
 #endif
@@ -119,22 +125,34 @@ Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendo
 Source: "@name@\vendor\vscode-for-windows\*";              DestDir: "{app}\vendor\vscode-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: vscode;    Permissions: users-modify
 #endif
 
+[Run]
+Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent
+Filename: "{app}\LICENSE.txt"; Description: "View the LICENSE file"; Flags: postinstall shellexec skipifsilent
+#ifdef with_gitext
+Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Description: "Start GitExtensions"; Flags: postinstall skipifsilent
+#endif
+
 [Dirs]
 Name: "{app}\config";                          Permissions: users-modify
 Name: "{app}\config\profile.d";                Permissions: users-modify
 #ifdef with_python
-Name: "{app}\vendor\python-for-windows";       Permissions: users-modify
+Name: "{app}\vendor\python-for-windows";       Permissions: users-modify;    Components: python
 #endif
 #ifdef with_vscode
-Name: "{app}\vendor\vscode-for-windows";       Permissions: users-modify
+Name: "{app}\vendor\vscode-for-windows";       Permissions: users-modify;    Components: vscode
 #endif
 
+[UninstallRun] 
+#ifdef with_gitext
+Filename: "{sys}\regsvr32.exe"; Parameters: "/s /u GitExtensionsShellEx64.dll"; WorkingDir: "{app}\vendor\gitext-for-windows"; Flags: runhidden;  Components: gitext
+#endif
+ 
 [UninstallDelete]
 Type: files;            Name: "{app}\config\.history"
 Type: files;            Name: "{app}\config\settings"
-Type: files;            Name: "{app}\config\user-aliases.cmd"
+Type: files;            Name: "{app}\config\user_aliases.cmd"
 Type: files;            Name: "{app}\config\user-ConEmu.xml"
-Type: files;            Name: "{app}\config\user-profile.cmd"
+Type: files;            Name: "{app}\config\user_profile.cmd"
 Type: filesandordirs;   Name: "{app}\vendor"
 Type: dirifempty;       Name: "{app}\config\profile.d"
 Type: dirifempty;       Name: "{app}"
