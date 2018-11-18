@@ -28,7 +28,7 @@ class VsToolVersion:
         
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.3.9"
+    version = "1.4.0"
     _cmder_version = "1.3.8"
     _cmder_version_build = "1.3.8.793"
     _git_version = "2.19.1"
@@ -208,6 +208,15 @@ class BarbarianConan(ConanFile):
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
                 path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "usr", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.ps1"), 'w') as f:
+                f.write('# Vendor: git support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "cmd")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
+                path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "mingw64", "bin")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
+                path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "usr", "bin")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: git support\n')
@@ -224,6 +233,11 @@ class BarbarianConan(ConanFile):
                 f.write(':: Vendor: cmake support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "cmake-for-windows", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "cmake-for-windows.ps1"), 'w') as f:
+                f.write('# Vendor: cmake support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "cmake-for-windows", "bin")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "cmake-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: cmake support\n')
@@ -241,6 +255,11 @@ class BarbarianConan(ConanFile):
                 f.write(':: Vendor: bazel support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "bazel-for-windows")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "bazel-for-windows.ps1"), 'w') as f:
+                f.write('# Vendor: bazel support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "bazel-for-windows")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "bazel-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: bazel support\n')
@@ -267,6 +286,13 @@ class BarbarianConan(ConanFile):
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
                 path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "Scripts")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.ps1"), 'w') as f:
+                f.write('# Vendor: python support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
+                path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "Scripts")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: python support\n')
@@ -310,6 +336,11 @@ class BarbarianConan(ConanFile):
                 f.write(':: Vendor: vscode support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "vscode-for-windows", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "vscode-for-windows.ps1"), 'w') as f:
+                f.write('# Vendor: vscode support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "vscode-for-windows", "bin")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "vscode-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: vscode support\n')
@@ -326,6 +357,11 @@ class BarbarianConan(ConanFile):
                 f.write(':: Vendor: kdiff3 support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "kdiff3-for-windows")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "kdiff3-for-windows.ps1"), 'w') as f:
+                f.write('# Vendor: kdiff3 support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "kdiff3-for-windows")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "kdiff3-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: kdiff3 support\n')
@@ -348,6 +384,11 @@ class BarbarianConan(ConanFile):
                 f.write(':: Vendor: winmerge support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "winmerge-for-windows", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.ps1"), 'w') as f:
+                f.write('# Vendor: winmerge support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "winmerge-for-windows", "bin")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: winmerge support\n')
@@ -370,6 +411,11 @@ class BarbarianConan(ConanFile):
                 f.write(':: Vendor: gitext support\n')
                 path = os.path.join("%CMDER_ROOT%", "vendor", "gitext-for-windows", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.ps1"), 'w') as f:
+                f.write('# Vendor: gitext support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "gitext-for-windows", "bin")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: gitext support\n')
