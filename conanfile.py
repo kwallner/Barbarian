@@ -149,11 +149,16 @@ class BarbarianConan(ConanFile):
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: git support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "cmd")
+                f.write('set "PATH={0};%PATH%"\n'.format(path))
+                path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "mingw64", "bin")
+                f.write('set "PATH={0};%PATH%"\n'.format(path))
                 path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "usr", "bin")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: git support\n')
+                # Pathes are already correct
             self._append_to_license_txt("Git", "https://git-scm.com", "Distributed version control system", os.path.join(self.build_folder, self.name, "vendor", "git-for-windows", "LICENSE.txt"))
 
         # 3a. CMake
