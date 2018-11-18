@@ -82,6 +82,7 @@ Source: "@name@\config\profile.d\vscode-for-windows.*";    DestDir: "{app}\confi
 #endif
 Source: "@name@\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion
+Source: "@name@\vendor\bin\*";                             DestDir: "{app}\vendor\bin";                                Flags: recursesubdirs createallsubdirs ignoreversion;
 Source: "@name@\vendor\clink\*";                           DestDir: "{app}\vendor\clink";                              Flags: recursesubdirs createallsubdirs ignoreversion;
 Source: "@name@\vendor\conemu-maximus5\*";                 DestDir: "{app}\vendor\conemu-maximus5";                    Flags: recursesubdirs createallsubdirs ignoreversion;
 Source: "@name@\vendor\lib\*";                             DestDir: "{app}\vendor\lib";                                Flags: recursesubdirs createallsubdirs ignoreversion;
@@ -139,9 +140,9 @@ Name: "{app}\vendor\vscode-for-windows";       Permissions: users-modify
 [UninstallDelete]
 Type: files;            Name: "{app}\config\.history"
 Type: files;            Name: "{app}\config\settings"
-Type: files;            Name: "{app}\config\user-aliases.cmd"
+Type: files;            Name: "{app}\config\user_aliases.cmd"
 Type: files;            Name: "{app}\config\user-ConEmu.xml"
-Type: files;            Name: "{app}\config\user-profile.cmd"
+Type: files;            Name: "{app}\config\user_profile.cmd"
 Type: filesandordirs;   Name: "{app}\vendor"
 Type: dirifempty;       Name: "{app}\config\profile.d"
 Type: dirifempty;       Name: "{app}"

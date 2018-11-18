@@ -149,9 +149,8 @@ class BarbarianConan(ConanFile):
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: git support\n')
-                # Do not add to path ... seems to produce problems
-                #path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "usr", "bin")
-                #f.write('set "PATH=%PATH%;{0}"\n'.format(path))
+                path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "usr", "bin")
+                f.write('set "PATH={0};%PATH%"\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: git support\n')
@@ -296,7 +295,7 @@ class BarbarianConan(ConanFile):
                 f.write('# Vendor: winmerge support\n')
                 path = os.path.join("$CMDER_ROOT", "vendor", "winmerge-for-windows", "bin")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
-                f.write('alias winmerge=WinMergeU.exe\n'.format(path))
+                f.write('alias winmerge=WinMergeU.exe\n')
             self._append_to_license_txt("WinMerge", "http://winmerge.org/", "Open Source differencing and merging tool for Windows", os.path.join(self.source_folder, "winmerge-LICENSE.txt"))
 
         # 9. GitExt
