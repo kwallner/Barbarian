@@ -54,32 +54,31 @@ Source: "@name@\Cmder.exe";                                DestDir: "{app}";    
 Source: "@name@\LICENSE.txt";                              DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion 
 Source: "@name@\README.md";                                DestDir: "{app}";                                           Flags: ignoreversion
-Source: "@name@\Version*";                                 DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\bin\*";                                    DestDir: "{app}\bin";                                       Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\config\*.*";                               DestDir: "{app}\config";                                    Flags: ignoreversion;    Permissions: users-modify
 #ifdef with_git
-Source: "@name@\config\profile.d\git-for-windows.cmd";     DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: git
+Source: "@name@\config\profile.d\git-for-windows.*";       DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: git
 #endif
 #ifdef with_cmake
-Source: "@name@\config\profile.d\cmake-for-windows.cmd";   DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: cmake
+Source: "@name@\config\profile.d\cmake-for-windows.*";     DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: cmake
 #endif
 #ifdef with_bazel
-Source: "@name@\config\profile.d\bazel-for-windows.cmd";   DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: bazel
+Source: "@name@\config\profile.d\bazel-for-windows.*";     DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: bazel
 #endif
 #ifdef with_gitext
-Source: "@name@\config\profile.d\gitext-for-windows.cmd";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: gitext
+Source: "@name@\config\profile.d\gitext-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: gitext
 #endif
 #ifdef with_kdiff3
-Source: "@name@\config\profile.d\kdiff3-for-windows.cmd";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: kdiff3
+Source: "@name@\config\profile.d\kdiff3-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: kdiff3
 #endif
 #ifdef with_winmerge
-Source: "@name@\config\profile.d\winmerge-for-windows.cmd"; DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: winmerge
+Source: "@name@\config\profile.d\winmerge-for-windows.*";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: winmerge
 #endif
 #ifdef with_python
-Source: "@name@\config\profile.d\python-for-windows.cmd";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: python
+Source: "@name@\config\profile.d\python-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: python
 #endif
 #ifdef with_vscode
-Source: "@name@\config\profile.d\vscode-for-windows.cmd";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: vscode
+Source: "@name@\config\profile.d\vscode-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: vscode
 #endif
 Source: "@name@\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion

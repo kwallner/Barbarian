@@ -104,10 +104,10 @@ class BarbarianConan(ConanFile):
                 f.write("\n")
                 f.write("=" * 80 + "\n")
                 f.write("=" * 2  + "\n")
-                f.write("=" * 2 + "%s: %s" % (name, description)  + "\n")
-                f.write("=" * 2 + "%s" % (url)  + "\n")
+                f.write("=" * 2 + " %s: %s" % (name, description)  + "\n")
+                f.write("=" * 2 + " %s" % (url)  + "\n")
                 f.write("=" * 2  + "\n")
-                f.write("=" * 2 + "%s is covered by the following licensed terms (LICENSE.txt):" % (name)  + "\n")
+                f.write("=" * 2 + " %s is covered by the following licensed terms (LICENSE.txt):" % (name)  + "\n")
                 f.write("=" * 2  + "\n")
                 f.write("\n")
                 with open(license_file, 'r') as f2:
@@ -149,8 +149,12 @@ class BarbarianConan(ConanFile):
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: git support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "usr", "bin")
-                f.write('set "PATH={0};%PATH%"\n'.format(path))
+                # Do not add to path ... seems to produce problems
+                #path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "usr", "bin")
+                #f.write('set "PATH=%PATH%;{0}"\n'.format(path))
+            os.linesep= '\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.sh"), 'w') as f:
+                f.write('# Vendor: git support\n')
             self._append_to_license_txt("Git", "https://git-scm.com", "Distributed version control system", os.path.join(self.build_folder, self.name, "vendor", "git-for-windows", "LICENSE.txt"))
 
         # 3a. CMake
@@ -239,7 +243,6 @@ class BarbarianConan(ConanFile):
             call(["code.cmd", "--install-extension", "ms-vscode.cpptools", "--force", "--extensions-dir", "resources/app/extensions"])
             call(["code.cmd", "--install-extension", "ms-python.python", "--force", "--extensions-dir", "resources/app/extensions"])
             call(["code.cmd", "--install-extension", "MS-CEINTL.vscode-language-pack-de", "--force", "--extensions-dir", "resources/app/extensions"])
-            call(["code.cmd", "--install-extension", "PeterJausovec.vscode-docker", "--force", "--extensions-dir", "resources/app/extensions"])
             call(["code.cmd", "--install-extension", "twxs.cmake", "--force", "--extensions-dir", "resources/app/extensions"])
             call(["code.cmd", "--install-extension", "vector-of-bool.cmake-tools", "--force", "--extensions-dir", "resources/app/extensions"])
             call(["code.cmd", "--install-extension", "DevonDCarew.bazel-code", "--force", "--extensions-dir", "resources/app/extensions"])
