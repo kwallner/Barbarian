@@ -47,7 +47,7 @@ To build with VSCode and KDiff3 and GitExtensions
 
 To build a minimal version
 ```
-conan create . user/channel -o with_git=False -o with_cmake=False -o with_bazel=False -o with_python=False -o with_conanio=False
+conan create . user/channel -o with_cmake=False -o with_bazel=False -o with_python=False -o with_conanio=False
 ```
 
 ### Python Flavour

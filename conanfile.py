@@ -37,6 +37,7 @@ class BarbarianConan(ConanFile):
     _winpython3_version = "3.7.1.0"
     _miniconda3_version = "4.5.11"
     _conan_version = "1.9.1"
+    _openpyxl_version = "2.5.9"
     _vscode_version = "1.29.1"
     _kdiff_version = "0.9.98"
     _winmerge_version = "2.14.0"
@@ -59,7 +60,7 @@ class BarbarianConan(ConanFile):
     def _installertype_set(self):
         if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext:
             return "full"
-        if not self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext:
+        if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext:
             return "minimal"
         if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext:
             return "default"
@@ -104,7 +105,7 @@ class BarbarianConan(ConanFile):
                 tools.download("https://github.com/winpython/winpython/releases/download/1.11.20181031/WinPython64-%s.exe" % (self._winpython3_version), "winpython3-win64.exe")
                 tools.download("https://raw.githubusercontent.com/winpython/winpython/master/LICENSE", "winpython3-LICENSE.txt")
             else:
-                raise ConanException("Invalid python flavor \"%s\"" % self.options.python_flavor)
+                raise ConanInvalidConfiguration("Invalid python flavor \"%s\"" % self.options.python_flavor)
             tools.download("https://raw.githubusercontent.com/python/cpython/master/LICENSE", "cpython-LICENSE.txt")
             tools.download("https://bitbucket.org/openpyxl/openpyxl/raw/1234131eb33fc7191a554afdd092ee368f7b1fc9/LICENCE.rst", "openpyxl-LICENSE.txt")
         if self.options.with_conanio:
@@ -211,11 +212,11 @@ class BarbarianConan(ConanFile):
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.ps1"), 'w') as f:
                 f.write('# Vendor: git support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "cmd")
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "git-for-windows", "cmd")
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
-                path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "mingw64", "bin")
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "git-for-windows", "mingw64", "bin")
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
-                path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "usr", "bin")
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "git-for-windows", "usr", "bin")
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.sh"), 'w') as f:
@@ -236,7 +237,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "cmake-for-windows.ps1"), 'w') as f:
                 f.write('# Vendor: cmake support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "cmake-for-windows", "bin")
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "cmake-for-windows", "bin")
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "cmake-for-windows.sh"), 'w') as f:
@@ -258,7 +259,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "bazel-for-windows.ps1"), 'w') as f:
                 f.write('# Vendor: bazel support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "bazel-for-windows")
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "bazel-for-windows")
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "bazel-for-windows.sh"), 'w') as f:
@@ -289,9 +290,9 @@ class BarbarianConan(ConanFile):
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.ps1"), 'w') as f:
                 f.write('# Vendor: python support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows")
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows")
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
-                path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "Scripts")
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", "Scripts")
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.sh"), 'w') as f:
@@ -308,7 +309,7 @@ class BarbarianConan(ConanFile):
             self._append_to_license_txt("Python", "https://www.python.org/", "Python programming language", os.path.join(self.source_folder, "cpython-LICENSE.txt"))
 
             # Additional python packages
-            call(["%s/vendor/python-for-windows/python.exe" % self.name, "-m", "pip", "install", "openpyxl", "--no-warn-script-location"])
+            call(["%s/vendor/python-for-windows/python.exe" % self.name, "-m", "pip", "install", "openpyxl==%s" % self._openpyxl_version, "--no-warn-script-location"])
             self._append_to_license_txt("openpyxl", "https://openpyxl.readthedocs.io/", "Python programming language", os.path.join(self.source_folder, "openpyxl-LICENSE.txt"))
 
         # 5. Conan.io
@@ -339,7 +340,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "vscode-for-windows.ps1"), 'w') as f:
                 f.write('# Vendor: vscode support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "vscode-for-windows", "bin")
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "vscode-for-windows", "bin")
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "vscode-for-windows.sh"), 'w') as f:
@@ -360,7 +361,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "kdiff3-for-windows.ps1"), 'w') as f:
                 f.write('# Vendor: kdiff3 support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "kdiff3-for-windows")
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "kdiff3-for-windows")
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "kdiff3-for-windows.sh"), 'w') as f:
@@ -387,7 +388,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.ps1"), 'w') as f:
                 f.write('# Vendor: winmerge support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "winmerge-for-windows", "bin")
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "winmerge-for-windows", "bin")
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.sh"), 'w') as f:
@@ -414,7 +415,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.ps1"), 'w') as f:
                 f.write('# Vendor: gitext support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "gitext-for-windows", "bin")
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "gitext-for-windows", "bin")
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.sh"), 'w') as f:

@@ -13,6 +13,7 @@ Compression=lzma2
 PrivilegesRequired=lowest
 AlwaysUsePersonalGroup=yes
 AllowNetworkDrive=no
+CloseApplications=yes
 OutputDir=.
 OutputBaseFilename=@output_base_name@
 
@@ -127,10 +128,11 @@ Source: "@name@\vendor\vscode-for-windows\*";              DestDir: "{app}\vendo
 #endif
 
 [Run]
-Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent
-Filename: "{app}\LICENSE.txt"; Description: "View the LICENSE file"; Flags: postinstall shellexec skipifsilent
+Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent unchecked
+Filename: "{app}\LICENSE.txt"; Description: "View the LICENSE file"; Flags: postinstall shellexec skipifsilent unchecked
 #ifdef with_gitext
-Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Description: "Start GitExtensions"; Flags: postinstall skipifsilent
+Filename: "{sys}\regsvr32.exe"; Parameters: "/s /u GitExtensionsShellEx64.dll"; WorkingDir: "{app}\vendor\gitext-for-windows"; Flags: runhidden;  Components: gitext
+Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Description: "Start GitExtensions"; Flags: postinstall skipifsilent unchecked;  Components: gitext
 #endif
 
 [Dirs]
@@ -151,9 +153,9 @@ Filename: "{sys}\regsvr32.exe"; Parameters: "/s /u GitExtensionsShellEx64.dll"; 
 [UninstallDelete]
 Type: files;            Name: "{app}\config\.history"
 Type: files;            Name: "{app}\config\settings"
-Type: files;            Name: "{app}\config\user_aliases.cmd"
+Type: files;            Name: "{app}\config\user_aliases.*"
 Type: files;            Name: "{app}\config\user-ConEmu.xml"
-Type: files;            Name: "{app}\config\user_profile.cmd"
+Type: files;            Name: "{app}\config\user_profile.*"
 Type: filesandordirs;   Name: "{app}\vendor"
 Type: dirifempty;       Name: "{app}\config\profile.d"
 Type: dirifempty;       Name: "{app}"
