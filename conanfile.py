@@ -5,7 +5,27 @@ import os
 import re
 import shutil
 import pathlib
+import jinja2
+from datetime import datetime
 
+class VsToolVersion:
+    def __init__(self, name, modified, build, Name, CommonToolsEnv, Architecture):
+        self.name = name
+        self.modified = modified
+        self.build = build
+        self.Name = Name
+        self.GuiArgs = " /icon \"%" + CommonToolsEnv + "%\\..\\IDE\\devenv.exe\""
+        extra_call = ""
+        extra_path= ""
+        if CommonToolsEnv == "VS150COMNTOOLS":
+            extra_call = "call \"%ConEmuDir%\\..\\barbarian-extra\\vswhere_find_vs2017.bat\" &amp; "
+            extra_path = "Auxiliary\\Build\\"
+        self.Cmd1 = extra_call + "call \"%" + CommonToolsEnv + "%..\\..\\VC\\" + extra_path + "vcvarsall.bat\" " + Architecture + " &amp; cmd /k \"\"%ConEmuDir%\\..\\init.bat\"\"" 
+        self.Count = "1"
+        self.Hotkey = "0"
+        self.Flags = "0"
+        self.Active = "1"
+        
 class BarbarianConan(ConanFile):
     name = "Barbarian"
     version = "1.3.9"
@@ -21,13 +41,15 @@ class BarbarianConan(ConanFile):
     _kdiff_version = "0.9.98"
     _winmerge_version = "2.14.0"
     _gitext_version = "2.51.05"
+    _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    _conemu_xml_buildnummer = "180318"
     generators = "txt"
     url = "http://github.com/kwallner/Barbarian"
     author = "Karl Wallner <kwallner@mail.de>"
     license = "https://raw.githubusercontent.com/kwallner/Barbarian/develop/LICENSE.txt"
     description = "Software Development Environment for Conan.io"
     settings = {"os": ["Windows"], "arch": ["x86_64"]}
-    exports_sources = [ "LICENSE.txt", "README.txt",  "README.md", "packaging/package-with_patching.iss", "packaging/package-without_patching.iss" ]
+    scm = { "type": "git", "url": "auto", "revision": "auto" }
     no_copy_source = True
     short_paths = True
     options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_winmerge": [True, False], "with_gitext": [True, False], "python_flavor": [ "WinPython3", "MiniConda3" ]}
@@ -49,7 +71,7 @@ class BarbarianConan(ConanFile):
             return self._installertype_set
         else:
             return "%s+%s" % (self._installertype_set, self.options.python_flavor)
-
+            
     def configure(self):
         if self.options.with_conanio and not self.options.with_python:
             raise ConanInvalidConfiguration("Invalid configuration: Python is required when using Conan.io")
@@ -99,21 +121,49 @@ class BarbarianConan(ConanFile):
             tools.download("https://raw.githubusercontent.com/gitextensions/gitextensions/master/LICENSE.md", "gitext-LICENSE.txt")
     
     def _append_to_license_txt(self, name, url, description, license_file):
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "LICENSE.txt"), "a") as f:
-                f.write("\n")
-                f.write("=" * 80 + "\n")
-                f.write("=" * 2  + "\n")
-                f.write("=" * 2 + " %s: %s" % (name, description)  + "\n")
-                f.write("=" * 2 + " %s" % (url)  + "\n")
-                f.write("=" * 2  + "\n")
-                f.write("=" * 2 + " %s is covered by the following licensed terms (LICENSE.txt):" % (name)  + "\n")
-                f.write("=" * 2  + "\n")
-                f.write("\n")
-                with open(license_file, 'r') as f2:
-                    for line in f2:
-                        f.write(line)
-                f.write("\n")
+        os.linesep= '\r\n'
+        with open(os.path.join(self.build_folder, self.name, "LICENSE.txt"), "a") as f:
+            f.write("\n")
+            f.write("=" * 80 + "\n")
+            f.write("=" * 2  + "\n")
+            f.write("=" * 2 + " %s: %s" % (name, description)  + "\n")
+            f.write("=" * 2 + " %s" % (url)  + "\n")
+            f.write("=" * 2  + "\n")
+            f.write("=" * 2 + " %s is covered by the following licensed terms (LICENSE.txt):" % (name)  + "\n")
+            f.write("=" * 2  + "\n")
+            f.write("\n")
+            with open(license_file, 'r') as f2:
+                for line in f2:
+                    f.write(line)
+            f.write("\n")
+                
+    def _update_conemu_xml_config(self):
+        output_dir = output = os.path.join(self.build_folder, self.name, "vendor", "barbarian-extra")
+        os.mkdir(output_dir)
+        shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2017.bat"), os.path.join(output_dir, "vswhere_find_vs2017.bat"))
+        vs_versions = { 
+            "VS 2010" : "VS100COMNTOOLS", 
+            "VS 2012" : "VS110COMNTOOLS", 
+            "VS 2013" : "VS120COMNTOOLS", 
+            "VS 2015" : "VS140COMNTOOLS", 
+            "VS 2017" : "VS150COMNTOOLS" 
+            }
+        template_dir = os.path.join(self.source_folder, "configuration")
+        env = jinja2.Environment(loader= jinja2.FileSystemLoader(template_dir), trim_blocks=True, lstrip_blocks=True, undefined=jinja2.StrictUndefined)
+        conemu_xml_template = env.get_template("ConEmu.xml.default.j2") 
+        output_dir = os.path.join(self.build_folder, self.name, "vendor")
+        output = os.path.join(output_dir, "ConEmu.xml.default")
+        os.rename(output, os.path.join(output_dir, "ConEmu.xml.original"))
+        f = open(output, "w")
+        vs_tool_prompts = [ ]
+        Count = 9
+        for vs_version,vs_common_tools in vs_versions.items():
+            Count = Count + 1
+            vs_tool_prompts.append(VsToolVersion("Task%d" % Count, self._conemu_xml_creation_datetime, self._conemu_xml_buildnummer, "%s-32Bit" % vs_version, vs_common_tools, "x86"))
+            Count = Count + 1
+            vs_tool_prompts.append(VsToolVersion("Task%d" % Count, self._conemu_xml_creation_datetime, self._conemu_xml_buildnummer, "%s-64Bit" % vs_version, vs_common_tools, "x86_amd64"))
+        f.write(conemu_xml_template.render(vs_tool_prompts = vs_tool_prompts, Count = Count))
+        f.close()
 
     def build(self):
         # 0. Cmder
@@ -141,6 +191,9 @@ class BarbarianConan(ConanFile):
         self._append_to_license_txt("Clink", "http://mridgers.github.io/clink/", "Powerful Bash-style command line editing for cmd.exe", os.path.join(self.build_folder, self.name, "vendor", "clink", "LICENSE"))
         self._append_to_license_txt("clink-completions", "https://github.com/vladimir-kotikov/clink-completions", "Completion files to clink util", os.path.join(self.build_folder, self.name, "vendor", "clink-completions", "LICENSE"))
         self._append_to_license_txt("ConEmu", "https://conemu.github.io/", "Handy Windows Terminal", os.path.join(self.build_folder, self.name, "vendor", "conemu-maximus5", "ConEmu", "License.txt"))
+
+        # 1d. Update/Replace ConEmu.xml
+        self._update_conemu_xml_config()
 
         # 2. Git
         if self.options.with_git:
@@ -387,3 +440,4 @@ class BarbarianConan(ConanFile):
         self.copy("README.txt")
         self.copy("LICENSE.txt")
         self.copy("%s-%s-%s-%s.exe" % (self.name, self.version, self.settings.arch, self._installertype))
+ 

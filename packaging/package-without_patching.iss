@@ -49,6 +49,10 @@ Name: winmerge;                                 Description: "WinMerge (http://w
 Name: gitext;                                   Description: "GitExtensions (http://gitextensions.github.io): Graphical User Interface for Git";    Types: full
 #endif
 
+; [Tasks]
+; Name: cmder_vstasks;                            Description: "Create Cmder Tasks for Microsoft Visual Studio"
+; Name: cmder_vstasks/vs15;                       Description: "Create Cmder Tasks for Microsoft Visual Studio 2015"                         
+
 [Files]
 Source: "@name@\Cmder.exe";                                DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\LICENSE.txt";                              DestDir: "{app}";                                           Flags: ignoreversion
@@ -88,6 +92,7 @@ Source: "@name@\vendor\conemu-maximus5\*";                 DestDir: "{app}\vendo
 Source: "@name@\vendor\lib\*";                             DestDir: "{app}\vendor\lib";                                Flags: recursesubdirs createallsubdirs ignoreversion;
 Source: "@name@\vendor\psmodules\*";                       DestDir: "{app}\vendor\psmodules";                          Flags: recursesubdirs createallsubdirs ignoreversion;
 Source: "@name@\vendor\clink-completions\*";               DestDir: "{app}\vendor\clink-completions";                  Flags: recursesubdirs createallsubdirs ignoreversion;
+Source: "@name@\vendor\barbarian-extra\*";                 DestDir: "{app}\vendor\barbarian-extra";                  Flags: recursesubdirs createallsubdirs ignoreversion;
 #ifdef with_cmake
 Source: "@name@\vendor\cmake-for-windows\*";               DestDir: "{app}\vendor\cmake-for-windows";                  Flags: recursesubdirs createallsubdirs ignoreversion;    Components: cmake
 #endif
