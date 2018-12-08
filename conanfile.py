@@ -28,10 +28,10 @@ class VsToolVersion:
         
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.4.1"
+    version = "1.4.2"
     _cmder_version = "1.3.10"
-    _cmder_version_build = "1.3.10.811"
-    _git_version = "2.19.2"
+    _cmder_version_build = "%s.811" % _cmder_version
+    _git_version = "2.19.1"
     _cmake_version = "3.13.1"
     _bazel_version = "0.20.0"
     _winpython3_version = "3.7.1.0"
@@ -41,7 +41,8 @@ class BarbarianConan(ConanFile):
     _vscode_version = "1.29.1"
     _kdiff_version = "0.9.98"
     _winmerge_version = "2.14.0"
-    _gitext_version = "2.51.05"
+    _gitext_version = "3.00.00"
+    _gitext_version_build = "%s.4433" % _gitext_version
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
     generators = "txt"
@@ -118,7 +119,7 @@ class BarbarianConan(ConanFile):
             tools.download("https://datapacket.dl.sourceforge.net/project/winmerge/stable/%s/WinMerge-%s-exe.zip" % (self._winmerge_version, self._winmerge_version), "winmerge.exe.zip")
             tools.download("https://bitbucket.org/winmerge/winmerge/raw/c1164661fef83403f91e93e4919801b3e7804df3/Docs/Users/GPL.rtf.txt", "winmerge-LICENSE.txt")
         if self.options.with_gitext:
-            tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version), "gitext.exe")
+            tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version_build), "gitext.exe")
             tools.download("https://raw.githubusercontent.com/gitextensions/gitextensions/master/LICENSE.md", "gitext-LICENSE.txt")
     
     def _append_to_license_txt(self, name, url, description, license_file):
