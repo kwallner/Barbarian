@@ -28,19 +28,19 @@ class VsToolVersion:
         
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.4.2"
+    version = "1.4.3"
     _cmder_version = "1.3.10"
     _cmder_version_build = "%s.811" % _cmder_version
-    _git_version = "2.19.1"
-    _cmake_version = "3.13.1"
-    _bazel_version = "0.20.0"
+    _git_version = "2.20.1"
+    _cmake_version = "3.13.2"
+    _bazel_version = "0.21.0"
     _winpython3_version = "3.7.1.0"
     _miniconda3_version = "4.5.11"
-    _conan_version = "1.9.2"
+    _conan_version = "1.11.0"
     _openpyxl_version = "2.5.12"
-    _vscode_version = "1.29.1"
+    _vscode_version = "1.30.1"
     _kdiff_version = "0.9.98"
-    _winmerge_version = "2.14.0"
+    _winmerge_version = "2.16.0"
     _gitext_version = "3.00.00"
     _gitext_version_build = "%s.4433" % _gitext_version
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -116,7 +116,7 @@ class BarbarianConan(ConanFile):
         if self.options.with_kdiff3:
             tools.download("https://datapacket.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self._kdiff_version, self._kdiff_version), "kdiff3-win64.exe")
         if self.options.with_winmerge:
-            tools.download("https://datapacket.dl.sourceforge.net/project/winmerge/stable/%s/WinMerge-%s-exe.zip" % (self._winmerge_version, self._winmerge_version), "winmerge.exe.zip")
+            tools.download("https://datapacket.dl.sourceforge.net/project/winmerge/stable/%s/winmerge-%s-x64-exe.zip" % (self._winmerge_version, self._winmerge_version), "winmerge-win64.exe.zip")
             tools.download("https://bitbucket.org/winmerge/winmerge/raw/c1164661fef83403f91e93e4919801b3e7804df3/Docs/Users/GPL.rtf.txt", "winmerge-LICENSE.txt")
         if self.options.with_gitext:
             tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version_build), "gitext.exe")
@@ -373,8 +373,8 @@ class BarbarianConan(ConanFile):
 
         # 8. WinMerge
         if self.options.with_winmerge:
-            tools.unzip(os.path.join(self.source_folder, "winmerge.exe.zip"))
-            os.rename("WinMerge-%s-exe" % self._winmerge_version, os.path.join(self.name, "vendor", "winmerge-for-windows"))
+            tools.unzip(os.path.join(self.source_folder, "winmerge-win64.exe.zip"))
+            os.rename("WinMerge", os.path.join(self.name, "vendor", "winmerge-for-windows"))
             tools.mkdir(os.path.join(self.build_folder, self.name, "vendor", "winmerge-for-windows", "bin"))
             # Create run script
             with open(os.path.join(self.build_folder, self.name, "vendor", "winmerge-for-windows", "bin", "winmerge.cmd"), 'w') as f:
