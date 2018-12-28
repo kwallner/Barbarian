@@ -16,5 +16,6 @@ Barbarian also contains:
 * [WinMerge](http://winmerge.org): Diff and Merge Tool
 * [GitExtension](http://gitextensions.github.io): Graphical User Interface for Git
 * [Graphviz](https://www.graphviz.org): Graph Visualization Software
+* [Doxygen](http://www.doxygen.nl/): Generate documentation from source code
 
 *Barbarian brings all you need to start with conan.io, cmake and git contained in a single installation package.*

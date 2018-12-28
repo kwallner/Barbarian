@@ -49,6 +49,12 @@ Name: winmerge;                                 Description: "WinMerge (http://w
 #ifdef with_gitext
 Name: gitext;                                   Description: "GitExtensions (http://gitextensions.github.io): Graphical User Interface for Git";    Types: full
 #endif
+#ifdef with_graphviz
+Name: graphviz;                                 Description: "Graphviz (https://www.graphviz.org): Graph Visualization Software";                    Types: full
+#endif
+#ifdef with_doxygen
+Name: doxygen;                                  Description: "Doxygen (http://www.doxygen.nl/): Generate documentation from source code";           Types: full
+#endif
 
 ; [Tasks]
 ; Name: cmder_vstasks;                            Description: "Create Cmder Tasks for Microsoft Visual Studio"
@@ -84,6 +90,12 @@ Source: "@name@\config\profile.d\python-for-windows.*";    DestDir: "{app}\confi
 #endif
 #ifdef with_vscode
 Source: "@name@\config\profile.d\vscode-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: vscode
+#endif
+#ifdef with_graphviz
+Source: "@name@\config\profile.d\graphviz-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: graphviz
+#endif
+#ifdef with_doxygen
+Source: "@name@\config\profile.d\doxygen-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: doxygen
 #endif
 Source: "@name@\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion
@@ -124,6 +136,12 @@ Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendo
 #endif
 #ifdef with_vscode
 Source: "@name@\vendor\vscode-for-windows\*";              DestDir: "{app}\vendor\vscode-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: vscode;    Permissions: users-modify
+#endif
+#ifdef with_graphviz
+Source: "@name@\vendor\graphviz-for-windows\*";            DestDir: "{app}\vendor\graphviz-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: graphviz; 
+#endif
+#ifdef with_doxygen
+Source: "@name@\vendor\doxygen-for-windows\*";             DestDir: "{app}\vendor\doxygen-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: doxygen; 
 #endif
 
 [Run]
@@ -172,5 +190,8 @@ Name: "{group}\WinMerge";             Filename: "{app}\vendor\winmerge-for-windo
 #endif
 #ifdef with_gitext
 Name: "{group}\GitExtensions";        Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: gitext
+#endif
+#ifdef with_doxygen
+Name: "{group}\DoxygenWizard";        Filename: "{app}\vendor\doxygen-for-windows\bin\doxywizard.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: doxygen
 #endif
 Name: "{group}\Uninstall @name@";     Filename: "{uninstallexe}"

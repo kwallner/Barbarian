@@ -40,10 +40,11 @@ The options used are:
     * with_kdiff3 (default False)
     * with_gitext (default False)
     * with_graphviz (default False)
+    * with_doxygen (default False)
 
 To build with VSCode and KDiff3 and GitExtensions
 ```
-# conan create . user/channel -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True
+# conan create . user/channel -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True
 ```
 
 To build a minimal version

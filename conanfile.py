@@ -2,9 +2,7 @@ from conans import ConanFile, tools
 from conans.errors import ConanInvalidConfiguration
 from subprocess import call
 import os
-import re
 import shutil
-import pathlib
 import jinja2
 from datetime import datetime
 
@@ -37,7 +35,7 @@ class BarbarianConan(ConanFile):
     _winpython3_version = "3.7.1.0"
     _conan_version = "1.11.1"
     _openpyxl_version = "2.5.12"
-    _vscode_version = "1.31.1"
+    _vscode_version = "1.30.1"
     _kdiff_version = "0.9.98"
     _winmerge_version = "2.16.0"
     _gitext_version = "3.00.00"
@@ -45,6 +43,7 @@ class BarbarianConan(ConanFile):
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
     _graphviz_version = "2.38"
+    _doxygen_version = "1.8.15"
     generators = "txt"
     url = "http://github.com/kwallner/Barbarian"
     author = "Karl Wallner <kwallner@mail.de>"
@@ -54,16 +53,16 @@ class BarbarianConan(ConanFile):
     scm = { "type": "git", "url": "auto", "revision": "auto" }
     no_copy_source = True
     short_paths = True
-    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_winmerge": [True, False], "with_gitext": [True, False], "with_graphviz": [True, False]}
-    default_options = { "with_git": True, "with_cmake" : True, "with_bazel" : True, "with_python" : True, "with_conanio" : True, "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False }
+    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_winmerge": [True, False], "with_gitext": [True, False], "with_graphviz": [True, False], "with_doxygen": [True, False]}
+    default_options = { "with_git": True, "with_cmake" : True, "with_bazel" : True, "with_python" : True, "with_conanio" : True, "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False, "with_doxygen" : False}
 
     @property
     def _installertype_set(self):
-        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_graphviz:
+        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_graphviz and self.options.with_doxygen:
             return "full"
-        if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz:
+        if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen:
             return "minimal"
-        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz:
+        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen:
             return "default"
         return "custom"
 
@@ -110,6 +109,9 @@ class BarbarianConan(ConanFile):
         if self.options.with_graphviz:
             tools.download("https://graphviz.gitlab.io/_pages/Download/windows/graphviz-%s.zip" % (self._graphviz_version), "graphviz.zip")
             tools.download("https://gitlab.com/graphviz/graphviz/raw/master/COPYING", "graphviz-LICENSE.txt")
+        if self.options.with_doxygen:
+            tools.download("http://doxygen.nl/files/doxygen-%s-setup.exe" % (self._doxygen_version), "doxygen-win64.exe")
+            tools.download("https://raw.githubusercontent.com/doxygen/doxygen/master/LICENSE", "doxygen-LICENSE.txt")
     
     def _append_to_license_txt(self, name, url, description, license_file):
         os.linesep= '\r\n'
@@ -263,6 +265,7 @@ class BarbarianConan(ConanFile):
             call(["innounp", "-q", "-x", os.path.join(self.source_folder, "winpython3-win64.exe")])
             os.rename("{app}/python-3.7.1.amd64", os.path.join(self.name, "vendor", "python-for-windows"))
             shutil.rmtree("{app}")
+            os.remove("install_script.iss")
             shutil.copyfile(os.path.join(self.source_folder, "winpython3-LICENSE.txt"), os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.cmd"), 'w') as f:
@@ -425,6 +428,40 @@ class BarbarianConan(ConanFile):
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("Graphviz", "https://www.graphviz.org/", "Graph Visualization Software", os.path.join(self.source_folder, "graphviz-LICENSE.txt"))
             
+        # 11. Doxygen
+        if self.options.with_doxygen:
+            call(["innounp", "-q", "-x", os.path.join(self.source_folder, "doxygen-win64.exe")])
+            os.rename("{app}", os.path.join(self.name, "vendor", "doxygen-for-windows"))
+            shutil.rmtree("{tmp}")
+            os.remove("install_script.iss")
+            shutil.copyfile(os.path.join(self.source_folder, "doxygen-LICENSE.txt"), os.path.join(self.name, "vendor", "doxygen-for-windows", "LICENSE.txt"))
+            # Fix Doxygen
+            os.remove(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxygen,2.exe"))
+            os.remove(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxyindexer,2.exe"))
+            os.remove(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxysearch.cgi,2.exe"))
+            os.rename(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxygen,1.exe"), os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxygen.exe"))
+            os.rename(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxyindexer,1.exe"), os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxyindexer.exe"))
+            os.rename(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxysearch.cgi,1.exe"), os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxysearch.cgi.exe"))
+
+            # Create install script
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "doxygen-for-windows.cmd"), 'w') as f:
+                f.write(':: Vendor: doxygen support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "doxygen-for-windows", "bin")
+                f.write('set "PATH={0};%PATH%"\n'.format(path))
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "doxygen-for-windows.ps1"), 'w') as f:
+                f.write('# Vendor: doxygen support\n')
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "doxygen-for-windows", "bin")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
+            os.linesep= '\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "doxygen-for-windows.sh"), 'w') as f:
+                f.write('# Vendor: doxygen support\n')
+                path = os.path.join("$CMDER_ROOT", "vendor", "doxygen-for-windows", "bin")
+                f.write('export "PATH={0}:$PATH"\n'.format(path))
+            self._append_to_license_txt("Doxygen", "http://www.doxygen.nl/", "Generate documentation from source code", os.path.join(self.source_folder, "doxygen-LICENSE.txt"))
+            
+        # Final. Pack everything
         shutil.copyfile(os.path.join(self.source_folder, "packaging", "package.iss"), "package.iss")
         tools.replace_in_file("package.iss", '@name@', self.name)
         tools.replace_in_file("package.iss", '@version@', self.version)
@@ -453,6 +490,8 @@ class BarbarianConan(ConanFile):
             iscc_command.append("/Dwith_gitext")
         if self.options.with_graphviz:
             iscc_command.append("/Dwith_graphviz")
+        if self.options.with_doxygen:
+            iscc_command.append("/Dwith_doxygen")
         iscc_command.append("package.iss")
         call(iscc_command)
         
