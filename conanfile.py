@@ -28,23 +28,23 @@ class VsToolVersion:
         
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.4.3"
-    _cmder_version = "1.3.10"
-    _cmder_version_build = "%s.811" % _cmder_version
+    version = "1.5.0"
+    _cmder_version = "1.3.11"
+    _cmder_version_build = "%s.843" % _cmder_version
     _git_version = "2.20.1"
     _cmake_version = "3.13.2"
     _bazel_version = "0.21.0"
     _winpython3_version = "3.7.1.0"
-    _miniconda3_version = "4.5.11"
-    _conan_version = "1.11.0"
+    _conan_version = "1.11.1"
     _openpyxl_version = "2.5.12"
-    _vscode_version = "1.30.1"
+    _vscode_version = "1.31.1"
     _kdiff_version = "0.9.98"
     _winmerge_version = "2.16.0"
     _gitext_version = "3.00.00"
     _gitext_version_build = "%s.4433" % _gitext_version
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
+    _graphviz_version = "2.38"
     generators = "txt"
     url = "http://github.com/kwallner/Barbarian"
     author = "Karl Wallner <kwallner@mail.de>"
@@ -54,25 +54,22 @@ class BarbarianConan(ConanFile):
     scm = { "type": "git", "url": "auto", "revision": "auto" }
     no_copy_source = True
     short_paths = True
-    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_winmerge": [True, False], "with_gitext": [True, False], "python_flavor": [ "WinPython3", "MiniConda3" ]}
-    default_options = { "with_git": True, "with_cmake" : True, "with_bazel" : True, "with_python" : True, "with_conanio" : True, "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "python_flavor" : "WinPython3" }
+    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_winmerge": [True, False], "with_gitext": [True, False], "with_graphviz": [True, False]}
+    default_options = { "with_git": True, "with_cmake" : True, "with_bazel" : True, "with_python" : True, "with_conanio" : True, "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False }
 
     @property
     def _installertype_set(self):
-        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext:
+        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_graphviz:
             return "full"
-        if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext:
+        if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz:
             return "minimal"
-        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext:
+        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz:
             return "default"
         return "custom"
 
     @property
     def _installertype(self):
-        if self.options.python_flavor == "WinPython3":
-            return self._installertype_set
-        else:
-            return "%s+%s" % (self._installertype_set, self.options.python_flavor)
+        return self._installertype_set
             
     def configure(self):
         if self.options.with_conanio and not self.options.with_python:
@@ -82,12 +79,7 @@ class BarbarianConan(ConanFile):
         self.build_requires("7z_installer/1.0@conan/stable")
         self.build_requires("InnoSetup/5.6.1@kwallner/testing")
         if self.options.with_python:
-            if self.options.python_flavor == "MiniConda3":
-                self.build_requires("iss_patch_dll/0.0.1@kwallner/testing")
-            elif self.options.python_flavor == "WinPython3":
-                self.build_requires("InnoSetupUnpacker/0.47@kwallner/testing")
-            else:
-                raise ConanInvalidConfiguration("Invalid python flavor \"%s\"" % self.options.python_flavor)  
+            self.build_requires("InnoSetupUnpacker/0.47@kwallner/testing")
                 
     def source(self):
         tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self._cmder_version), "cmder_mini.zip")
@@ -99,14 +91,8 @@ class BarbarianConan(ConanFile):
             tools.download("https://github.com/bazelbuild/bazel/releases/download/%s/bazel-%s-windows-x86_64.zip" % (self._bazel_version, self._bazel_version), "bazel-win64.zip")
             tools.download("https://raw.githubusercontent.com/bazelbuild/bazel/master/LICENSE", "bazel-LICENSE.txt")
         if self.options.with_python:
-            if self.options.python_flavor == "MiniConda3":
-                tools.download("https://repo.continuum.io/miniconda/Miniconda3-%s-Windows-x86_64.exe" % (self._miniconda3_version), "miniconda3-win64.exe")
-                tools.download("https://raw.githubusercontent.com/conda/conda/master/LICENSE.txt", "miniconda3-LICENSE.txt")
-            elif self.options.python_flavor == "WinPython3":
-                tools.download("https://github.com/winpython/winpython/releases/download/1.11.20181031/WinPython64-%s.exe" % (self._winpython3_version), "winpython3-win64.exe")
-                tools.download("https://raw.githubusercontent.com/winpython/winpython/master/LICENSE", "winpython3-LICENSE.txt")
-            else:
-                raise ConanInvalidConfiguration("Invalid python flavor \"%s\"" % self.options.python_flavor)
+            tools.download("https://github.com/winpython/winpython/releases/download/1.11.20181031/WinPython64-%s.exe" % (self._winpython3_version), "winpython3-win64.exe")
+            tools.download("https://raw.githubusercontent.com/winpython/winpython/master/LICENSE", "winpython3-LICENSE.txt")
             tools.download("https://raw.githubusercontent.com/python/cpython/master/LICENSE", "cpython-LICENSE.txt")
             tools.download("https://bitbucket.org/openpyxl/openpyxl/raw/1234131eb33fc7191a554afdd092ee368f7b1fc9/LICENCE.rst", "openpyxl-LICENSE.txt")
         if self.options.with_conanio:
@@ -121,6 +107,9 @@ class BarbarianConan(ConanFile):
         if self.options.with_gitext:
             tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version_build), "gitext.exe")
             tools.download("https://raw.githubusercontent.com/gitextensions/gitextensions/master/LICENSE.md", "gitext-LICENSE.txt")
+        if self.options.with_graphviz:
+            tools.download("https://graphviz.gitlab.io/_pages/Download/windows/graphviz-%s.zip" % (self._graphviz_version), "graphviz.zip")
+            tools.download("https://gitlab.com/graphviz/graphviz/raw/master/COPYING", "graphviz-LICENSE.txt")
     
     def _append_to_license_txt(self, name, url, description, license_file):
         os.linesep= '\r\n'
@@ -271,16 +260,10 @@ class BarbarianConan(ConanFile):
 
         # 4. Python
         if self.options.with_python:
-            if self.options.python_flavor == "MiniConda3":
-                call([os.path.join(self.source_folder, "miniconda3-win64.exe"), "/InstallationType=JustMe", "/RegisterPython=0", "/S", "/AddToPath=0", "/D=%s" % (pathlib.PureWindowsPath(self.build_folder, self.name, "vendor", "python-for-windows")) ])
-                shutil.copyfile(os.path.join(self.source_folder, "miniconda3-LICENSE.txt"), os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
-            elif self.options.python_flavor == "WinPython3":
-                call(["innounp", "-q", "-x", os.path.join(self.source_folder, "winpython3-win64.exe")])
-                os.rename("{app}/python-3.7.1.amd64", os.path.join(self.name, "vendor", "python-for-windows"))
-                shutil.rmtree("{app}")
-                shutil.copyfile(os.path.join(self.source_folder, "winpython3-LICENSE.txt"), os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
-            else:
-                raise ConanInvalidConfiguration("Invalid python flavor \"%s\"" % self.options.python_flavor)
+            call(["innounp", "-q", "-x", os.path.join(self.source_folder, "winpython3-win64.exe")])
+            os.rename("{app}/python-3.7.1.amd64", os.path.join(self.name, "vendor", "python-for-windows"))
+            shutil.rmtree("{app}")
+            shutil.copyfile(os.path.join(self.source_folder, "winpython3-LICENSE.txt"), os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: python support\n')
@@ -302,13 +285,8 @@ class BarbarianConan(ConanFile):
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
                 path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", "Scripts")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
-            
-            if self.options.python_flavor == "MiniConda3":
-                self._append_to_license_txt("Miniconda", "https://conda.io/miniconda.html", "Distribution of the Python programming language for Windows", os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
-            elif self.options.python_flavor == "WinPython3":
-                self._append_to_license_txt("WinPython", "http://winpython.github.io/", "Portable distribution of the Python programming language for Windows", os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
+            self._append_to_license_txt("WinPython", "http://winpython.github.io/", "Portable distribution of the Python programming language for Windows", os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
             self._append_to_license_txt("Python", "https://www.python.org/", "Python programming language", os.path.join(self.source_folder, "cpython-LICENSE.txt"))
-
             # Additional python packages
             call(["%s/vendor/python-for-windows/python.exe" % self.name, "-m", "pip", "install", "openpyxl==%s" % self._openpyxl_version, "--no-warn-script-location"])
             self._append_to_license_txt("openpyxl", "https://openpyxl.readthedocs.io/", "Python programming language", os.path.join(self.source_folder, "openpyxl-LICENSE.txt"))
@@ -425,36 +403,29 @@ class BarbarianConan(ConanFile):
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("Git Extensions", "http://gitextensions.github.io/", "Graphical user interface for Git", os.path.join(self.source_folder, "gitext-LICENSE.txt"))
 
-        # 10. Replace pathes
-        if self.options.with_python:
-            if self.options.python_flavor == "MiniConda3":
-                barbarian_dir= os.path.join(self.build_folder, self.name).replace("\\", "/") 
-                barbarian_str= barbarian_dir + "/"
-                replace_str = "X:/__BARBARIAN_REPLACE_THIS_LONG_UNIQUE_PATH__/__AND_FILENAME_BARBARIAN_/"
-                conda_files = re.compile(r"^conda\..*sh$")
-                for root, _, files in os.walk(os.path.join(barbarian_dir, "vendor", "python-for-windows", "etc"), topdown=False):
-                    for name in files:
-                        if conda_files.match(name):
-                            call(["patchispthexe", barbarian_str, replace_str, os.path.join(root,name).replace("\\", "/")])
-                for root, _, files in os.walk(os.path.join(barbarian_dir, "vendor", "python-for-windows", "Lib"), topdown=False):
-                    for name in files:
-                        if conda_files.match(name):
-                            call(["patchispthexe", barbarian_str, replace_str, os.path.join(root,name).replace("\\", "/")])
-                json_files = re.compile(r"^.*\.json$")
-                for root, _, files in os.walk(os.path.join(barbarian_dir, "vendor", "python-for-windows", "conda-meta"), topdown=False):
-                    for name in files:
-                        if json_files.match(name):
-                            call(["patchispthexe", barbarian_str, replace_str, os.path.join(root,name).replace("\\", "/")])
-                for root, _, files in os.walk(os.path.join(barbarian_dir, "vendor", "python-for-windows", "Scripts"), topdown=False):
-                    for name in files:
-                        call(["patchispthexe", barbarian_str, replace_str, os.path.join(root,name).replace("\\", "/")])
-
-        # 11. Installer file: EXE-File
-        if self.options.with_python and self.options.python_flavor == "MiniConda3":
-            shutil.copyfile(os.path.join(self.deps_cpp_info["iss_patch_dll"].rootpath, "bin", "patchistxt.dll"), "patchistxt.dll")
-            shutil.copyfile(os.path.join(self.source_folder, "packaging", "package-with_patching.iss"), "package.iss")
-        else:
-            shutil.copyfile(os.path.join(self.source_folder, "packaging", "package-without_patching.iss"), "package.iss")
+        # 10. Graphviz
+        if self.options.with_graphviz:
+            tools.unzip(os.path.join(self.source_folder, "graphviz.zip"), destination = os.path.join(self.name, "vendor"))
+            os.rename(os.path.join(self.name, "vendor", "release"), os.path.join(self.name, "vendor", "graphviz-for-windows"))
+            # Create install script
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "graphviz-for-windows.cmd"), 'w') as f:
+                f.write(':: Vendor: graphviz support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "graphviz-for-windows", "bin")
+                f.write('set "PATH={0};%PATH%"\n'.format(path))
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "graphviz-for-windows.ps1"), 'w') as f:
+                f.write('# Vendor: graphviz support\n')
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "graphviz-for-windows", "bin")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
+            os.linesep= '\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "graphviz-for-windows.sh"), 'w') as f:
+                f.write('# Vendor: graphviz support\n')
+                path = os.path.join("$CMDER_ROOT", "vendor", "graphviz-for-windows", "bin")
+                f.write('export "PATH={0}:$PATH"\n'.format(path))
+            self._append_to_license_txt("Graphviz", "https://www.graphviz.org/", "Graph Visualization Software", os.path.join(self.source_folder, "graphviz-LICENSE.txt"))
+            
+        shutil.copyfile(os.path.join(self.source_folder, "packaging", "package.iss"), "package.iss")
         tools.replace_in_file("package.iss", '@name@', self.name)
         tools.replace_in_file("package.iss", '@version@', self.version)
         tools.replace_in_file("package.iss", '@author@', self.author)
@@ -480,6 +451,8 @@ class BarbarianConan(ConanFile):
             iscc_command.append("/Dwith_winmerge")
         if self.options.with_gitext:
             iscc_command.append("/Dwith_gitext")
+        if self.options.with_graphviz:
+            iscc_command.append("/Dwith_graphviz")
         iscc_command.append("package.iss")
         call(iscc_command)
         
