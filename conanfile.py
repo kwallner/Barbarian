@@ -439,10 +439,11 @@ class BarbarianConan(ConanFile):
             os.remove(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxygen,2.exe"))
             os.remove(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxyindexer,2.exe"))
             os.remove(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxysearch.cgi,2.exe"))
+            os.remove(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "libclang,2.dll"))
             os.rename(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxygen,1.exe"), os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxygen.exe"))
             os.rename(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxyindexer,1.exe"), os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxyindexer.exe"))
             os.rename(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxysearch.cgi,1.exe"), os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxysearch.cgi.exe"))
-
+            os.rename(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "libclang,1.dll"), os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "libclang.dll"))
             # Create install script
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "doxygen-for-windows.cmd"), 'w') as f:
