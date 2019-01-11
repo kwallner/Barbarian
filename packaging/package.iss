@@ -49,13 +49,18 @@ Name: winmerge;                                 Description: "WinMerge (http://w
 #ifdef with_gitext
 Name: gitext;                                   Description: "GitExtensions (http://gitextensions.github.io): Graphical User Interface for Git";    Types: full
 #endif
+#ifdef with_graphviz
+Name: graphviz;                                 Description: "Graphviz (https://www.graphviz.org): Graph Visualization Software";                    Types: full
+#endif
+#ifdef with_doxygen
+Name: doxygen;                                  Description: "Doxygen (http://www.doxygen.nl/): Generate documentation from source code";           Types: full
+#endif
 
 ; [Tasks]
 ; Name: cmder_vstasks;                            Description: "Create Cmder Tasks for Microsoft Visual Studio"
 ; Name: cmder_vstasks/vs15;                       Description: "Create Cmder Tasks for Microsoft Visual Studio 2015"                         
 
 [Files]
-Source: "patchistxt.dll"; Flags: dontcopy
 Source: "@name@\Cmder.exe";                                DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\LICENSE.txt";                              DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion 
@@ -85,6 +90,12 @@ Source: "@name@\config\profile.d\python-for-windows.*";    DestDir: "{app}\confi
 #endif
 #ifdef with_vscode
 Source: "@name@\config\profile.d\vscode-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: vscode
+#endif
+#ifdef with_graphviz
+Source: "@name@\config\profile.d\graphviz-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: graphviz
+#endif
+#ifdef with_doxygen
+Source: "@name@\config\profile.d\doxygen-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: doxygen
 #endif
 Source: "@name@\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion
@@ -125,6 +136,12 @@ Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendo
 #endif
 #ifdef with_vscode
 Source: "@name@\vendor\vscode-for-windows\*";              DestDir: "{app}\vendor\vscode-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: vscode;    Permissions: users-modify
+#endif
+#ifdef with_graphviz
+Source: "@name@\vendor\graphviz-for-windows\*";            DestDir: "{app}\vendor\graphviz-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: graphviz; 
+#endif
+#ifdef with_doxygen
+Source: "@name@\vendor\doxygen-for-windows\*";             DestDir: "{app}\vendor\doxygen-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: doxygen; 
 #endif
 
 [Run]
@@ -174,72 +191,7 @@ Name: "{group}\WinMerge";             Filename: "{app}\vendor\winmerge-for-windo
 #ifdef with_gitext
 Name: "{group}\GitExtensions";        Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: gitext
 #endif
+#ifdef with_doxygen
+Name: "{group}\DoxygenWizard";        Filename: "{app}\vendor\doxygen-for-windows\bin\doxywizard.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: doxygen
+#endif
 Name: "{group}\Uninstall @name@";     Filename: "{uninstallexe}"
-
-[Code]
-procedure patchispth(replaceFile, findString, replaceString: AnsiString);
-external 'patchispth@files:patchistxt.dll cdecl setuponly';
-
-procedure patchispth_file(file: String);
-begin
-      patchispth(file, 'X:/__BARBARIAN_REPLACE_THIS_LONG_UNIQUE_PATH__/__AND_FILENAME_BARBARIAN_/', ExpandConstant('{app}\'));
-end;
-
-procedure patchispth_dir(dir: String);
-var
-  FindRec: TFindRec;
-begin
-  if FindFirst(dir + '\*', FindRec) then begin
-    try
-      repeat
-        patchispth_file(dir + '\' + FindRec.Name); 
-      until not FindNext(FindRec);
-    finally
-      FindClose(FindRec);
-    end;
-  end;
-end; 
-
-procedure patchispth_ext(dir, ext: String);
-var
-  FindRec: TFindRec;
-begin
-  if FindFirst(dir + '\*', FindRec) then begin
-    try
-      repeat
-        if ExtractFileExt(FindRec.Name) = ext then
-          patchispth_file(dir + '\' + FindRec.Name); 
-      until not FindNext(FindRec);
-    finally
-      FindClose(FindRec);
-    end;
-  end;
-end; 
-
-procedure patchispth_nam(dir, nam: String);
-var        
-  FindRec: TFindRec;
-begin
-  if FindFirst(dir + '\*', FindRec) then begin
-    try
-      repeat
-        if ExtractFileName(FindRec.Name) = nam then
-          patchispth_file(dir + '\' + FindRec.Name); 
-      until not FindNext(FindRec);
-    finally
-      FindClose(FindRec);
-    end;
-  end;
-end; 
-
-procedure CurStepChanged(CurStep: TSetupStep);
-begin
-  if curStep = ssPostInstall then
-  begin
-    patchispth_dir(ExpandConstant('{app}\vendor\python-for-windows\etc\fish\conf.d'));
-    patchispth_dir(ExpandConstant('{app}\vendor\python-for-windows\etc\profile.d'));
-    patchispth_dir(ExpandConstant('{app}\vendor\python-for-windows\Lib\site-packages\xonsh'));
-    patchispth_ext(ExpandConstant('{app}\vendor\python-for-windows\conda-meta'), '.json');
-    patchispth_dir(ExpandConstant('{app}\vendor\python-for-windows\Scripts'));
- end;
-end;

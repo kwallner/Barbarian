@@ -39,22 +39,15 @@ The options used are:
     * with_vscode (default False)
     * with_kdiff3 (default False)
     * with_gitext (default False)
+    * with_graphviz (default False)
+    * with_doxygen (default False)
 
 To build with VSCode and KDiff3 and GitExtensions
 ```
-# conan create . user/channel -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True
+# conan create . user/channel -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True
 ```
 
 To build a minimal version
 ```
 conan create . user/channel -o with_cmake=False -o with_bazel=False -o with_python=False -o with_conanio=False
-```
-
-### Python Flavour
-
-Barbarian can be configured to use [Miniconda3](https://winpython.github.io) instead of [WinPython3](https://conda.io/miniconda.html)
-
-To build with MiniConda3 instead of WinPython3
-```
-# conan create . user/channel -o python_flavor=MiniConda3
 ```
