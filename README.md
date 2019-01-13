@@ -16,7 +16,13 @@ Barbarian also contains:
 * [WinMerge](http://winmerge.org): Diff and Merge Tool
 * [GitExtension](http://gitextensions.github.io): Graphical User Interface for Git
 * [Graphviz](https://www.graphviz.org): Graph Visualization Software
-* [Doxygen](http://www.doxygen.nl/): Generate documentation from source code
+* [Doxygen](http://www.doxygen.nl): Generate documentation from source code
+* [MiKTeX](https://miktex.org): MiKTeX is an implementation of TeX and related programs
+
+Barbarian Logo is based on:
+* [Barba Rossa](https://openclipart.org/detail/299925/barba-rossa): 
+** Created by [AdamStanislav](https://openclipart.org/user-detail/AdamStanislav)
+** Licensed according to [Openclipart License](https://openclipart.org/share)
 
 *Barbarian brings all you need to start with conan.io, cmake and git contained in a single installation package.*
 

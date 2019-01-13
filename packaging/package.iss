@@ -16,6 +16,8 @@ AllowNetworkDrive=no
 CloseApplications=yes
 OutputDir=.
 OutputBaseFilename=@output_base_name@
+UninstallDisplayIcon={app}\Barbarian.ico
+SetupIconFile=@name@\Barbarian.ico
 
 [Messages]
 WelcomeLabel1=Barbarian - A Software Development Environment for Conan.io
@@ -53,18 +55,19 @@ Name: gitext;                                   Description: "GitExtensions (htt
 Name: graphviz;                                 Description: "Graphviz (https://www.graphviz.org): Graph Visualization Software";                    Types: full
 #endif
 #ifdef with_doxygen
-Name: doxygen;                                  Description: "Doxygen (http://www.doxygen.nl/): Generate documentation from source code";           Types: full
+Name: doxygen;                                  Description: "Doxygen (http://www.doxygen.nl): Generate documentation from source code";           Types: full
 #endif
-
-; [Tasks]
-; Name: cmder_vstasks;                            Description: "Create Cmder Tasks for Microsoft Visual Studio"
-; Name: cmder_vstasks/vs15;                       Description: "Create Cmder Tasks for Microsoft Visual Studio 2015"                         
+#ifdef with_miktex
+Name: miktex;                                  Description: "MiKTeX (https://miktex.org): MiKTeX is an implementation of TeX and related programs";           Types: full
+#endif
 
 [Files]
 Source: "@name@\Cmder.exe";                                DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\LICENSE.txt";                              DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion 
 Source: "@name@\README.md";                                DestDir: "{app}";                                           Flags: ignoreversion
+Source: "@name@\Barbarian.ico";                            DestDir: "{app}";                                           Flags: ignoreversion
+Source: "@name@\Barbarian.png";                            DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\bin\*";                                    DestDir: "{app}\bin";                                       Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\config\*.*";                               DestDir: "{app}\config";                                    Flags: ignoreversion;    Permissions: users-modify
 #ifdef with_git
@@ -97,6 +100,9 @@ Source: "@name@\config\profile.d\graphviz-for-windows.*";    DestDir: "{app}\con
 #ifdef with_doxygen
 Source: "@name@\config\profile.d\doxygen-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: doxygen
 #endif
+#ifdef with_miktex
+Source: "@name@\config\profile.d\miktex-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: miktex
+#endif
 Source: "@name@\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion
 Source: "@name@\vendor\bin\*";                             DestDir: "{app}\vendor\bin";                                Flags: recursesubdirs createallsubdirs ignoreversion;
@@ -122,7 +128,7 @@ Source: "@name@\vendor\gitext-for-windows\*";              DestDir: "{app}\vendo
 Source: "@name@\vendor\kdiff3-for-windows\*";              DestDir: "{app}\vendor\kdiff3-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: kdiff3
 #endif
 #ifdef with_winmerge
-Source: "@name@\vendor\winmerge-for-windows\*";            DestDir: "{app}\vendor\winmerge-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: kdiff3
+Source: "@name@\vendor\winmerge-for-windows\*";            DestDir: "{app}\vendor\winmerge-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: winmerge
 #endif
 #ifdef with_python
 #ifdef with_conanio
@@ -131,7 +137,7 @@ Source: "@name@\vendor\python-for-windows\Scripts\conan*"; DestDir: "{app}\vendo
 Source: "@name@\vendor\python-for-windows\Lib\site-packages\conan-@conan_version@.dist-info\*"; DestDir: "{app}\vendor\python-for-windows\Lib\site-packages\conan-@conan_version@.dist-info";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;
 Source: "@name@\vendor\python-for-windows\Lib\site-packages\conans\*"; DestDir: "{app}\vendor\python-for-windows\Lib\site-packages\conans";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;    Excludes: "__pycache__"
 #else
-Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;                           Permissions: users-modify;    Excludes: "__pycache__"
+Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;    Permissions: users-modify;    Excludes: "__pycache__"
 #endif
 #endif
 #ifdef with_vscode
@@ -142,6 +148,9 @@ Source: "@name@\vendor\graphviz-for-windows\*";            DestDir: "{app}\vendo
 #endif
 #ifdef with_doxygen
 Source: "@name@\vendor\doxygen-for-windows\*";             DestDir: "{app}\vendor\doxygen-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: doxygen; 
+#endif      
+#ifdef with_miktex
+Source: "@name@\vendor\miktex-for-windows\*";             DestDir: "{app}\vendor\miktex-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion onlyifdoesntexist;    Components: miktex; Permissions: users-modify
 #endif
 
 [Run]
@@ -150,6 +159,9 @@ Filename: "{app}\LICENSE.txt"; Description: "View the LICENSE file"; Flags: post
 #ifdef with_gitext
 Filename: "{sys}\regsvr32.exe"; Parameters: "/s /u GitExtensionsShellEx64.dll"; WorkingDir: "{app}\vendor\gitext-for-windows"; Flags: runhidden;  Components: gitext
 Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Description: "Start GitExtensions"; Flags: postinstall skipifsilent unchecked;  Components: gitext
+#endif
+#ifdef with_miktex
+Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\miktex-console.exe"; WorkingDir: "{app}\vendor\miktex-for-windows\texmfs";  Description: "Start MiKTeX Console"; Flags: postinstall skipifsilent unchecked;  Components: miktex
 #endif
 
 [Dirs]
@@ -160,6 +172,9 @@ Name: "{app}\vendor\python-for-windows";       Permissions: users-modify;    Com
 #endif
 #ifdef with_vscode
 Name: "{app}\vendor\vscode-for-windows";       Permissions: users-modify;    Components: vscode
+#endif
+#ifdef with_miktex
+Name: "{app}\vendor\miktex-for-windows";       Permissions: users-modify;    Components: miktex
 #endif
 
 [UninstallRun] 
@@ -194,4 +209,17 @@ Name: "{group}\GitExtensions";        Filename: "{app}\vendor\gitext-for-windows
 #ifdef with_doxygen
 Name: "{group}\DoxygenWizard";        Filename: "{app}\vendor\doxygen-for-windows\bin\doxywizard.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: doxygen
 #endif
-Name: "{group}\Uninstall @name@";     Filename: "{uninstallexe}"
+#ifdef with_miktex
+Name: "{group}\MiKTeX\MikTeX Console";                              Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\miktex-console.exe";  Parameters: ""; WorkingDir: "{app}\vendor\miktex-for-windows\texmfs";    Components: miktex
+Name: "{group}\MiKTeX\DVI Previewer";                               Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\yap.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: miktex
+Name: "{group}\MiKTeX\TeXworks";                                    Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\miktex-texworks.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: miktex
+Name: "{group}\MiKTeX\Help\MiKTeX Manual";                          Filename: "{app}\vendor\miktex-for-windows\texmfs\install\doc\miktex\miktex.chm";  Parameters: ""; WorkingDir: "app}\vendor\miktex-for-windows\texmfs";    Components: miktex
+Name: "{group}\MiKTeX\Maintenance\MiKTeX Package Manager";          Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\miktex-console.exe";  Parameters: "--start-page packages"; WorkingDir: "app}\vendor\miktex-for-windows\texmfs";    Components: miktex
+Name: "{group}\MiKTeX\Maintenance\MiKTeX Settings";                 Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\miktex-console.exe";  Parameters: "--start-page settings"; WorkingDir: "app}\vendor\miktex-for-windows\texmfs";    Components: miktex
+Name: "{group}\MiKTeX\Maintenance\MiKTeX Update";                   Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\miktex-console.exe";  Parameters: "--start-page updates"; WorkingDir: "app}\vendor\miktex-for-windows\texmfs";    Components: miktex
+Name: "{group}\MiKTeX\MiKTeX on the Web\Give back";                 Filename: "https://miktex.org/giveback"; Components: miktex
+Name: "{group}\MiKTeX\MiKTeX on the Web\Known Issues";              Filename: "https://miktex.org/2.9/issues"; Components: miktex
+Name: "{group}\MiKTeX\MiKTeX on the Web\MiKTeX Project Page";       Filename: "https://miktex.org/"; Components: miktex
+Name: "{group}\MiKTeX\MiKTeX on the Web\MiKTeX Support";            Filename: "https://miktex.org/support"; Components: miktex
+#endif
+Name: "{group}\Uninstall @name@";     Filename: "{uninstallexe}"; IconFilename: "{app}\Barbarian.ico"

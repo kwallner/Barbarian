@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 10000 10000"
+   version="1.1"
+   id="svg885"
+   sodipodi:docname="Barbarian.svg"
+   width="10000"
+   height="10000"
+   style="fill-rule:evenodd"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   inkscape:export-filename="D:\buildspace\Barbarian\documentation\logo\Barbarian32.png"
+   inkscape:export-xdpi="0.30720001"
+   inkscape:export-ydpi="0.30720001">
+  <metadata
+     id="metadata891">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs889" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1177"
+     id="namedview887"
+     showgrid="false"
+     fit-margin-top="80"
+     fit-margin-left="65"
+     fit-margin-right="65"
+     fit-margin-bottom="80"
+     inkscape:zoom="0.0236"
+     inkscape:cx="877.97242"
+     inkscape:cy="8573.977"
+     inkscape:window-x="1072"
+     inkscape:window-y="263"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg885" />
+  <g
+     id="BarbaraRossa"
+     transform="translate(-175.27782,-80.709746)">
+    <title
+       id="title864">Barba Rossa, by Adam Stanislav</title>
+    <desc
+       id="desc866">
+			Try rotating the entire image by 180°.
+		</desc>
+    <path
+       id="Head"
+       d="m 1499.97,3713.2 c -63.071,-215.311 -96.703,-441.59 -96.703,-675 0,-1437.44 1275.58,-2604.46 2846.73,-2604.46 1571.16,0 2846.73,1167.02 2846.73,2604.46 0,233.41 -33.632,459.689 -96.703,675 63.071,215.311 96.703,441.591 96.703,675 0,1437.44 -1275.58,2604.46 -2846.73,2604.46 -1571.16,0 -2846.73,-1167.02 -2846.73,-2604.46 0,-233.409 33.632,-459.689 96.703,-675 z"
+       inkscape:connector-curvature="0"
+       style="fill:#ff9567" />
+    <g
+       id="Eyes">
+      <g
+         id="Eye">
+        <path
+           d="m 1882.66,2924.88 c 121.593,-146.964 383.472,-248.735 686.621,-248.735 303.149,0 565.028,101.771 686.622,248.735 -121.594,146.963 -383.473,248.734 -686.622,248.734 -303.149,0 -565.028,-101.771 -686.621,-248.734 z"
+           id="path869"
+           inkscape:connector-curvature="0"
+           style="fill:#f5d2c4" />
+        <clipPath
+           id="EyeClip">
+          <path
+             d="m 1882.66,2924.88 c 121.593,-146.964 383.472,-248.735 686.621,-248.735 303.149,0 565.028,101.771 686.622,248.735 -121.594,146.963 -383.473,248.734 -686.622,248.734 -303.149,0 -565.028,-101.771 -686.621,-248.734 z"
+             id="path871"
+             inkscape:connector-curvature="0" />
+        </clipPath>
+        <g
+           clip-path="url(#EyeClip)"
+           id="g876">
+          <path
+             d="m 2569.28,2655.54 c 142.966,0 259.036,116.07 259.036,259.036 0,142.966 -116.07,259.036 -259.036,259.036 -142.966,0 -259.036,-116.07 -259.036,-259.036 0,-142.966 116.07,-259.036 259.036,-259.036 z m 0,173.554 c 47.179,0 85.482,38.304 85.482,85.482 0,47.179 -38.303,85.482 -85.482,85.482 -47.179,0 -85.482,-38.303 -85.482,-85.482 0,-47.178 38.303,-85.482 85.482,-85.482 z"
+             id="path874"
+             inkscape:connector-curvature="0"
+             style="fill:#4a0b14" />
+        </g>
+      </g>
+      <use
+         xlink:href="#Eye"
+         transform="translate(3260)"
+         id="use879"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%" />
+    </g>
+    <path
+       id="Barba"
+       d="m 4004.23,4711.52 c 58.17,77.122 149.168,122.467 245.769,122.467 96.601,0 187.599,-45.345 245.769,-122.467 134.64,-178.507 306.719,-406.651 469.028,-621.842 362.664,-480.823 1017.69,-632.784 1555.01,-360.751 167.407,84.673 327.613,184.343 478.546,298.185 1397.54,1054.1 1676.37,3044.53 622.264,4442.07 -804.666,1066.83 -2154.95,1481.76 -3370.61,1149.5 -1215.66,332.265 -2565.95,-82.666 -3370.61,-1149.5 -1054.1,-1397.54 -775.277,-3387.97 622.264,-4442.07 150.933,-113.842 311.139,-213.512 478.551,-298.175 537.317,-272.03 1192.33,-120.071 1554.99,360.748 162.318,215.184 334.397,443.328 469.037,621.835 z m 2324.08,1266.43 h -956.024 c 0,159.897 -502.467,289.518 -1122.29,289.518 -619.823,0 -1122.29,-129.622 -1122.29,-289.518 h -956.024 c 0,296.104 930.492,536.144 2078.31,536.144 1147.82,0 2078.31,-240.039 2078.31,-536.144 z M 4084.47,4885.71 c -10e-4,155.439 -126.008,281.446 -281.446,281.446 -155.334,0 -281.446,-126.112 -281.446,-281.446 0,-155.438 126.008,-281.446 281.446,-281.446 v -104.096 c -212.929,0 -385.542,172.613 -385.542,385.542 0,212.786 172.756,385.542 385.542,385.542 212.929,0 385.541,-172.612 385.542,-385.542 z m 618.554,-385.542 c 212.929,0 385.542,172.613 385.542,385.542 0,212.786 -172.755,385.542 -385.542,385.542 -212.929,0 -385.542,-172.613 -385.542,-385.542 h 104.096 c 0,155.438 126.008,281.446 281.446,281.446 155.334,0 281.446,-126.112 281.446,-281.446 0,-155.438 -126.008,-281.446 -281.446,-281.446 z M 3820,4767.107 c 69.821,0 126.506,56.686 126.506,126.506 0,69.821 -56.685,126.506 -126.506,126.506 -69.821,0 -126.506,-56.685 -126.506,-126.506 0,-69.82 56.685,-126.506 126.506,-126.506 z m 860,0 c 69.821,0 126.506,56.686 126.506,126.506 0,69.821 -56.685,126.506 -126.506,126.506 -69.821,0 -126.506,-56.685 -126.506,-126.506 0,-69.82 56.685,-126.506 126.506,-126.506 z"
+       inkscape:connector-curvature="0"
+       style="fill:#f2442b" />
+    <path
+       id="Wrinkles"
+       d="m 5611.45,1891.57 c 0,-309.205 -572.253,-560.241 -1277.11,-560.241 -704.855,0 -1277.11,251.036 -1277.11,560.241 297.992,-92.761 767.66,-168.072 1277.11,-168.072 509.449,0 979.117,75.311 1277.11,168.072 z"
+       inkscape:connector-curvature="0"
+       style="fill:#ff6638" />
+  </g>
+  <flowRoot
+     xml:space="preserve"
+     id="flowRoot893"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     transform="translate(-175.27782,-80.709746)"><flowRegion
+       id="flowRegion895"><rect
+         id="rect897"
+         width="14194.915"
+         height="7161.0171"
+         x="15932.203"
+         y="4745.7627" /></flowRegion><flowPara
+       id="flowPara899" /></flowRoot>  <flowRoot
+     xml:space="preserve"
+     id="flowRoot901"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:semi-expanded;font-size:42.66666794px;line-height:25px;font-family:'Goudy Old Style';-inkscape-font-specification:'Goudy Old Style, Semi-Expanded';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     transform="translate(-175.27782,-80.709746)"><flowRegion
+       id="flowRegion903"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:semi-expanded;font-size:42.66666794px;font-family:'Goudy Old Style';-inkscape-font-specification:'Goudy Old Style, Semi-Expanded';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start"><rect
+         id="rect905"
+         width="12330.509"
+         height="6271.1865"
+         x="13983.051"
+         y="9533.8984"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:semi-expanded;font-size:42.66666794px;font-family:'Goudy Old Style';-inkscape-font-specification:'Goudy Old Style, Semi-Expanded';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start" /></flowRegion><flowPara
+       id="flowPara909">Barbarian</flowPara></flowRoot>  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="14655.23"
+     y="5173.5283"
+     id="text913"><tspan
+       sodipodi:role="line"
+       id="tspan911"
+       x="14655.23"
+       y="5173.5283">B</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2357.85400391px;line-height:614.02453613px;font-family:'Century Gothic';-inkscape-font-specification:'Century Gothic, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:24.56097794px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="-11036.472"
+     y="9052.8652"
+     id="text917"
+     transform="matrix(0,-0.9148714,1.0930498,0,0,0)"><tspan
+       sodipodi:role="line"
+       id="tspan915"
+       x="-11036.472"
+       y="9052.8652"
+       style="stroke-width:24.56097794px">Barbarian</tspan></text>
+</svg>
