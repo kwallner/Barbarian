@@ -16,6 +16,8 @@ AllowNetworkDrive=no
 CloseApplications=yes
 OutputDir=.
 OutputBaseFilename=@output_base_name@
+UninstallDisplayIcon={app}\Barbarian.ico
+SetupIconFile=@name@\Barbarian.ico
 
 [Messages]
 WelcomeLabel1=Barbarian - A Software Development Environment for Conan.io
@@ -64,6 +66,8 @@ Source: "@name@\Cmder.exe";                                DestDir: "{app}";    
 Source: "@name@\LICENSE.txt";                              DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion 
 Source: "@name@\README.md";                                DestDir: "{app}";                                           Flags: ignoreversion
+Source: "@name@\Barbarian.ico";                            DestDir: "{app}";                                           Flags: ignoreversion
+Source: "@name@\Barbarian.png";                            DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\bin\*";                                    DestDir: "{app}\bin";                                       Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\config\*.*";                               DestDir: "{app}\config";                                    Flags: ignoreversion;    Permissions: users-modify
 #ifdef with_git
@@ -133,7 +137,7 @@ Source: "@name@\vendor\python-for-windows\Scripts\conan*"; DestDir: "{app}\vendo
 Source: "@name@\vendor\python-for-windows\Lib\site-packages\conan-@conan_version@.dist-info\*"; DestDir: "{app}\vendor\python-for-windows\Lib\site-packages\conan-@conan_version@.dist-info";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;
 Source: "@name@\vendor\python-for-windows\Lib\site-packages\conans\*"; DestDir: "{app}\vendor\python-for-windows\Lib\site-packages\conans";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;    Excludes: "__pycache__"
 #else
-Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;                           Permissions: users-modify;    Excludes: "__pycache__"
+Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;    Permissions: users-modify;    Excludes: "__pycache__"
 #endif
 #endif
 #ifdef with_vscode
@@ -146,7 +150,7 @@ Source: "@name@\vendor\graphviz-for-windows\*";            DestDir: "{app}\vendo
 Source: "@name@\vendor\doxygen-for-windows\*";             DestDir: "{app}\vendor\doxygen-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: doxygen; 
 #endif      
 #ifdef with_miktex
-Source: "@name@\vendor\miktex-for-windows\*";             DestDir: "{app}\vendor\miktex-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion;    Components: miktex; 
+Source: "@name@\vendor\miktex-for-windows\*";             DestDir: "{app}\vendor\miktex-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion onlyifdoesntexist;    Components: miktex; Permissions: users-modify
 #endif
 
 [Run]
@@ -218,4 +222,4 @@ Name: "{group}\MiKTeX\MiKTeX on the Web\Known Issues";              Filename: "h
 Name: "{group}\MiKTeX\MiKTeX on the Web\MiKTeX Project Page";       Filename: "https://miktex.org/"; Components: miktex
 Name: "{group}\MiKTeX\MiKTeX on the Web\MiKTeX Support";            Filename: "https://miktex.org/support"; Components: miktex
 #endif
-Name: "{group}\Uninstall @name@";     Filename: "{uninstallexe}"
+Name: "{group}\Uninstall @name@";     Filename: "{uninstallexe}"; IconFilename: "{app}\Barbarian.ico"
