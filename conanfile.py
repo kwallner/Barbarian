@@ -26,7 +26,7 @@ class VsToolVersion:
         
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.5.0"
+    version = "1.5.1"
     _cmder_version = "1.3.11"
     _cmder_version_build = "%s.843" % _cmder_version
     _git_version = "2.20.1"
@@ -444,6 +444,12 @@ class BarbarianConan(ConanFile):
             os.rename(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxyindexer,1.exe"), os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxyindexer.exe"))
             os.rename(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxysearch.cgi,1.exe"), os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "doxysearch.cgi.exe"))
             os.rename(os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "libclang,1.dll"), os.path.join(self.name, "vendor", "doxygen-for-windows", "bin", "libclang.dll"))
+            # Create ghostscript hack script (Doxygen hardcoded gswin32c for latex. MikTex uses mgs.exe)
+            # FIXME: Need a better solution here !!!
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name,  "vendor", "doxygen-for-windows", "bin", "gswin32c.cmd"), 'w') as f:
+                f.write('@ECHO OFF\n')
+                f.write('mgs.exe %*\n')
             # Create install script
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "doxygen-for-windows.cmd"), 'w') as f:
