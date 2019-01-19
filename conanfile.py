@@ -26,12 +26,12 @@ class VsToolVersion:
         
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.6.0"
+    version = "1.6.1"
     _cmder_version = "1.3.11"
     _cmder_version_build = "%s.843" % _cmder_version
     _git_version = "2.20.1"
-    _cmake_version = "3.13.2"
-    _bazel_version = "0.21.0"
+    _cmake_version = "3.13.3"
+    _bazel_version = "0.22.0"
     _winpython3_version = "3.7.1.0"
     _conan_version = "1.11.2"
     _openpyxl_version = "2.5.12"
