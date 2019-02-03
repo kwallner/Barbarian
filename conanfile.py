@@ -26,7 +26,7 @@ class VsToolVersion:
         
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.6.1"
+    version = "1.7.0"
     _cmder_version = "1.3.11"
     _cmder_version_build = "%s.843" % _cmder_version
     _git_version = "2.20.1"
@@ -43,6 +43,7 @@ class BarbarianConan(ConanFile):
     _graphviz_version = "2.38"
     _doxygen_version = "1.8.15"
     _miktex_version = "2.9.6942"
+    _ninja_version = "1.9.0"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
     generators = "txt"
@@ -54,16 +55,16 @@ class BarbarianConan(ConanFile):
     scm = { "type": "git", "url": "auto", "revision": "auto" }
     no_copy_source = True
     short_paths = True
-    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio": [True, False], "with_vscode": [True, False], "with_kdiff3": [True, False], "with_winmerge": [True, False], "with_gitext": [True, False], "with_graphviz": [True, False], "with_doxygen": [True, False], "with_miktex": [True, False]}
-    default_options = {"with_git": True, "with_cmake" : True, "with_bazel" : True, "with_python" : True, "with_conanio" : True, "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False, "with_doxygen" : False, "with_miktex": False}
+    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio" : [True, False], "with_vscode" : [True, False], "with_kdiff3" : [True, False], "with_winmerge" : [True, False], "with_gitext" : [True, False], "with_graphviz" : [True, False], "with_doxygen" : [True, False], "with_miktex" : [True, False], "with_ninja" : [True, False]}
+    default_options = {"with_git": True, "with_cmake" : True, "with_bazel" : False, "with_python" : True, "with_conanio" : True, "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False, "with_doxygen" : False, "with_miktex" : False, "with_ninja" : False}
 
     @property
     def _installertype_set(self):
-        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_graphviz and self.options.with_doxygen and self.options.with_miktex:
+        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_graphviz and self.options.with_doxygen and self.options.with_miktex and self.options.with_ninja:
             return "full"
-        if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex:
+        if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex and not self.options.with_ninja:
             return "minimal"
-        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex:
+        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex and not self.options.with_ninja:
             return "default"
         return "custom"
 
@@ -116,6 +117,9 @@ class BarbarianConan(ConanFile):
         if self.options.with_miktex:
             tools.download("http://ftp.fau.de/ctan/systems/win32/miktex/setup/windows-x86/miktex-portable-%s.exe" % (self._miktex_version), "miktex-win64.exe")
             tools.download("https://raw.githubusercontent.com/MiKTeX/miktex/master/COPYING.md", "miktex-LICENSE.txt")
+        if self.options.with_ninja:
+            tools.download("https://github.com/ninja-build/ninja/releases/download/v%s/ninja-win.zip" % (self._ninja_version), "ninja-win.zip")
+            tools.download("https://raw.githubusercontent.com/ninja-build/ninja/master/COPYING", "ninja-LICENSE.txt")
     
     def _append_to_license_txt(self, name, url, description, license_file):
         os.linesep= '\r\n'
@@ -500,7 +504,30 @@ class BarbarianConan(ConanFile):
                 path = os.path.join("$CMDER_ROOT", "vendor", "miktex-for-windows", "texmfs", "install", "miktex", "bin")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("MiKTex", "https://miktex.org/", "MiKTeX is an implementation of TeX and related programs", os.path.join(self.source_folder, "miktex-LICENSE.txt"))
-          
+
+        # 13. Ninja
+        if self.options.with_ninja:
+            tools.unzip(os.path.join(self.source_folder, "ninja-win.zip"))
+            tools.mkdir(os.path.join(self.build_folder, self.name, "vendor", "ninja-for-windows"))
+            os.rename("ninja.exe", os.path.join(self.name, "vendor", "ninja-for-windows", "ninja.exe"))
+            # Create install script
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "ninja-for-windows.cmd"), 'w') as f:
+                f.write(':: Vendor: ninja support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "ninja-for-windows")
+                f.write('set "PATH={0};%PATH%"\n'.format(path))
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "ninja-for-windows.ps1"), 'w') as f:
+                f.write('# Vendor: ninja support\n')
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "ninja-for-windows")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
+            os.linesep= '\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "ninja-for-windows.sh"), 'w') as f:
+                f.write('# Vendor: ninja support\n')
+                path = os.path.join("$CMDER_ROOT", "vendor", "ninja-for-windows")
+                f.write('export "PATH={0}:$PATH"\n'.format(path))
+            self._append_to_license_txt("Ninja Build", "https://ninja-build.org/", "Small build system with a focus on speed", os.path.join(self.source_folder, "ninja-LICENSE.txt"))
+            
         # Final. Pack everything
         shutil.copyfile(os.path.join(self.source_folder, "packaging", "package.iss"), "package.iss")
         tools.replace_in_file("package.iss", '@name@', self.name)
@@ -534,6 +561,8 @@ class BarbarianConan(ConanFile):
             iscc_command.append("/Dwith_doxygen")
         if self.options.with_miktex:
             iscc_command.append("/Dwith_miktex")
+        if self.options.with_ninja:
+            iscc_command.append("/Dwith_ninja")
         iscc_command.append("package.iss")
         call(iscc_command)
         

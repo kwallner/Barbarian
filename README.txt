@@ -18,6 +18,7 @@ Barbarian also contains:
 * [Graphviz](https://www.graphviz.org): Graph Visualization Software
 * [Doxygen](http://www.doxygen.nl): Generate documentation from source code
 * [MiKTeX](https://miktex.org): MiKTeX is an implementation of TeX and related programs
+* [Ninja](https://ninja-build.org): Ninja is a small build system with a focus on speed
 
 Barbarian Logo is based on:
 * [Barba Rossa](https://openclipart.org/detail/299925/barba-rossa): 
