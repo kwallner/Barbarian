@@ -33,7 +33,7 @@ You can include and exclude packages. Default is a full build containing all pac
 The options used are:
     * with_git (default True)
     * with_cmake (default True)
-    * with_bazel (default True)
+    * with_bazel (default False)
     * with_python (default True)
     * with_conanio (default True)
     * with_vscode (default False)
@@ -42,13 +42,14 @@ The options used are:
     * with_graphviz (default False)
     * with_doxygen (default False)
     * with_miktex (default False)
+    * with_ninja (default False)
 
 To build with VSCode and KDiff3 and GitExtensions
 ```
-# conan create . user/channel -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True -o with_miktex=True
+# conan create . user/channel -o with_bazel=True -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True -o with_miktex=True -o with_ninja=True
 ```
 
 To build a minimal version
 ```
-conan create . user/channel -o with_cmake=False -o with_bazel=False -o with_python=False -o with_conanio=False
+conan create . user/channel -o with_cmake=False -o with_python=False -o with_conanio=False
 ```

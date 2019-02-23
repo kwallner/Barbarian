@@ -58,7 +58,10 @@ Name: graphviz;                                 Description: "Graphviz (https://
 Name: doxygen;                                  Description: "Doxygen (http://www.doxygen.nl): Generate documentation from source code";           Types: full
 #endif
 #ifdef with_miktex
-Name: miktex;                                  Description: "MiKTeX (https://miktex.org): MiKTeX is an implementation of TeX and related programs";           Types: full
+Name: miktex;                                   Description: "MiKTeX (https://miktex.org): MiKTeX is an implementation of TeX and related programs";           Types: full
+#endif
+#ifdef with_ninja
+Name: ninja;                                   Description: "Ninja (https://ninja-build.org): Ninja is a small build system with a focus on speed";           Types: full
 #endif
 
 [Files]
@@ -102,6 +105,9 @@ Source: "@name@\config\profile.d\doxygen-for-windows.*";    DestDir: "{app}\conf
 #endif
 #ifdef with_miktex
 Source: "@name@\config\profile.d\miktex-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: miktex
+#endif
+#ifdef with_ninja
+Source: "@name@\config\profile.d\ninja-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: ninja
 #endif
 Source: "@name@\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion
@@ -151,6 +157,9 @@ Source: "@name@\vendor\doxygen-for-windows\*";             DestDir: "{app}\vendo
 #endif      
 #ifdef with_miktex
 Source: "@name@\vendor\miktex-for-windows\*";             DestDir: "{app}\vendor\miktex-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion onlyifdoesntexist;    Components: miktex; Permissions: users-modify
+#endif
+#ifdef with_ninja
+Source: "@name@\vendor\ninja-for-windows\*";             DestDir: "{app}\vendor\ninja-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion;    Components: ninja; Permissions: users-modify
 #endif
 
 [Run]
