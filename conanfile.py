@@ -32,7 +32,7 @@ class BarbarianConan(ConanFile):
     _git_version = "2.20.1"
     _cmake_version = "3.13.4"
     _bazel_version = "0.22.0"
-    _winpython3_version = "3.7.2.0"
+    _winpython3_version = "3.7.1.0"
     _conan_version = "1.12.3"
     _openpyxl_version = "2.6.0"
     _vscode_version = "1.31.1"
