@@ -64,7 +64,7 @@ class BarbarianConan(ConanFile):
             return "full"
         if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex and not self.options.with_ninja:
             return "minimal"
-        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex and not self.options.with_ninja:
+        if self.options.with_git and self.options.with_cmake and not self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex and not self.options.with_ninja:
             return "default"
         return "custom"
 
