@@ -175,7 +175,7 @@ Source: "@name@\vendor\npp-for-windows\*";             DestDir: "{app}\vendor\np
 Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent unchecked
 Filename: "{app}\LICENSE.txt"; Description: "View the LICENSE file"; Flags: postinstall shellexec skipifsilent unchecked
 #ifdef with_python
-Filename: "{app}\vendor\python-for-windows\WinPython Command Prompt.exe"; WorkingDir: "{app}\vendor\python-for-windows";  Description: "Start WinPython Control Panel"; Flags: postinstall skipifsilent unchecked;  Components: python
+Filename: "{app}\vendor\python-for-windows\WinPython Control Panel.exe"; WorkingDir: "{app}\vendor\python-for-windows";  Description: "Start WinPython Control Panel"; Flags: postinstall skipifsilent unchecked;  Components: python
 #endif
 #ifdef with_gitext
 Filename: "{sys}\regsvr32.exe"; Parameters: "/s /u GitExtensionsShellEx64.dll"; WorkingDir: "{app}\vendor\gitext-for-windows"; Flags: runhidden;  Components: gitext
