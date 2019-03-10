@@ -12,7 +12,7 @@ class VsToolVersion:
         self.modified = modified
         self.build = build
         self.Name = Name
-        self.GuiArgs = " /icon \"%" + CommonToolsEnv + "%\\..\\IDE\\devenv.exe\""
+        self.GuiArgs = "/icon \"%" + CommonToolsEnv + "%..\\IDE\\devenv.exe\""
         extra_call = ""
         extra_path= ""
         if CommonToolsEnv == "VS150COMNTOOLS":
@@ -21,12 +21,12 @@ class VsToolVersion:
         elif CommonToolsEnv == "VS160COMNTOOLS":
             extra_call = "call \"%ConEmuDir%\\..\\barbarian-extra\\vswhere_find_vs2019.bat\" &amp; "
             extra_path = "Auxiliary\\Build\\"
-        self.Cmd1 = extra_call + "call \"%" + CommonToolsEnv + "%..\\..\\VC\\" + extra_path + "vcvarsall.bat\" " + Architecture + " &amp; cmd /k \"\"%ConEmuDir%\\..\\init.bat\"\"" 
+        self.Cmd1 = extra_call + "call \"%" + CommonToolsEnv + "%..\\..\\VC\\" + extra_path + "vcvarsall.bat\" " + Architecture + " &amp; cmd /k \"\"%ConEmuDir%\\..\\init.bat\"\""
         self.Count = "1"
         self.Hotkey = "0"
         self.Flags = "0"
         self.Active = "1"
-        
+
 class BarbarianConan(ConanFile):
     name = "Barbarian"
     version = "1.8.0"
@@ -77,7 +77,7 @@ class BarbarianConan(ConanFile):
     @property
     def _installertype(self):
         return self._installertype_set
-            
+
     def configure(self):
         if self.options.with_conanio and not self.options.with_python:
             raise ConanInvalidConfiguration("Invalid configuration: Python is required when using Conan.io")
@@ -87,7 +87,7 @@ class BarbarianConan(ConanFile):
         self.build_requires("InnoSetup/5.6.1@kwallner/testing")
         if self.options.with_python:
             self.build_requires("InnoSetupUnpacker/0.48@kwallner/testing")
-                
+
     def source(self):
         tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self._cmder_version), "cmder_mini.zip")
         if self.options.with_git:
@@ -129,7 +129,7 @@ class BarbarianConan(ConanFile):
         if self.options.with_npp:
             tools.download("https://notepad-plus-plus.org/repository/7.x/%s/npp.%s.bin.x64.zip" % (self._npp_version, self._npp_version), "npp-win64.zip")
             tools.download("https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/master/LICENSE", "npp-LICENSE.txt")
-    
+
     def _append_to_license_txt(self, name, url, description, license_file):
         os.linesep= '\r\n'
         with open(os.path.join(self.build_folder, self.name, "LICENSE.txt"), "a", encoding="utf8") as f:
@@ -146,23 +146,23 @@ class BarbarianConan(ConanFile):
                 for line in f2:
                     f.write(line)
             f.write("\n")
-                
+
     def _update_conemu_xml_config(self):
         output_dir = output = os.path.join(self.build_folder, self.name, "vendor", "barbarian-extra")
         os.mkdir(output_dir)
         shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2017.bat"), os.path.join(output_dir, "vswhere_find_vs2017.bat"))
         shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2019.bat"), os.path.join(output_dir, "vswhere_find_vs2019.bat"))
-        vs_versions = { 
-            "VS 2010" : "VS100COMNTOOLS", 
-            "VS 2012" : "VS110COMNTOOLS", 
-            "VS 2013" : "VS120COMNTOOLS", 
-            "VS 2015" : "VS140COMNTOOLS", 
-            "VS 2017" : "VS150COMNTOOLS", 
-            "VS 2019" : "VS160COMNTOOLS" 
+        vs_versions = {
+            "VS 2010" : "VS100COMNTOOLS",
+            "VS 2012" : "VS110COMNTOOLS",
+            "VS 2013" : "VS120COMNTOOLS",
+            "VS 2015" : "VS140COMNTOOLS",
+            "VS 2017" : "VS150COMNTOOLS",
+            "VS 2019" : "VS160COMNTOOLS"
             }
         template_dir = os.path.join(self.source_folder, "configuration")
         env = jinja2.Environment(loader= jinja2.FileSystemLoader(template_dir), trim_blocks=True, lstrip_blocks=True, undefined=jinja2.StrictUndefined)
-        conemu_xml_template = env.get_template("ConEmu.xml.default.j2") 
+        conemu_xml_template = env.get_template("ConEmu.xml.default.j2")
         output_dir = os.path.join(self.build_folder, self.name, "vendor")
         output = os.path.join(output_dir, "ConEmu.xml.default")
         os.rename(output, os.path.join(output_dir, "ConEmu.xml.original"))
@@ -286,10 +286,13 @@ class BarbarianConan(ConanFile):
             call(["innounp", "-q", "-x", os.path.join(self.source_folder, "winpython3-win64.exe")])
             os.rename("{app}", os.path.join(self.name, "vendor", "python-for-windows"))
             os.remove("install_script.iss")
+            shutil.rmtree(os.path.join(self.name, "vendor", "python-for-windows", "n", "node_modules", "npm", "test"))
             shutil.copyfile(os.path.join(self.source_folder, "winpython3-LICENSE.txt"), os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: python support\n')
+                #path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", "scripts")
+                #f.write('set "PATH={0};%PATH%"\n'.format(path))
                 path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", self._winpython3_subdirectory)
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
                 path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", self._winpython3_subdirectory, "Scripts")
@@ -297,6 +300,8 @@ class BarbarianConan(ConanFile):
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.ps1"), 'w') as f:
                 f.write('# Vendor: python support\n')
+                #path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", "scripts")
+                #f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
                 path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", self._winpython3_subdirectory)
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
                 path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", self._winpython3_subdirectory, "Scripts")
@@ -304,6 +309,8 @@ class BarbarianConan(ConanFile):
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: python support\n')
+                #path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", "scripts")
+                #f.write('export "PATH={0}:$PATH"\n'.format(path))
                 path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", self._winpython3_subdirectory)
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
                 path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", self._winpython3_subdirectory, "Scripts")
@@ -447,7 +454,7 @@ class BarbarianConan(ConanFile):
                 path = os.path.join("$CMDER_ROOT", "vendor", "graphviz-for-windows", "bin")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("Graphviz", "https://www.graphviz.org/", "Graph Visualization Software", os.path.join(self.source_folder, "graphviz-LICENSE.txt"))
-            
+
         # 11. Doxygen
         if self.options.with_doxygen:
             call(["innounp", "-q", "-x", os.path.join(self.source_folder, "doxygen-win64.exe")])
@@ -481,7 +488,7 @@ class BarbarianConan(ConanFile):
                 path = os.path.join("$CMDER_ROOT", "vendor", "doxygen-for-windows", "bin")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("Doxygen", "http://www.doxygen.nl/", "Generate documentation from source code", os.path.join(self.source_folder, "doxygen-LICENSE.txt"))
-        
+
         # 12. MiKTex
         if self.options.with_miktex:
             call(["7z", "x", os.path.join(self.source_folder, "miktex-win64.exe"), "-o%s/%s/%s" % (self.name, "vendor", "miktex-for-windows") ])
@@ -537,7 +544,7 @@ class BarbarianConan(ConanFile):
                 path = os.path.join("$CMDER_ROOT", "vendor", "ninja-for-windows")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("Ninja Build", "https://ninja-build.org/", "Small build system with a focus on speed", os.path.join(self.source_folder, "ninja-LICENSE.txt"))
-            
+
         # 14. Notepad++
         if self.options.with_ninja:
             tools.unzip(os.path.join(self.source_folder, "npp-win64.zip"), destination=os.path.join(self.name, "vendor", "npp-for-windows"))
@@ -559,7 +566,7 @@ class BarbarianConan(ConanFile):
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
                 f.write('alias npp=notepad++.exe\n')
             self._append_to_license_txt("Notepad++", "https://notepad-plus-plus.org/", "Source code editor and Notepad replacement", os.path.join(self.source_folder, "npp-LICENSE.txt"))
-      
+
         # Final. Pack everything
         shutil.copyfile(os.path.join(self.source_folder, "packaging", "package.iss"), "package.iss")
         tools.replace_in_file("package.iss", '@name@', self.name)
@@ -567,6 +574,7 @@ class BarbarianConan(ConanFile):
         tools.replace_in_file("package.iss", '@author@', self.author)
         tools.replace_in_file("package.iss", '@url@', self.url)
         tools.replace_in_file("package.iss", '@conan_version@', self._conan_version)
+        tools.replace_in_file("package.iss", '@winpython3_subdirectory@', self._winpython3_subdirectory)
         tools.replace_in_file("package.iss", '@output_base_name@', "%s-%s-%s-%s" % (self.name, self.version, self.settings.arch, self._installertype))
         iscc_command= ["iscc", "/Q"]
         if self.options.with_git:
@@ -599,10 +607,9 @@ class BarbarianConan(ConanFile):
             iscc_command.append("/Dwith_npp")
         iscc_command.append("package.iss")
         call(iscc_command)
-        
+
     def package(self):
         self.copy("README.md")
         self.copy("README.txt")
         self.copy("LICENSE.txt")
         self.copy("%s-%s-%s-%s.exe" % (self.name, self.version, self.settings.arch, self._installertype))
- 
