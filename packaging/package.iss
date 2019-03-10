@@ -63,6 +63,9 @@ Name: miktex;                                   Description: "MiKTeX (https://mi
 #ifdef with_ninja
 Name: ninja;                                   Description: "Ninja (https://ninja-build.org): Ninja is a small build system with a focus on speed";           Types: full
 #endif
+#ifdef with_npp
+Name: npp;                                   Description: "Notepad++ (https://notepad-plus-plus.org): Source code editor and Notepad replacement";           Types: full
+#endif
 
 [Files]
 Source: "@name@\Cmder.exe";                                DestDir: "{app}";                                           Flags: ignoreversion
@@ -108,6 +111,9 @@ Source: "@name@\config\profile.d\miktex-for-windows.*";    DestDir: "{app}\confi
 #endif
 #ifdef with_ninja
 Source: "@name@\config\profile.d\ninja-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: ninja
+#endif
+#ifdef with_npp
+Source: "@name@\config\profile.d\npp-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: npp
 #endif
 Source: "@name@\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion
@@ -161,10 +167,16 @@ Source: "@name@\vendor\miktex-for-windows\*";             DestDir: "{app}\vendor
 #ifdef with_ninja
 Source: "@name@\vendor\ninja-for-windows\*";             DestDir: "{app}\vendor\ninja-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion;    Components: ninja; Permissions: users-modify
 #endif
+#ifdef with_npp
+Source: "@name@\vendor\npp-for-windows\*";             DestDir: "{app}\vendor\npp-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion;    Components: npp; Permissions: users-modify
+#endif
 
 [Run]
 Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent unchecked
 Filename: "{app}\LICENSE.txt"; Description: "View the LICENSE file"; Flags: postinstall shellexec skipifsilent unchecked
+#ifdef with_python
+Filename: "{app}\vendor\python-for-windows\WinPython Command Prompt.exe"; WorkingDir: "{app}\vendor\python-for-windows";  Description: "Start WinPython Control Panel"; Flags: postinstall skipifsilent unchecked;  Components: python
+#endif
 #ifdef with_gitext
 Filename: "{sys}\regsvr32.exe"; Parameters: "/s /u GitExtensionsShellEx64.dll"; WorkingDir: "{app}\vendor\gitext-for-windows"; Flags: runhidden;  Components: gitext
 Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Description: "Start GitExtensions"; Flags: postinstall skipifsilent unchecked;  Components: gitext
@@ -203,6 +215,15 @@ Type: dirifempty;       Name: "{app}"
 
 [Icons]
 Name: "{group}\Cmder";                Filename: "{app}\Cmder.exe";                                    Parameters: ""; WorkingDir: "{userdocs}"
+#ifdef with_python
+Name: "{group}\WinPython\IDLE (Python GUI)";   Filename: "{app}\vendor\python-for-windows\IDLE (Python GUI).exe";                       Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\IPython Qt Console";   Filename: "{app}\vendor\python-for-windows\IPython Qt Console.exe";                     Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\Jupyter Lab";   Filename: "{app}\vendor\python-for-windows\Jupyter Lab.exe";                                   Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\Jupyter Notebook";   Filename: "{app}\vendor\python-for-windows\Jupyter Notebook.exe";                         Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\Spyder Python IDE";   Filename: "{app}\vendor\python-for-windows\Spyder.exe";                                  Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\WinPython Command Prompt";   Filename: "{app}\vendor\python-for-windows\WinPython Command Prompt.exe";         Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\WinPython Control Panel";   Filename: "{app}\vendor\python-for-windows\WinPython Control Panel.exe";           Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+#endif
 #ifdef with_vscode
 Name: "{group}\Visual Studio Code";   Filename: "{app}\vendor\vscode-for-windows\Code.exe";           Parameters: ""; WorkingDir: "{userdocs}";    Components: vscode
 #endif
