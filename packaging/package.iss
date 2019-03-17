@@ -224,6 +224,9 @@ Name: "{group}\WinPython\Pyzo (Python IDE)";   Filename: "{app}\vendor\python-fo
 //Name: "{group}\WinPython\Spyder (Python IDE)";   Filename: "{app}\vendor\python-for-windows\Spyder.exe";                                  Parameters: ""; WorkingDir: "{userdocs}";    Components: python
 Name: "{group}\WinPython\WinPython Command Prompt";   Filename: "{app}\vendor\python-for-windows\WinPython Command Prompt.exe";         Parameters: ""; WorkingDir: "{userdocs}";    Components: python
 Name: "{group}\WinPython\WinPython Control Panel";   Filename: "{app}\vendor\python-for-windows\WinPython Control Panel.exe";           Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\WinPython Command Prompt";   Filename: "{app}\vendor\python-for-windows\WinPython Command Prompt.exe";         Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\Qt Designer";   Filename: "{app}\vendor\python-for-windows\Qt Designer.exe";           Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\Qt Linguist";   Filename: "{app}\vendor\python-for-windows\Qt Linguist.exe";           Parameters: ""; WorkingDir: "{userdocs}";    Components: python
 #endif
 #ifdef with_vscode
 Name: "{group}\Visual Studio Code";   Filename: "{app}\vendor\vscode-for-windows\Code.exe";           Parameters: ""; WorkingDir: "{userdocs}";    Components: vscode
