@@ -62,7 +62,7 @@ class BarbarianConan(ConanFile):
     no_copy_source = True
     short_paths = True
     options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio" : [True, False], "with_vscode" : [True, False], "with_kdiff3" : [True, False], "with_winmerge" : [True, False], "with_gitext" : [True, False], "with_graphviz" : [True, False], "with_doxygen" : [True, False], "with_miktex" : [True, False], "with_ninja" : [True, False], "with_npp" : [True, False]}
-    default_options = {"with_git": True, "with_cmake" : True, "with_bazel" : False, "with_python" : True, "with_conanio" : True, "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False, "with_doxygen" : False, "with_miktex" : False, "with_ninja" : False, "with_npp" : True}
+    default_options = {"with_git": True, "with_cmake" : True, "with_bazel" : False, "with_python" : True, "with_conanio" : True, "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False, "with_doxygen" : False, "with_miktex" : False, "with_ninja" : False, "with_npp" : False}
 
     @property
     def _installertype_set(self):
@@ -546,7 +546,7 @@ class BarbarianConan(ConanFile):
             self._append_to_license_txt("Ninja Build", "https://ninja-build.org/", "Small build system with a focus on speed", os.path.join(self.source_folder, "ninja-LICENSE.txt"))
 
         # 14. Notepad++
-        if self.options.with_ninja:
+        if self.options.with_npp:
             tools.unzip(os.path.join(self.source_folder, "npp-win64.zip"), destination=os.path.join(self.name, "vendor", "npp-for-windows"))
             # Create install script
             os.linesep= '\r\n'
