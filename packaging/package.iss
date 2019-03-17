@@ -63,11 +63,14 @@ Name: miktex;                                   Description: "MiKTeX (https://mi
 #ifdef with_ninja
 Name: ninja;                                   Description: "Ninja (https://ninja-build.org): Ninja is a small build system with a focus on speed";           Types: full
 #endif
+#ifdef with_npp
+Name: npp;                                   Description: "Notepad++ (https://notepad-plus-plus.org): Source code editor and Notepad replacement";           Types: full
+#endif
 
 [Files]
 Source: "@name@\Cmder.exe";                                DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\LICENSE.txt";                              DestDir: "{app}";                                           Flags: ignoreversion
-Source: "@name@\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion 
+Source: "@name@\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\README.md";                                DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\Barbarian.ico";                            DestDir: "{app}";                                           Flags: ignoreversion
 Source: "@name@\Barbarian.png";                            DestDir: "{app}";                                           Flags: ignoreversion
@@ -109,6 +112,9 @@ Source: "@name@\config\profile.d\miktex-for-windows.*";    DestDir: "{app}\confi
 #ifdef with_ninja
 Source: "@name@\config\profile.d\ninja-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: ninja
 #endif
+#ifdef with_npp
+Source: "@name@\config\profile.d\npp-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: npp
+#endif
 Source: "@name@\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion
 Source: "@name@\vendor\bin\*";                             DestDir: "{app}\vendor\bin";                                Flags: recursesubdirs createallsubdirs ignoreversion;
@@ -139,9 +145,9 @@ Source: "@name@\vendor\winmerge-for-windows\*";            DestDir: "{app}\vendo
 #ifdef with_python
 #ifdef with_conanio
 Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;        Permissions: users-modify;    Excludes: "__pycache__,conans,conan*"
-Source: "@name@\vendor\python-for-windows\Scripts\conan*"; DestDir: "{app}\vendor\python-for-windows\Scripts";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;    Excludes: "__pycache__"
-Source: "@name@\vendor\python-for-windows\Lib\site-packages\conan-@conan_version@.dist-info\*"; DestDir: "{app}\vendor\python-for-windows\Lib\site-packages\conan-@conan_version@.dist-info";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;
-Source: "@name@\vendor\python-for-windows\Lib\site-packages\conans\*"; DestDir: "{app}\vendor\python-for-windows\Lib\site-packages\conans";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;    Excludes: "__pycache__"
+Source: "@name@\vendor\python-for-windows\@winpython3_subdirectory@\Scripts\conan*"; DestDir: "{app}\vendor\python-for-windows\@winpython3_subdirectory@\Scripts";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;    Excludes: "__pycache__"
+Source: "@name@\vendor\python-for-windows\@winpython3_subdirectory@\Lib\site-packages\conan-@conan_version@.dist-info\*"; DestDir: "{app}\vendor\python-for-windows\@winpython3_subdirectory@\Lib\site-packages\conan-@conan_version@.dist-info";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;
+Source: "@name@\vendor\python-for-windows\@winpython3_subdirectory@\Lib\site-packages\conans\*"; DestDir: "{app}\vendor\python-for-windows\@winpython3_subdirectory@\Lib\site-packages\conans";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;    Excludes: "__pycache__"
 #else
 Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;    Permissions: users-modify;    Excludes: "__pycache__"
 #endif
@@ -150,21 +156,27 @@ Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendo
 Source: "@name@\vendor\vscode-for-windows\*";              DestDir: "{app}\vendor\vscode-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: vscode;    Permissions: users-modify
 #endif
 #ifdef with_graphviz
-Source: "@name@\vendor\graphviz-for-windows\*";            DestDir: "{app}\vendor\graphviz-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: graphviz; 
+Source: "@name@\vendor\graphviz-for-windows\*";            DestDir: "{app}\vendor\graphviz-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: graphviz;
 #endif
 #ifdef with_doxygen
-Source: "@name@\vendor\doxygen-for-windows\*";             DestDir: "{app}\vendor\doxygen-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: doxygen; 
-#endif      
+Source: "@name@\vendor\doxygen-for-windows\*";             DestDir: "{app}\vendor\doxygen-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: doxygen;
+#endif
 #ifdef with_miktex
 Source: "@name@\vendor\miktex-for-windows\*";             DestDir: "{app}\vendor\miktex-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion onlyifdoesntexist;    Components: miktex; Permissions: users-modify
 #endif
 #ifdef with_ninja
 Source: "@name@\vendor\ninja-for-windows\*";             DestDir: "{app}\vendor\ninja-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion;    Components: ninja; Permissions: users-modify
 #endif
+#ifdef with_npp
+Source: "@name@\vendor\npp-for-windows\*";             DestDir: "{app}\vendor\npp-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion;    Components: npp; Permissions: users-modify
+#endif
 
 [Run]
 Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent unchecked
 Filename: "{app}\LICENSE.txt"; Description: "View the LICENSE file"; Flags: postinstall shellexec skipifsilent unchecked
+#ifdef with_python
+Filename: "{app}\vendor\python-for-windows\WinPython Control Panel.exe"; WorkingDir: "{app}\vendor\python-for-windows";  Description: "Start WinPython Control Panel"; Flags: postinstall skipifsilent unchecked;  Components: python
+#endif
 #ifdef with_gitext
 Filename: "{sys}\regsvr32.exe"; Parameters: "/s /u GitExtensionsShellEx64.dll"; WorkingDir: "{app}\vendor\gitext-for-windows"; Flags: runhidden;  Components: gitext
 Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Description: "Start GitExtensions"; Flags: postinstall skipifsilent unchecked;  Components: gitext
@@ -186,11 +198,11 @@ Name: "{app}\vendor\vscode-for-windows";       Permissions: users-modify;    Com
 Name: "{app}\vendor\miktex-for-windows";       Permissions: users-modify;    Components: miktex
 #endif
 
-[UninstallRun] 
+[UninstallRun]
 #ifdef with_gitext
 Filename: "{sys}\regsvr32.exe"; Parameters: "/s /u GitExtensionsShellEx64.dll"; WorkingDir: "{app}\vendor\gitext-for-windows"; Flags: runhidden;  Components: gitext
 #endif
- 
+
 [UninstallDelete]
 Type: files;            Name: "{app}\config\.history"
 Type: files;            Name: "{app}\config\settings"
@@ -203,6 +215,19 @@ Type: dirifempty;       Name: "{app}"
 
 [Icons]
 Name: "{group}\Cmder";                Filename: "{app}\Cmder.exe";                                    Parameters: ""; WorkingDir: "{userdocs}"
+#ifdef with_python
+Name: "{group}\WinPython\IDLE (Python IDE)";   Filename: "{app}\vendor\python-for-windows\IDLE (Python GUI).exe";                       Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\IPython Qt Console";   Filename: "{app}\vendor\python-for-windows\IPython Qt Console.exe";                     Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+//Name: "{group}\WinPython\Jupyter Lab";   Filename: "{app}\vendor\python-for-windows\Jupyter Lab.exe";                                   Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+//Name: "{group}\WinPython\Jupyter Notebook";   Filename: "{app}\vendor\python-for-windows\Jupyter Notebook.exe";                         Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\Pyzo (Python IDE)";   Filename: "{app}\vendor\python-for-windows\Pyzo.exe";                       Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+//Name: "{group}\WinPython\Spyder (Python IDE)";   Filename: "{app}\vendor\python-for-windows\Spyder.exe";                                  Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\WinPython Command Prompt";   Filename: "{app}\vendor\python-for-windows\WinPython Command Prompt.exe";         Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\WinPython Control Panel";   Filename: "{app}\vendor\python-for-windows\WinPython Control Panel.exe";           Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\WinPython Command Prompt";   Filename: "{app}\vendor\python-for-windows\WinPython Command Prompt.exe";         Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\Qt Designer";   Filename: "{app}\vendor\python-for-windows\Qt Designer.exe";           Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+Name: "{group}\WinPython\Qt Linguist";   Filename: "{app}\vendor\python-for-windows\Qt Linguist.exe";           Parameters: ""; WorkingDir: "{userdocs}";    Components: python
+#endif
 #ifdef with_vscode
 Name: "{group}\Visual Studio Code";   Filename: "{app}\vendor\vscode-for-windows\Code.exe";           Parameters: ""; WorkingDir: "{userdocs}";    Components: vscode
 #endif
@@ -230,5 +255,8 @@ Name: "{group}\MiKTeX\MiKTeX on the Web\Give back";                 Filename: "h
 Name: "{group}\MiKTeX\MiKTeX on the Web\Known Issues";              Filename: "https://miktex.org/2.9/issues"; Components: miktex
 Name: "{group}\MiKTeX\MiKTeX on the Web\MiKTeX Project Page";       Filename: "https://miktex.org/"; Components: miktex
 Name: "{group}\MiKTeX\MiKTeX on the Web\MiKTeX Support";            Filename: "https://miktex.org/support"; Components: miktex
+#endif
+#ifdef with_npp
+Name: "{group}\Notepad++";        Filename: "{app}\vendor\npp-for-windows\bin\notepad++.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: npp
 #endif
 Name: "{group}\Uninstall @name@";     Filename: "{uninstallexe}"; IconFilename: "{app}\Barbarian.ico"
