@@ -29,17 +29,17 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.8.0"
+    version = "1.8.1"
     _cmder_version = "1.3.11"
     _cmder_version_build = "%s.843" % _cmder_version
     _git_version = "2.21.0"
-    _cmake_version = "3.14.0"
-    _bazel_version = "0.23.2"
+    _cmake_version = "3.14.1"
+    _bazel_version = "0.24.0"
     _winpython3_version = "3.7.2.0"
     _winpython3_version_build = "1.11.20190223"
     _winpython3_subdirectory = "python-3.7.2.amd64"
-    _conan_version = "1.13.1"
-    _openpyxl_version = "2.6.1"
+    _conan_version = "1.14.0"
+    _openpyxl_version = "2.6.2"
     _vscode_version = "1.32.3"
     _kdiff_version = "0.9.98"
     _winmerge_version = "2.16.0"
@@ -47,9 +47,10 @@ class BarbarianConan(ConanFile):
     _gitext_version_build = "%s.5232" % _gitext_version
     _graphviz_version = "2.38"
     _doxygen_version = "1.8.15"
-    _miktex_version = "2.9.6942"
+    _miktex_version = "2.9.7021"
     _ninja_version = "1.9.0"
     _npp_version = "7.6.4"
+    _pandoc_version = "2.7.1"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
     generators = "txt"
@@ -61,16 +62,16 @@ class BarbarianConan(ConanFile):
     scm = { "type": "git", "url": "auto", "revision": "auto" }
     no_copy_source = True
     short_paths = True
-    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio" : [True, False], "with_vscode" : [True, False], "with_kdiff3" : [True, False], "with_winmerge" : [True, False], "with_gitext" : [True, False], "with_graphviz" : [True, False], "with_doxygen" : [True, False], "with_miktex" : [True, False], "with_ninja" : [True, False], "with_npp" : [True, False]}
-    default_options = {"with_git": True, "with_cmake" : True, "with_bazel" : False, "with_python" : True, "with_conanio" : True, "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False, "with_doxygen" : False, "with_miktex" : False, "with_ninja" : False, "with_npp" : False}
+    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio" : [True, False], "with_vscode" : [True, False], "with_kdiff3" : [True, False], "with_winmerge" : [True, False], "with_gitext" : [True, False], "with_graphviz" : [True, False], "with_doxygen" : [True, False], "with_miktex" : [True, False], "with_ninja" : [True, False], "with_npp" : [True, False], "with_pandoc" : [True, False]}
+    default_options = {"with_git": True, "with_cmake" : True, "with_bazel" : False, "with_python" : True, "with_conanio" : True, "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False, "with_doxygen" : False, "with_miktex" : False, "with_ninja" : False, "with_npp" : False, "with_pandoc" : False}
 
     @property
     def _installertype_set(self):
-        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_graphviz and self.options.with_doxygen and self.options.with_miktex and self.options.with_ninja and self.options.with_npp:
+        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_graphviz and self.options.with_doxygen and self.options.with_miktex and self.options.with_ninja and self.options.with_npp and self.options.with_pandoc:
             return "full"
-        if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex and not self.options.with_ninja and not self.options.with_npp:
+        if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex and not self.options.with_ninja and not self.options.with_npp and not self.options.with_pandoc:
             return "minimal"
-        if self.options.with_git and self.options.with_cmake and not self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex and not self.options.with_ninja and not self.options.with_npp:
+        if self.options.with_git and self.options.with_cmake and not self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex and not self.options.with_ninja and not self.options.with_npp and not self.options.with_pandoc:
             return "default"
         return "custom"
 
@@ -129,6 +130,9 @@ class BarbarianConan(ConanFile):
         if self.options.with_npp:
             tools.download("https://notepad-plus-plus.org/repository/7.x/%s/npp.%s.bin.x64.zip" % (self._npp_version, self._npp_version), "npp-win64.zip")
             tools.download("https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/master/LICENSE", "npp-LICENSE.txt")
+        if self.options.with_pandoc:
+            tools.download("https://github.com/jgm/pandoc/releases/download/%s/pandoc-%s-windows-x86_64.zip" % (self._pandoc_version, self._pandoc_version), "pandoc-win64.zip")
+            tools.download("https://raw.githubusercontent.com/jgm/pandoc/master/COPYRIGHT", "pandoc-LICENSE.txt")
 
     def _append_to_license_txt(self, name, url, description, license_file):
         os.linesep= '\r\n'
@@ -566,6 +570,26 @@ class BarbarianConan(ConanFile):
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
                 f.write('alias npp=notepad++.exe\n')
             self._append_to_license_txt("Notepad++", "https://notepad-plus-plus.org/", "Source code editor and Notepad replacement", os.path.join(self.source_folder, "npp-LICENSE.txt"))
+        # 15. Pandoc
+        if self.options.with_pandoc:
+            tools.unzip(os.path.join(self.source_folder, "pandoc-win64.zip"), destination=os.path.join(self.name, "vendor", "pandoc-for-windows"))
+            # Create install script
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "pandoc-for-windows.cmd"), 'w') as f:
+                f.write(':: Vendor: pandoc support\n')
+                path = os.path.join("%CMDER_ROOT%", "vendor", "pandoc-for-windows")
+                f.write('set "PATH={0};%PATH%"\n'.format(path))
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "pandoc-for-windows.ps1"), 'w') as f:
+                f.write('# Vendor: pandoc support\n')
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "pandoc-for-windows")
+                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
+            os.linesep= '\n'
+            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "pandoc-for-windows.sh"), 'w') as f:
+                f.write('# Vendor: pandoc support\n')
+                path = os.path.join("$CMDER_ROOT", "vendor", "pandoc-for-windows")
+                f.write('export "PATH={0}:$PATH"\n'.format(path))
+            self._append_to_license_txt("Pandoc", "https://pandoc.org/", "Universal document converter", os.path.join(self.source_folder, "pandoc-LICENSE.txt"))
 
         # Final. Pack everything
         shutil.copyfile(os.path.join(self.source_folder, "packaging", "package.iss"), "package.iss")

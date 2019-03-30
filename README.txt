@@ -20,6 +20,7 @@ Barbarian also contains:
 * [MiKTeX](https://miktex.org): MiKTeX is an implementation of TeX and related programs
 * [Ninja](https://ninja-build.org): Ninja is a small build system with a focus on speed
 * [Notepad++](https://notepad-plus-plus.org): Source code editor and Notepad replacement
+* [Pandoc](https://pandoc.org): Universal document converter
 
 Barbarian Logo is based on:
 * [Barba Rossa](https://openclipart.org/detail/299925/barba-rossa): 
