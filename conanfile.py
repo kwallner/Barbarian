@@ -47,7 +47,7 @@ class BarbarianConan(ConanFile):
     _gitext_version_build = "%s.5232" % _gitext_version
     _graphviz_version = "2.38"
     _doxygen_version = "1.8.15"
-    _miktex_version = "2.9.7021"
+    _miktex_version = "2.9.6942"
     _ninja_version = "1.9.0"
     _npp_version = "7.6.4"
     _pandoc_version = "2.7.1"
