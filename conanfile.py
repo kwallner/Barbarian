@@ -629,6 +629,8 @@ class BarbarianConan(ConanFile):
             iscc_command.append("/Dwith_ninja")
         if self.options.with_npp:
             iscc_command.append("/Dwith_npp")
+        if self.options.with_pandoc:
+            iscc_command.append("/Dwith_pandoc")
         iscc_command.append("package.iss")
         call(iscc_command)
 
