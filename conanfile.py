@@ -572,7 +572,8 @@ class BarbarianConan(ConanFile):
             self._append_to_license_txt("Notepad++", "https://notepad-plus-plus.org/", "Source code editor and Notepad replacement", os.path.join(self.source_folder, "npp-LICENSE.txt"))
         # 15. Pandoc
         if self.options.with_pandoc:
-            tools.unzip(os.path.join(self.source_folder, "pandoc-win64.zip"), destination=os.path.join(self.name, "vendor", "pandoc-for-windows"))
+            tools.unzip(os.path.join(self.source_folder, "pandoc-win64.zip"))
+            os.rename("pandoc-%s-windows-x86_64" % self._pandoc_version, os.path.join(self.name, "vendor", "pandoc-for-windows"))
             # Create install script
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "pandoc-for-windows.cmd"), 'w') as f:
