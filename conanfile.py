@@ -53,6 +53,7 @@ class BarbarianConan(ConanFile):
     _pandoc_version = "2.7.1"
     _ruby_version = "2.6.1"
     _ruby_version_build= "%s-1" % _ruby_version
+    _asciidoctor_version = "2.0.4"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
     generators = "txt"
@@ -138,6 +139,7 @@ class BarbarianConan(ConanFile):
         if self.options.with_ruby:
             tools.download("https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-%s/rubyinstaller-%s-x64.7z" % (self._ruby_version_build, self._ruby_version_build), "ruby-win64.7z")
             tools.download("https://raw.githubusercontent.com/ruby/ruby/trunk/COPYING", "ruby-LICENSE.txt")
+            tools.download("https://raw.githubusercontent.com/asciidoctor/asciidoctor/master/LICENSE", "asciidoctor-LICENSE.txt")
 
 
     def _append_to_license_txt(self, name, url, description, license_file):
@@ -602,7 +604,7 @@ class BarbarianConan(ConanFile):
         # 16. Ruby
         if self.options.with_ruby:
             call(["7z", "x", os.path.join(self.source_folder, "ruby-win64.7z"), "-o." ])
-            os.rename("rubyinstaller-2.6.1-1-x64" % self._ruby_version_build, os.path.join(self.name, "vendor", "ruby-for-windows"))
+            os.rename("rubyinstaller-%s-x64" % self._ruby_version_build, os.path.join(self.name, "vendor", "ruby-for-windows"))
             # Create install script
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "ruby-for-windows.cmd"), 'w') as f:
@@ -619,7 +621,10 @@ class BarbarianConan(ConanFile):
                 f.write('# Vendor: ruby support\n')
                 path = os.path.join("$CMDER_ROOT", "vendor", "ruby-for-windows")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
-            self._append_to_license_txt("Ruby", "ttps://www.ruby-lang.org/", "Dynamic, open source programming language", os.path.join(self.source_folder, "ruby-LICENSE.txt"))
+            self._append_to_license_txt("Ruby", "https://www.ruby-lang.org/", "Dynamic, open source programming language", os.path.join(self.source_folder, "ruby-LICENSE.txt"))
+            # Additional ruby packages
+            call(["%s/vendor/ruby-for-windows/bin/gem.cmd" % self.name, "install", "asciidoctor", "-v", self._asciidoctor_version])
+            self._append_to_license_txt("asciidoctor", "https://asciidoctor.org/", "Fast text processor & publishing toolchain", os.path.join(self.source_folder, "asciidoctor-LICENSE.txt"))
 
         # Final. Pack everything
         shutil.copyfile(os.path.join(self.source_folder, "packaging", "package.iss"), "package.iss")
