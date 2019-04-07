@@ -44,10 +44,12 @@ The options used are:
     * with_miktex (default False)
     * with_ninja (default False)
     * with_npp (default False)
+    * with_pandoc (default False)
+    * with_ruby (default False)
     
 To build with VSCode and KDiff3 and GitExtensions
 ```
-# conan create . user/channel -o with_bazel=True -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True -o with_miktex=True -o with_ninja=True -o with_npp=True
+# conan create . user/channel -o with_bazel=True -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True -o with_miktex=True -o with_ninja=True -o with_npp=True -o with_pandoc=True -o with_ruby=True
 ```
 
 To build a minimal version
