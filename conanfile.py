@@ -110,6 +110,7 @@ class BarbarianConan(ConanFile):
             tools.download("https://raw.githubusercontent.com/conan-io/conan/develop/LICENSE.md", "conanio-LICENSE.txt")
         if self.options.with_vscode:
             tools.download("https://go.microsoft.com/fwlink/?Linkid=850641", "vscode-win64.zip")
+            tools.download("https://raw.githubusercontent.com/Microsoft/vscode/master/LICENSE.txt", "vscode-LICENSE.txt")
         if self.options.with_kdiff3:
             tools.download("https://datapacket.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self._kdiff_version, self._kdiff_version), "kdiff3-win64.exe")
         if self.options.with_winmerge:
@@ -368,7 +369,7 @@ class BarbarianConan(ConanFile):
                 f.write('# Vendor: vscode support\n')
                 path = os.path.join("$CMDER_ROOT", "vendor", "vscode-for-windows", "bin")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
-            self._append_to_license_txt("Visual Studio Code", "https://code.visualstudio.com/", "Code editing Redefined", os.path.join(self.name, "vendor", "vscode-for-windows", "resources", "app", "LICENSE.txt"))
+            self._append_to_license_txt("Visual Studio Code", "https://code.visualstudio.com/", "Code editing Redefined", os.path.join(self.source_folder, "vscode-LICENSE.txt"))
 
         # 7. KDiff3
         if self.options.with_kdiff3:
