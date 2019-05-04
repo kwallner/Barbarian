@@ -275,6 +275,6 @@ Name: "{group}\MiKTeX\MiKTeX on the Web\MiKTeX Project Page";       Filename: "h
 Name: "{group}\MiKTeX\MiKTeX on the Web\MiKTeX Support";            Filename: "https://miktex.org/support"; Components: miktex
 #endif
 #ifdef with_npp
-Name: "{group}\Notepad++";        Filename: "{app}\vendor\npp-for-windows\bin\notepad++.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: npp
+Name: "{group}\Notepad++";        Filename: "{app}\vendor\npp-for-windows\notepad++.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: npp
 #endif
 Name: "{group}\Uninstall @name@";     Filename: "{uninstallexe}"; IconFilename: "{app}\Barbarian.ico"

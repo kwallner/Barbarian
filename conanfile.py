@@ -29,18 +29,18 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.8.1"
+    version = "1.8.2"
     _cmder_version = "1.3.11"
     _cmder_version_build = "%s.843" % _cmder_version
     _git_version = "2.21.0"
-    _cmake_version = "3.14.1"
-    _bazel_version = "0.24.1"
+    _cmake_version = "3.14.3"
+    _bazel_version = "0.25.0"
     _winpython3_version = "3.7.2.0"
     _winpython3_version_build = "1.11.20190223"
     _winpython3_subdirectory = "python-3.7.2.amd64"
-    _conan_version = "1.14.1"
+    _conan_version = "1.14.5"
     _openpyxl_version = "2.6.2"
-    _vscode_version = "1.33.0"
+    _vscode_version = "1.33.1"
     _kdiff_version = "0.9.98"
     _winmerge_version = "2.16.2"
     _gitext_version = "3.0.2"
@@ -51,9 +51,9 @@ class BarbarianConan(ConanFile):
     _ninja_version = "1.9.0"
     _npp_version = "7.6.6"
     _pandoc_version = "2.7.2"
-    _ruby_version = "2.6.1"
+    _ruby_version = "2.6.3"
     _ruby_version_build= "%s-1" % _ruby_version
-    _asciidoctor_version = "2.0.6"
+    _asciidoctor_version = "2.0.9"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
     generators = "txt"
