@@ -29,22 +29,22 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.8.2"
+    version = "1.8.3"
     _cmder_version = "1.3.11"
     _cmder_version_build = "%s.843" % _cmder_version
     _git_version = "2.21.0"
-    _cmake_version = "3.14.3"
-    _bazel_version = "0.25.0"
+    _cmake_version = "3.14.4"
+    _bazel_version = "0.25.2"
     _winpython3_version = "3.7.2.0"
     _winpython3_version_build = "1.11.20190223"
     _winpython3_subdirectory = "python-3.7.2.amd64"
-    _conan_version = "1.14.5"
+    _conan_version = "1.15.1"
     _openpyxl_version = "2.6.2"
-    _vscode_version = "1.33.1"
+    _vscode_version = "1.34.0"
     _kdiff_version = "0.9.98"
     _winmerge_version = "2.16.2"
-    _gitext_version = "3.0.2"
-    _gitext_version_build = "%s.5232" % _gitext_version
+    _gitext_version = "3.1.0"
+    _gitext_version_build = "%s.5877" % _gitext_version
     _graphviz_version = "2.38"
     _doxygen_version = "1.8.15"
     _miktex_version = "2.9.6942"
