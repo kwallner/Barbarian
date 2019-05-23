@@ -35,8 +35,11 @@ Name: bazel;                                    Description: "Bazel (https:://ba
 #endif
 #ifdef with_python
 Name: python;                                   Description: "Python (https:://python.org): Python Programming Language";                           Types: full custom
-#ifdef with_conanio
+#ifdef with_conanio_pip
 Name: python/conanio;                           Description: "Conan.io (https:://conan.io): C/C++ Package Manager";                                 Types: full custom
+#endif
+#ifdef with_conanio_standalone
+Name: conanio;                                  Description: "Conan.io (https:://conan.io): C/C++ Package Manager (Standalone)";                                 Types: full custom
 #endif
 #endif
 #ifdef with_vscode
@@ -155,7 +158,7 @@ Source: "@name@\vendor\kdiff3-for-windows\*";              DestDir: "{app}\vendo
 Source: "@name@\vendor\winmerge-for-windows\*";            DestDir: "{app}\vendor\winmerge-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: winmerge
 #endif
 #ifdef with_python
-#ifdef with_conanio
+#ifdef with_conanio_pip
 Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;        Permissions: users-modify;    Excludes: "__pycache__,conans,conan*"
 Source: "@name@\vendor\python-for-windows\@winpython3_subdirectory@\Scripts\conan*"; DestDir: "{app}\vendor\python-for-windows\@winpython3_subdirectory@\Scripts";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;    Excludes: "__pycache__"
 Source: "@name@\vendor\python-for-windows\@winpython3_subdirectory@\Lib\site-packages\conan-@conan_version@.dist-info\*"; DestDir: "{app}\vendor\python-for-windows\@winpython3_subdirectory@\Lib\site-packages\conan-@conan_version@.dist-info";         Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python/conanio;Permissions: users-modify;
@@ -163,6 +166,9 @@ Source: "@name@\vendor\python-for-windows\@winpython3_subdirectory@\Lib\site-pac
 #else
 Source: "@name@\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;    Permissions: users-modify;    Excludes: "__pycache__"
 #endif
+#endif
+#ifdef with_conanio_standalone
+Source: "@name@\vendor\conan-for-windows\*";              DestDir: "{app}\vendor\conan-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: conanio;    Permissions: users-modify
 #endif
 #ifdef with_vscode
 Source: "@name@\vendor\vscode-for-windows\*";              DestDir: "{app}\vendor\vscode-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: vscode;    Permissions: users-modify
