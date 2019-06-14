@@ -32,28 +32,28 @@ class BarbarianConan(ConanFile):
     version = "1.8.3"
     _cmder_version = "1.3.11"
     _cmder_version_build = "%s.843" % _cmder_version
-    _git_version = "2.21.0"
-    _cmake_version = "3.14.4"
-    _bazel_version = "0.25.2"
+    _git_version = "2.22.0"
+    _cmake_version = "3.14.5"
+    _bazel_version = "0.26.1"
     _winpython3_version = "3.7.2.0"
     _winpython3_version_build = "1.11.20190223"
     _winpython3_subdirectory = "python-3.7.2.amd64"
-    _conan_version = "1.15.1"
+    _conan_version = "1.16.0"
     _openpyxl_version = "2.6.2"
-    _vscode_version = "1.34.0"
+    _vscode_version = "1.35.1"
     _kdiff_version = "0.9.98"
     _winmerge_version = "2.16.2"
-    _gitext_version = "3.1.0"
-    _gitext_version_build = "%s.5877" % _gitext_version
+    _gitext_version = "3.1.1"
+    _gitext_version_build = "%s.6049" % _gitext_version
     _graphviz_version = "2.38"
     _doxygen_version = "1.8.15"
     _miktex_version = "2.9.6942"
     _ninja_version = "1.9.0"
-    _npp_version = "7.6.6"
-    _pandoc_version = "2.7.2"
+    _npp_version = "7.7"
+    _pandoc_version = "2.7.3"
     _ruby_version = "2.6.3"
     _ruby_version_build= "%s-1" % _ruby_version
-    _asciidoctor_version = "2.0.9"
+    _asciidoctor_version = "2.0.10"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
     generators = "txt"
@@ -122,7 +122,7 @@ class BarbarianConan(ConanFile):
             tools.download("https://datapacket.dl.sourceforge.net/project/winmerge/stable/%s/winmerge-%s-x64-exe.zip" % (self._winmerge_version, self._winmerge_version), "winmerge-win64.exe.zip")
             tools.download("https://bitbucket.org/winmerge/winmerge/raw/c1164661fef83403f91e93e4919801b3e7804df3/Docs/Users/GPL.rtf.txt", "winmerge-LICENSE.txt")
         if self.options.with_gitext:
-            tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (".".join(self._gitext_version.split(".")[0:2]), self._gitext_version_build), "gitext.exe")
+            tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version_build), "gitext.exe")
             tools.download("https://raw.githubusercontent.com/gitextensions/gitextensions/master/LICENSE.md", "gitext-LICENSE.txt")
         if self.options.with_graphviz:
             tools.download("https://graphviz.gitlab.io/_pages/Download/windows/graphviz-%s.zip" % (self._graphviz_version), "graphviz.zip")
@@ -131,7 +131,8 @@ class BarbarianConan(ConanFile):
             tools.download("http://doxygen.nl/files/doxygen-%s-setup.exe" % (self._doxygen_version), "doxygen-win64.exe")
             tools.download("https://raw.githubusercontent.com/doxygen/doxygen/master/LICENSE", "doxygen-LICENSE.txt")
         if self.options.with_miktex:
-            tools.download("http://ftp.fau.de/ctan/systems/win32/miktex/setup/windows-x86/miktex-portable-%s.exe" % (self._miktex_version), "miktex-win64.exe")
+            #tools.download("http://ftp.fau.de/ctan/systems/win32/miktex/setup/windows-x86/miktex-portable-%s.exe" % (self._miktex_version), "miktex-win64.exe")
+            tools.download("http://ftp.fau.de/ctan/systems/win32/miktex/setup/windows-x86/miktex-portable.exe", "miktex-win64.exe")
             tools.download("https://raw.githubusercontent.com/MiKTeX/miktex/master/COPYING.md", "miktex-LICENSE.txt")
         if self.options.with_ninja:
             tools.download("https://github.com/ninja-build/ninja/releases/download/v%s/ninja-win.zip" % (self._ninja_version), "ninja-win.zip")
