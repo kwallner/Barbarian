@@ -339,6 +339,8 @@ class BarbarianConan(ConanFile):
             # Additional python packages
             call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "openpyxl==%s" % self._openpyxl_version, "--no-warn-script-location"])
             self._append_to_license_txt("openpyxl", "https://openpyxl.readthedocs.io/", "Python programming language", os.path.join(self.source_folder, "openpyxl-LICENSE.txt"))
+            # More python packages ... as they are needed by vscode, without specific version 
+            call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "pylint", "--no-warn-script-location"])
 
         # 5. Conan.io
         if self.options.with_conanio:
