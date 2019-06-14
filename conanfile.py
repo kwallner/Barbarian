@@ -29,31 +29,31 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.8.2"
+    version = "1.8.3"
     _cmder_version = "1.3.11"
     _cmder_version_build = "%s.843" % _cmder_version
-    _git_version = "2.21.0"
-    _cmake_version = "3.14.3"
-    _bazel_version = "0.25.0"
+    _git_version = "2.22.0"
+    _cmake_version = "3.14.5"
+    _bazel_version = "0.26.1"
     _winpython3_version = "3.7.2.0"
     _winpython3_version_build = "1.11.20190223"
     _winpython3_subdirectory = "python-3.7.2.amd64"
-    _conan_version = "1.14.5"
+    _conan_version = "1.16.0"
     _openpyxl_version = "2.6.2"
-    _vscode_version = "1.33.1"
+    _vscode_version = "1.35.1"
     _kdiff_version = "0.9.98"
     _winmerge_version = "2.16.2"
-    _gitext_version = "3.0.2"
-    _gitext_version_build = "%s.5232" % _gitext_version
+    _gitext_version = "3.1.1"
+    _gitext_version_build = "%s.6049" % _gitext_version
     _graphviz_version = "2.38"
     _doxygen_version = "1.8.15"
     _miktex_version = "2.9.6942"
     _ninja_version = "1.9.0"
-    _npp_version = "7.6.6"
-    _pandoc_version = "2.7.2"
+    _npp_version = "7.7"
+    _pandoc_version = "2.7.3"
     _ruby_version = "2.6.3"
     _ruby_version_build= "%s-1" % _ruby_version
-    _asciidoctor_version = "2.0.9"
+    _asciidoctor_version = "2.0.10"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
     generators = "txt"
@@ -65,13 +65,16 @@ class BarbarianConan(ConanFile):
     scm = { "type": "git", "url": "auto", "revision": "auto" }
     no_copy_source = True
     short_paths = True
-    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio" : [True, False], "with_vscode" : [True, False], "with_kdiff3" : [True, False], "with_winmerge" : [True, False], "with_gitext" : [True, False], "with_graphviz" : [True, False], "with_doxygen" : [True, False], "with_miktex" : [True, False], "with_ninja" : [True, False], "with_npp" : [True, False], "with_pandoc" : [True, False], "with_ruby" : [True, False]}
-    default_options = {"with_git": True, "with_cmake" : True, "with_bazel" : False, "with_python" : True, "with_conanio" : True, "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False, "with_doxygen" : False, "with_miktex" : False, "with_ninja" : False, "with_npp" : False, "with_pandoc" : False, "with_ruby" : False}
+    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio" : [True, False], "conanio_variant" : ["pip", "standalone"], "with_vscode" : [True, False], "with_kdiff3" : [True, False], "with_winmerge" : [True, False], "with_gitext" : [True, False], "with_graphviz" : [True, False], "with_doxygen" : [True, False], "with_miktex" : [True, False], "with_ninja" : [True, False], "with_npp" : [True, False], "with_pandoc" : [True, False], "with_ruby" : [True, False]}
+    default_options = {"with_git": True, "with_cmake" : True, "with_bazel" : False, "with_python" : True, "with_conanio" : True, "conanio_variant" : "pip", "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False, "with_doxygen" : False, "with_miktex" : False, "with_ninja" : False, "with_npp" : False, "with_pandoc" : False, "with_ruby" : False}
 
     @property
     def _installertype_set(self):
         if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_graphviz and self.options.with_doxygen and self.options.with_miktex and self.options.with_ninja and self.options.with_npp and self.options.with_pandoc and self.options.with_ruby:
-            return "full"
+            if self.options.conanio_variant == "standalone":
+                return "standalone"
+            else:
+                return "full"
         if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex and not self.options.with_ninja and not self.options.with_npp and not self.options.with_pandoc and not self.options.with_ruby:
             return "minimal"
         if self.options.with_git and self.options.with_cmake and not self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex and not self.options.with_ninja and not self.options.with_npp and not self.options.with_pandoc and not self.options.with_ruby:
@@ -83,8 +86,8 @@ class BarbarianConan(ConanFile):
         return self._installertype_set
 
     def configure(self):
-        if self.options.with_conanio and not self.options.with_python:
-            raise ConanInvalidConfiguration("Invalid configuration: Python is required when using Conan.io")
+        if self.options.with_conanio and self.options.conanio_variant == "pip" and not self.options.with_python:
+            raise ConanInvalidConfiguration("Invalid configuration: Python is required when using Conan.io with pip")
 
     def build_requirements(self):
         self.build_requires("7z_installer/1.0@conan/stable")
@@ -107,6 +110,8 @@ class BarbarianConan(ConanFile):
             tools.download("https://raw.githubusercontent.com/python/cpython/master/LICENSE", "cpython-LICENSE.txt")
             tools.download("https://bitbucket.org/openpyxl/openpyxl/raw/1234131eb33fc7191a554afdd092ee368f7b1fc9/LICENCE.rst", "openpyxl-LICENSE.txt")
         if self.options.with_conanio:
+            if self.options.conanio_variant == "standalone":
+                tools.download("https://dl.bintray.com/conan/installers/conan-win-64_%s.exe" % (self._conan_version.replace(".", "_")), "conan-win64.exe")
             tools.download("https://raw.githubusercontent.com/conan-io/conan/develop/LICENSE.md", "conanio-LICENSE.txt")
         if self.options.with_vscode:
             tools.download("https://go.microsoft.com/fwlink/?Linkid=850641", "vscode-win64.zip")
@@ -126,7 +131,8 @@ class BarbarianConan(ConanFile):
             tools.download("http://doxygen.nl/files/doxygen-%s-setup.exe" % (self._doxygen_version), "doxygen-win64.exe")
             tools.download("https://raw.githubusercontent.com/doxygen/doxygen/master/LICENSE", "doxygen-LICENSE.txt")
         if self.options.with_miktex:
-            tools.download("http://ftp.fau.de/ctan/systems/win32/miktex/setup/windows-x86/miktex-portable-%s.exe" % (self._miktex_version), "miktex-win64.exe")
+            #tools.download("http://ftp.fau.de/ctan/systems/win32/miktex/setup/windows-x86/miktex-portable-%s.exe" % (self._miktex_version), "miktex-win64.exe")
+            tools.download("http://ftp.fau.de/ctan/systems/win32/miktex/setup/windows-x86/miktex-portable.exe", "miktex-win64.exe")
             tools.download("https://raw.githubusercontent.com/MiKTeX/miktex/master/COPYING.md", "miktex-LICENSE.txt")
         if self.options.with_ninja:
             tools.download("https://github.com/ninja-build/ninja/releases/download/v%s/ninja-win.zip" % (self._ninja_version), "ninja-win.zip")
@@ -333,11 +339,35 @@ class BarbarianConan(ConanFile):
             # Additional python packages
             call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "openpyxl==%s" % self._openpyxl_version, "--no-warn-script-location"])
             self._append_to_license_txt("openpyxl", "https://openpyxl.readthedocs.io/", "Python programming language", os.path.join(self.source_folder, "openpyxl-LICENSE.txt"))
+            # More python packages ... as they are needed by vscode, without specific version 
+            call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "pylint", "--no-warn-script-location"])
 
         # 5. Conan.io
         if self.options.with_conanio:
-            call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "conan==%s" % self._conan_version, "--no-warn-script-location"])
-            # No install script needed ... installed with python
+            if self.options.conanio_variant == "standalone":
+                call(["innounp", "-q", "-x", os.path.join(self.source_folder, "conan-win64.exe")])
+                os.rename(os.path.join("{app}", "conan"), os.path.join(self.name, "vendor", "conan-for-windows"))
+                shutil.rmtree("{app}")
+                os.remove("install_script.iss")
+                os.linesep= '\r\n'
+                with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "conan-for-windows.cmd"), 'w') as f:
+                    f.write(':: Vendor: conan support\n')
+                    path = os.path.join("%CMDER_ROOT%", "vendor", "conan-for-windows", "bin")
+                    f.write('set "PATH={0};%PATH%"\n'.format(path))
+                os.linesep= '\r\n'
+                with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "conan-for-windows.ps1"), 'w') as f:
+                    f.write('# Vendor: conan support\n')
+                    path = os.path.join("$env:CMDER_ROOT", "vendor", "conan-for-windows", "bin")
+                    f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
+                os.linesep= '\n'
+                with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "conan-for-windows.sh"), 'w') as f:
+                    f.write('# Vendor: conan support\n')
+                    path = os.path.join("$CMDER_ROOT", "vendor", "conan-for-windows", "bin")
+                    f.write('export "PATH={0}:$PATH"\n'.format(path))
+            else:
+                # Integrate conan into python
+                call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "conan==%s" % self._conan_version, "--no-warn-script-location"])
+            # Append license
             self._append_to_license_txt("Conan.io", "https://conan.io/", "A Python library to read/write Excel 2010 xlsx/xlsm files", os.path.join(self.source_folder, "conanio-LICENSE.txt"))
 
         # 6. VS Code + Extensions
@@ -647,6 +677,7 @@ class BarbarianConan(ConanFile):
             iscc_command.append("/Dwith_python")
         if self.options.with_conanio:
             iscc_command.append("/Dwith_conanio")
+            iscc_command.append("/Dwith_conanio_%s" % self.options.conanio_variant)
         if self.options.with_vscode:
             iscc_command.append("/Dwith_vscode")
         if self.options.with_kdiff3:
