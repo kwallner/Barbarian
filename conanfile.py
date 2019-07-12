@@ -29,16 +29,16 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.8.3"
+    version = "1.8.4"
     _cmder_version = "1.3.11"
     _cmder_version_build = "%s.843" % _cmder_version
     _git_version = "2.22.0"
     _cmake_version = "3.14.5"
-    _bazel_version = "0.26.1"
+    _bazel_version = "0.27.1"
     _winpython3_version = "3.7.2.0"
     _winpython3_version_build = "1.11.20190223"
     _winpython3_subdirectory = "python-3.7.2.amd64"
-    _conan_version = "1.16.0"
+    _conan_version = "1.16.1"
     _openpyxl_version = "2.6.2"
     _vscode_version = "1.35.1"
     _kdiff_version = "0.9.98"
@@ -47,9 +47,9 @@ class BarbarianConan(ConanFile):
     _gitext_version_build = "%s.6049" % _gitext_version
     _graphviz_version = "2.38"
     _doxygen_version = "1.8.15"
-    _miktex_version = "2.9.6942"
+    _miktex_version = "2.9.7100"
     _ninja_version = "1.9.0"
-    _npp_version = "7.7"
+    _npp_version = "7.7.1"
     _pandoc_version = "2.7.3"
     _ruby_version = "2.6.3"
     _ruby_version_build= "%s-1" % _ruby_version
@@ -131,8 +131,7 @@ class BarbarianConan(ConanFile):
             tools.download("http://doxygen.nl/files/doxygen-%s-setup.exe" % (self._doxygen_version), "doxygen-win64.exe")
             tools.download("https://raw.githubusercontent.com/doxygen/doxygen/master/LICENSE", "doxygen-LICENSE.txt")
         if self.options.with_miktex:
-            #tools.download("http://ftp.fau.de/ctan/systems/win32/miktex/setup/windows-x86/miktex-portable-%s.exe" % (self._miktex_version), "miktex-win64.exe")
-            tools.download("http://ftp.fau.de/ctan/systems/win32/miktex/setup/windows-x86/miktex-portable.exe", "miktex-win64.exe")
+            tools.download("http://ftp.fau.de/ctan/systems/win32/miktex/setup/windows-x64/basic-miktex-%s-x64.exe" % (self._miktex_version), "miktex-win64.exe")
             tools.download("https://raw.githubusercontent.com/MiKTeX/miktex/master/COPYING.md", "miktex-LICENSE.txt")
         if self.options.with_ninja:
             tools.download("https://github.com/ninja-build/ninja/releases/download/v%s/ninja-win.zip" % (self._ninja_version), "ninja-win.zip")
