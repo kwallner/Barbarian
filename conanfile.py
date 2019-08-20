@@ -29,7 +29,7 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.8.4"
+    version = "1.8.5"
     _cmder_version = "1.3.11"
     _cmder_version_build = "%s.843" % _cmder_version
     _git_version = "2.22.0"
@@ -40,7 +40,7 @@ class BarbarianConan(ConanFile):
     _winpython3_subdirectory = "python-3.7.2.amd64"
     _conan_version = "1.16.1"
     _openpyxl_version = "2.6.2"
-    _vscode_version = "1.35.1"
+    _vscode_version = "1.36.1"
     _kdiff_version = "0.9.98"
     _winmerge_version = "2.16.2"
     _gitext_version = "3.1.1"
@@ -340,6 +340,8 @@ class BarbarianConan(ConanFile):
             self._append_to_license_txt("openpyxl", "https://openpyxl.readthedocs.io/", "Python programming language", os.path.join(self.source_folder, "openpyxl-LICENSE.txt"))
             # More python packages ... as they are needed by vscode, without specific version 
             call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "pylint", "--no-warn-script-location"])
+            call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "GitPython", "--no-warn-script-location"])
+            call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "jira", "--no-warn-script-location"])
 
         # 5. Conan.io
         if self.options.with_conanio:
