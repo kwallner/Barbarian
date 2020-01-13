@@ -34,7 +34,6 @@ class BarbarianConan(ConanFile):
     _cmder_version_build = "%s.982" % _cmder_version
     _git_version = "2.24.1.2"
     _cmake_version = "3.15.6"
-    _bazel_version = "2.0.0"
     _winpython3_version = "3.7.6.0"
     _winpython3_version_build = "2.2.20191222"
     _winpython3_subdirectory = "python-3.7.6.amd64"
@@ -60,19 +59,19 @@ class BarbarianConan(ConanFile):
     scm = { "type": "git", "url": "auto", "revision": "auto" }
     no_copy_source = True
     short_paths = True
-    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio" : [True, False], "conanio_variant" : ["pip", "standalone"], "with_vscode" : [True, False], "with_kdiff3" : [True, False], "with_winmerge" : [True, False], "with_gitext" : [True, False], "with_graphviz" : [True, False], "with_doxygen" : [True, False], "with_ninja" : [True, False], "with_npp" : [True, False]}
-    default_options = {"with_git": True, "with_cmake" : True, "with_bazel" : False, "with_python" : True, "with_conanio" : True, "conanio_variant" : "pip", "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False, "with_doxygen" : False, "with_ninja" : False, "with_npp" : False}
+    options = {"with_git": [True, False], "with_cmake": [True, False], "with_python": [True, False], "with_conanio" : [True, False], "conanio_variant" : ["pip", "standalone"], "with_vscode" : [True, False], "with_kdiff3" : [True, False], "with_winmerge" : [True, False], "with_gitext" : [True, False], "with_graphviz" : [True, False], "with_doxygen" : [True, False], "with_ninja" : [True, False], "with_npp" : [True, False]}
+    default_options = {"with_git": True, "with_cmake" : True, "with_python" : True, "with_conanio" : True, "conanio_variant" : "pip", "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False, "with_doxygen" : False, "with_ninja" : False, "with_npp" : False}
 
     @property
     def _installertype_set(self):
-        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_graphviz and self.options.with_doxygen and self.options.with_ninja and self.options.with_npp:
+        if self.options.with_git and self.options.with_cmake and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_graphviz and self.options.with_doxygen and self.options.with_ninja and self.options.with_npp:
             if self.options.conanio_variant == "standalone":
                 return "standalone"
             else:
                 return "full"
-        if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_ninja and not self.options.with_npp:
+        if self.options.with_git and not self.options.with_cmake and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_ninja and not self.options.with_npp:
             return "minimal"
-        if self.options.with_git and self.options.with_cmake and not self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_ninja and not self.options.with_npp:
+        if self.options.with_git and self.options.with_cmake and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_ninja and not self.options.with_npp:
             return "default"
         return "custom"
 
@@ -107,9 +106,6 @@ class BarbarianConan(ConanFile):
             self.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.2/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version), "git-for-windows.7z.exe")
         if self.options.with_cmake:
             self.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self._cmake_version.split(".")[0], self._cmake_version.split(".")[1], self._cmake_version), "cmake-win64.zip")
-        if self.options.with_bazel:
-            self.download("https://github.com/bazelbuild/bazel/releases/download/%s/bazel-%s-windows-x86_64.zip" % (self._bazel_version, self._bazel_version), "bazel-win64.zip")
-            self.download("https://raw.githubusercontent.com/bazelbuild/bazel/master/LICENSE", "bazel-LICENSE.txt")
         if self.options.with_python:
             self.download("https://github.com/winpython/winpython/releases/download/%s/WinPython64-%sPs2.exe" % (self._winpython3_version_build, self._winpython3_version), "winpython3-win64.exe")
             self.download("https://raw.githubusercontent.com/python/cpython/master/LICENSE", "cpython-LICENSE.txt")
@@ -271,27 +267,7 @@ class BarbarianConan(ConanFile):
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("CMake", "https://cmake.org/", "Cross-Plattform Build System", os.path.join(self.build_folder, self.name, "vendor", "cmake-for-windows", "doc", "cmake", "Copyright.txt"))
 
-        # 3b. Bazel
-        if self.options.with_bazel:
-            tools.unzip(os.path.join(self.source_folder, "bazel-win64.zip"), destination = os.path.join(self.name, "vendor", "bazel-for-windows"))
-            shutil.copyfile(os.path.join(self.source_folder, "bazel-LICENSE.txt"), os.path.join(self.name, "vendor", "bazel-for-windows", "LICENSE.txt"))
-            # Create install script
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "bazel-for-windows.cmd"), 'w') as f:
-                f.write(':: Vendor: bazel support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "bazel-for-windows")
-                f.write('set "PATH={0};%PATH%"\n'.format(path))
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "bazel-for-windows.ps1"), 'w') as f:
-                f.write('# Vendor: bazel support\n')
-                path = os.path.join("$env:CMDER_ROOT", "vendor", "bazel-for-windows")
-                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
-            os.linesep= '\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "bazel-for-windows.sh"), 'w') as f:
-                f.write('# Vendor: bazel support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "bazel-for-windows")
-                f.write('export "PATH={0}:$PATH"\n'.format(path))
-            self._append_to_license_txt("Bazel", "https://bazel.build/", "Build and test software of any size, quickly and reliably", os.path.join(self.name, "vendor", "bazel-for-windows", "LICENSE.txt"))
+        # 3b. Bazel ... REMOVED
 
         # 4. Python
         if self.options.with_python:
@@ -367,7 +343,6 @@ class BarbarianConan(ConanFile):
             call(["code.cmd", "--install-extension", "MS-CEINTL.vscode-language-pack-de", "--force", "--extensions-dir", "resources/app/extensions"])
             call(["code.cmd", "--install-extension", "twxs.cmake", "--force", "--extensions-dir", "resources/app/extensions"])
             call(["code.cmd", "--install-extension", "vector-of-bool.cmake-tools", "--force", "--extensions-dir", "resources/app/extensions"])
-            call(["code.cmd", "--install-extension", "DevonDCarew.bazel-code", "--force", "--extensions-dir", "resources/app/extensions"])
             os.chdir(old)
             # Create install script
             os.linesep= '\r\n'
@@ -583,8 +558,6 @@ class BarbarianConan(ConanFile):
             iscc_command.append("/Dwith_git")
         if self.options.with_cmake:
             iscc_command.append("/Dwith_cmake")
-        if self.options.with_bazel:
-            iscc_command.append("/Dwith_bazel")
         if self.options.with_python:
             iscc_command.append("/Dwith_python")
         if self.options.with_conanio:
