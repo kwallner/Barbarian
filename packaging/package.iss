@@ -66,12 +66,6 @@ Name: ninja;                                   Description: "Ninja (https://ninj
 #ifdef with_npp
 Name: npp;                                   Description: "Notepad++ (https://notepad-plus-plus.org): Source code editor and Notepad replacement";           Types: full
 #endif
-#ifdef with_pandoc
-Name: pandoc;                                   Description: "Pandoc(https://pandoc.org): Universal document converter";           Types: full
-#endif
-#ifdef with_ruby
-Name: ruby;                                   Description: "Ruby(https://www.ruby-lang.org): Dynamic, open source programming language";           Types: full
-#endif
 
 [Files]
 Source: "@name@\Cmder.exe";                                DestDir: "{app}";                                           Flags: ignoreversion
@@ -117,12 +111,6 @@ Source: "@name@\config\profile.d\ninja-for-windows.*";    DestDir: "{app}\config
 #endif
 #ifdef with_npp
 Source: "@name@\config\profile.d\npp-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: npp
-#endif
-#ifdef with_pandoc
-Source: "@name@\config\profile.d\pandoc-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: pandoc
-#endif
-#ifdef with_ruby
-Source: "@name@\config\profile.d\ruby-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: ruby
 #endif
 Source: "@name@\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "@name@\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion
@@ -178,12 +166,6 @@ Source: "@name@\vendor\ninja-for-windows\*";             DestDir: "{app}\vendor\
 #endif
 #ifdef with_npp
 Source: "@name@\vendor\npp-for-windows\*";             DestDir: "{app}\vendor\npp-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion;    Components: npp; Permissions: users-modify
-#endif
-#ifdef with_pandoc
-Source: "@name@\vendor\pandoc-for-windows\*";             DestDir: "{app}\vendor\pandoc-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion;    Components: pandoc; Permissions: users-modify
-#endif
-#ifdef with_ruby
-Source: "@name@\vendor\ruby-for-windows\*";             DestDir: "{app}\vendor\ruby-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion;    Components: ruby; Permissions: users-modify
 #endif
 
 [Run]

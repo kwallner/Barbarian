@@ -43,8 +43,6 @@ The options used are:
     * with_doxygen (default False)
     * with_ninja (default False)
     * with_npp (default False)
-    * with_pandoc (default False)
-    * with_ruby (default False)
 Additional variant options:
     * conanio_variant (default "pip")
       "pip": Use python integrated conan, installed with pip
@@ -52,12 +50,12 @@ Additional variant options:
     
 To build full version:
 ```
-conan create . user/channel -o with_bazel=True -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True -o with_ninja=True -o with_npp=True -o with_pandoc=True -o with_ruby=True
+conan create . user/channel -o with_bazel=True -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True -o with_ninja=True -o with_npp=True
 ```
 
 To build standalone version:
 ```
-conan create . user/channel -o conanio_variant=standalone -o with_bazel=True -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True -o with_ninja=True -o with_npp=True -o with_pandoc=True -o with_ruby=True
+conan create . user/channel -o conanio_variant=standalone -o with_bazel=True -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True -o with_ninja=True -o with_npp=True
 ```
 
 To build a minimal version
@@ -69,8 +67,8 @@ conan create . user/channel -o with_cmake=False -o with_python=False -o with_con
 
 ```
 set BARBARIAN_CACHE_DIR=D:/buildspace/Barbarian/temp_cache
-conan create . kwallner/testing -o with_bazel=True -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True -o with_ninja=True -o with_npp=True -o with_pandoc=True -o with_ruby=True
-conan create . kwallner/testing -o conanio_variant=standalone -o with_bazel=True -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True -o with_ninja=True -o with_npp=True -o with_pandoc=True -o with_ruby=True
+conan create . kwallner/testing -o with_bazel=True -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True -o with_ninja=True -o with_npp=True
+conan create . kwallner/testing -o conanio_variant=standalone -o with_bazel=True -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True -o with_ninja=True -o with_npp=True
 conan create . kwallner/testing 
 conan create . kwallner/testing -o with_cmake=False -o with_python=False -o with_conanio=False
 ```
