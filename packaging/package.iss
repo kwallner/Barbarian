@@ -60,9 +60,6 @@ Name: graphviz;                                 Description: "Graphviz (https://
 #ifdef with_doxygen
 Name: doxygen;                                  Description: "Doxygen (http://www.doxygen.nl): Generate documentation from source code";           Types: full
 #endif
-#ifdef with_miktex
-Name: miktex;                                   Description: "MiKTeX (https://miktex.org): MiKTeX is an implementation of TeX and related programs";           Types: full
-#endif
 #ifdef with_ninja
 Name: ninja;                                   Description: "Ninja (https://ninja-build.org): Ninja is a small build system with a focus on speed";           Types: full
 #endif
@@ -114,9 +111,6 @@ Source: "@name@\config\profile.d\graphviz-for-windows.*";    DestDir: "{app}\con
 #endif
 #ifdef with_doxygen
 Source: "@name@\config\profile.d\doxygen-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: doxygen
-#endif
-#ifdef with_miktex
-Source: "@name@\config\profile.d\miktex-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: miktex
 #endif
 #ifdef with_ninja
 Source: "@name@\config\profile.d\ninja-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: ninja
@@ -179,9 +173,6 @@ Source: "@name@\vendor\graphviz-for-windows\*";            DestDir: "{app}\vendo
 #ifdef with_doxygen
 Source: "@name@\vendor\doxygen-for-windows\*";             DestDir: "{app}\vendor\doxygen-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: doxygen;
 #endif
-#ifdef with_miktex
-Source: "@name@\vendor\miktex-for-windows\*";             DestDir: "{app}\vendor\miktex-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion onlyifdoesntexist;    Components: miktex; Permissions: users-modify
-#endif
 #ifdef with_ninja
 Source: "@name@\vendor\ninja-for-windows\*";             DestDir: "{app}\vendor\ninja-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion;    Components: ninja; Permissions: users-modify
 #endif
@@ -205,9 +196,6 @@ Filename: "{app}\vendor\python-for-windows\WinPython Control Panel.exe"; Working
 Filename: "{sys}\regsvr32.exe"; Parameters: "/s /u GitExtensionsShellEx64.dll"; WorkingDir: "{app}\vendor\gitext-for-windows"; Flags: runhidden;  Components: gitext
 Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Description: "Start GitExtensions"; Flags: postinstall skipifsilent unchecked;  Components: gitext
 #endif
-#ifdef with_miktex
-Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\miktex-console.exe"; WorkingDir: "{app}\vendor\miktex-for-windows\texmfs";  Description: "Start MiKTeX Console"; Flags: postinstall skipifsilent unchecked;  Components: miktex
-#endif
 
 [Dirs]
 Name: "{app}\config";                          Permissions: users-modify
@@ -217,9 +205,6 @@ Name: "{app}\vendor\python-for-windows";       Permissions: users-modify;    Com
 #endif
 #ifdef with_vscode
 Name: "{app}\vendor\vscode-for-windows";       Permissions: users-modify;    Components: vscode
-#endif
-#ifdef with_miktex
-Name: "{app}\vendor\miktex-for-windows";       Permissions: users-modify;    Components: miktex
 #endif
 
 [UninstallRun]
@@ -266,19 +251,6 @@ Name: "{group}\GitExtensions";        Filename: "{app}\vendor\gitext-for-windows
 #endif
 #ifdef with_doxygen
 Name: "{group}\DoxygenWizard";        Filename: "{app}\vendor\doxygen-for-windows\bin\doxywizard.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: doxygen
-#endif
-#ifdef with_miktex
-Name: "{group}\MiKTeX\MikTeX Console";                              Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\miktex-console.exe";  Parameters: ""; WorkingDir: "{app}\vendor\miktex-for-windows\texmfs";    Components: miktex
-Name: "{group}\MiKTeX\DVI Previewer";                               Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\yap.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: miktex
-Name: "{group}\MiKTeX\TeXworks";                                    Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\miktex-texworks.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: miktex
-Name: "{group}\MiKTeX\Help\MiKTeX Manual";                          Filename: "{app}\vendor\miktex-for-windows\texmfs\install\doc\miktex\miktex.chm";  Parameters: ""; WorkingDir: "app}\vendor\miktex-for-windows\texmfs";    Components: miktex
-Name: "{group}\MiKTeX\Maintenance\MiKTeX Package Manager";          Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\miktex-console.exe";  Parameters: "--start-page packages"; WorkingDir: "app}\vendor\miktex-for-windows\texmfs";    Components: miktex
-Name: "{group}\MiKTeX\Maintenance\MiKTeX Settings";                 Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\miktex-console.exe";  Parameters: "--start-page settings"; WorkingDir: "app}\vendor\miktex-for-windows\texmfs";    Components: miktex
-Name: "{group}\MiKTeX\Maintenance\MiKTeX Update";                   Filename: "{app}\vendor\miktex-for-windows\texmfs\install\miktex\bin\miktex-console.exe";  Parameters: "--start-page updates"; WorkingDir: "app}\vendor\miktex-for-windows\texmfs";    Components: miktex
-Name: "{group}\MiKTeX\MiKTeX on the Web\Give back";                 Filename: "https://miktex.org/giveback"; Components: miktex
-Name: "{group}\MiKTeX\MiKTeX on the Web\Known Issues";              Filename: "https://miktex.org/2.9/issues"; Components: miktex
-Name: "{group}\MiKTeX\MiKTeX on the Web\MiKTeX Project Page";       Filename: "https://miktex.org/"; Components: miktex
-Name: "{group}\MiKTeX\MiKTeX on the Web\MiKTeX Support";            Filename: "https://miktex.org/support"; Components: miktex
 #endif
 #ifdef with_npp
 Name: "{group}\Notepad++";        Filename: "{app}\vendor\npp-for-windows\notepad++.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: npp

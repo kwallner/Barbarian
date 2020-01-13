@@ -29,29 +29,28 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.8.6"
-    _cmder_version = "1.3.12"
-    _cmder_version_build = "%s.915" % _cmder_version
-    _git_version = "2.23.0"
-    _cmake_version = "3.15.2"
-    _bazel_version = "0.28.1"
-    _winpython3_version = "3.7.2.0"
-    _winpython3_version_build = "1.11.20190223"
-    _winpython3_subdirectory = "python-3.7.2.amd64"
-    _conan_version = "1.18.1"
-    _openpyxl_version = "2.6.3"
-    _vscode_version = "1.37.1"
+    version = "1.9.0"
+    _cmder_version = "1.3.14"
+    _cmder_version_build = "%s.982" % _cmder_version
+    _git_version = "2.24.1.2"
+    _cmake_version = "3.15.6"
+    _bazel_version = "2.0.0"
+    _winpython3_version = "3.7.6.0"
+    _winpython3_version_build = "2.2.20191222"
+    _winpython3_subdirectory = "python-3.7.6.amd64"
+    _conan_version = "1.20.5"
+    _openpyxl_version = "3.0.3"
+    _vscode_version = "1.41.1"
     _kdiff_version = "0.9.98"
     _winmerge_version = "2.16.4"
-    _gitext_version = "3.1.1"
-    _gitext_version_build = "%s.6049" % _gitext_version
+    _gitext_version = "3.3.1"
+    _gitext_version_build = "%s.7897" % _gitext_version
     _graphviz_version = "2.38"
-    _doxygen_version = "1.8.16"
-    _miktex_version = "2.9.7152"
+    _doxygen_version = "1.8.17"
     _ninja_version = "1.9.0"
-    _npp_version = "7.7.1"
-    _pandoc_version = "2.7.3"
-    _ruby_version = "2.6.3"
+    _npp_version = "7.8.2"
+    _pandoc_version = "2.9.1.1"
+    _ruby_version = "2.6.5"
     _ruby_version_build= "%s-1" % _ruby_version
     _asciidoctor_version = "2.0.10"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -65,19 +64,19 @@ class BarbarianConan(ConanFile):
     scm = { "type": "git", "url": "auto", "revision": "auto" }
     no_copy_source = True
     short_paths = True
-    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio" : [True, False], "conanio_variant" : ["pip", "standalone"], "with_vscode" : [True, False], "with_kdiff3" : [True, False], "with_winmerge" : [True, False], "with_gitext" : [True, False], "with_graphviz" : [True, False], "with_doxygen" : [True, False], "with_miktex" : [True, False], "with_ninja" : [True, False], "with_npp" : [True, False], "with_pandoc" : [True, False], "with_ruby" : [True, False]}
-    default_options = {"with_git": True, "with_cmake" : True, "with_bazel" : False, "with_python" : True, "with_conanio" : True, "conanio_variant" : "pip", "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False, "with_doxygen" : False, "with_miktex" : False, "with_ninja" : False, "with_npp" : False, "with_pandoc" : False, "with_ruby" : False}
+    options = {"with_git": [True, False], "with_cmake": [True, False], "with_bazel": [True, False], "with_python": [True, False], "with_conanio" : [True, False], "conanio_variant" : ["pip", "standalone"], "with_vscode" : [True, False], "with_kdiff3" : [True, False], "with_winmerge" : [True, False], "with_gitext" : [True, False], "with_graphviz" : [True, False], "with_doxygen" : [True, False], "with_ninja" : [True, False], "with_npp" : [True, False], "with_pandoc" : [True, False], "with_ruby" : [True, False]}
+    default_options = {"with_git": True, "with_cmake" : True, "with_bazel" : False, "with_python" : True, "with_conanio" : True, "conanio_variant" : "pip", "with_vscode" : False, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_graphviz" : False, "with_doxygen" : False, "with_ninja" : False, "with_npp" : False, "with_pandoc" : False, "with_ruby" : False}
 
     @property
     def _installertype_set(self):
-        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_graphviz and self.options.with_doxygen and self.options.with_miktex and self.options.with_ninja and self.options.with_npp and self.options.with_pandoc and self.options.with_ruby:
+        if self.options.with_git and self.options.with_cmake and self.options.with_bazel and self.options.with_python and self.options.with_conanio and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_graphviz and self.options.with_doxygen and self.options.with_ninja and self.options.with_npp and self.options.with_pandoc and self.options.with_ruby:
             if self.options.conanio_variant == "standalone":
                 return "standalone"
             else:
                 return "full"
-        if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex and not self.options.with_ninja and not self.options.with_npp and not self.options.with_pandoc and not self.options.with_ruby:
+        if self.options.with_git and not self.options.with_cmake and not self.options.with_bazel and not self.options.with_python and not self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_ninja and not self.options.with_npp and not self.options.with_pandoc and not self.options.with_ruby:
             return "minimal"
-        if self.options.with_git and self.options.with_cmake and not self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_miktex and not self.options.with_ninja and not self.options.with_npp and not self.options.with_pandoc and not self.options.with_ruby:
+        if self.options.with_git and self.options.with_cmake and not self.options.with_bazel and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_ninja and not self.options.with_npp and not self.options.with_pandoc and not self.options.with_ruby:
             return "default"
         return "custom"
 
@@ -95,58 +94,64 @@ class BarbarianConan(ConanFile):
         if self.options.with_python:
             self.build_requires("InnoSetupUnpacker/0.48@kwallner/testing")
 
+    def download(self, url, filename, verify=True, retry=2, retry_wait=5, overwrite=False, auth=None, headers=None):
+        cache_dir = os.environ["BARBARIAN_CACHE_DIR"]
+        if cache_dir:
+            cache_file = os.path.join(cache_dir, filename)
+            source_file = os.path.join(self.source_folder, filename)
+            if not os.path.isfile(cache_file):
+                tools.download(url=url, filename=cache_file, verify=verify, retry=retry, retry_wait=retry_wait, overwrite=overwrite, auth=auth, headers=headers)
+            shutil.copyfile(cache_file, source_file)
+        else:
+            tools.download(url=url, filename=filename, verify=verify, retry=retry, retry_wait=retry_wait, overwrite=overwrite, auth=auth, headers=headers)
+
     def source(self):
-        tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self._cmder_version), "cmder_mini.zip")
+        self.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self._cmder_version), "cmder_mini.zip")
         if self.options.with_git:
-            tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.1/PortableGit-%s-64-bit.7z.exe" % (self._git_version, self._git_version), "git-for-windows.7z.exe")
+            self.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.2/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version), "git-for-windows.7z.exe")
         if self.options.with_cmake:
-            tools.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self._cmake_version.split(".")[0], self._cmake_version.split(".")[1], self._cmake_version), "cmake-win64.zip")
+            self.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self._cmake_version.split(".")[0], self._cmake_version.split(".")[1], self._cmake_version), "cmake-win64.zip")
         if self.options.with_bazel:
-            tools.download("https://github.com/bazelbuild/bazel/releases/download/%s/bazel-%s-windows-x86_64.zip" % (self._bazel_version, self._bazel_version), "bazel-win64.zip")
-            tools.download("https://raw.githubusercontent.com/bazelbuild/bazel/master/LICENSE", "bazel-LICENSE.txt")
+            self.download("https://github.com/bazelbuild/bazel/releases/download/%s/bazel-%s-windows-x86_64.zip" % (self._bazel_version, self._bazel_version), "bazel-win64.zip")
+            self.download("https://raw.githubusercontent.com/bazelbuild/bazel/master/LICENSE", "bazel-LICENSE.txt")
         if self.options.with_python:
-            tools.download("https://github.com/winpython/winpython/releases/download/%s/WinPython64-%sPs2.exe" % (self._winpython3_version_build, self._winpython3_version), "winpython3-win64.exe")
-            tools.download("https://raw.githubusercontent.com/winpython/winpython/master/LICENSE", "winpython3-LICENSE.txt")
-            tools.download("https://raw.githubusercontent.com/python/cpython/master/LICENSE", "cpython-LICENSE.txt")
-            tools.download("https://bitbucket.org/openpyxl/openpyxl/raw/1234131eb33fc7191a554afdd092ee368f7b1fc9/LICENCE.rst", "openpyxl-LICENSE.txt")
+            self.download("https://github.com/winpython/winpython/releases/download/%s/WinPython64-%sPs2.exe" % (self._winpython3_version_build, self._winpython3_version), "winpython3-win64.exe")
+            self.download("https://raw.githubusercontent.com/python/cpython/master/LICENSE", "cpython-LICENSE.txt")
+            self.download("https://bitbucket.org/openpyxl/openpyxl/raw/1234131eb33fc7191a554afdd092ee368f7b1fc9/LICENCE.rst", "openpyxl-LICENSE.txt")
         if self.options.with_conanio:
             if self.options.conanio_variant == "standalone":
-                tools.download("https://dl.bintray.com/conan/installers/conan-win-64_%s.exe" % (self._conan_version.replace(".", "_")), "conan-win64.exe")
-            tools.download("https://raw.githubusercontent.com/conan-io/conan/develop/LICENSE.md", "conanio-LICENSE.txt")
+                self.download("https://dl.bintray.com/conan/installers/conan-win-64_%s.exe" % (self._conan_version.replace(".", "_")), "conan-win64.exe")
+            self.download("https://raw.githubusercontent.com/conan-io/conan/develop/LICENSE.md", "conanio-LICENSE.txt")
         if self.options.with_vscode:
-            tools.download("https://go.microsoft.com/fwlink/?Linkid=850641", "vscode-win64.zip")
-            tools.download("https://raw.githubusercontent.com/Microsoft/vscode/master/LICENSE.txt", "vscode-LICENSE.txt")
+            self.download("https://go.microsoft.com/fwlink/?Linkid=850641", "vscode-win64.zip")
+            self.download("https://raw.githubusercontent.com/Microsoft/vscode/master/LICENSE.txt", "vscode-LICENSE.txt")
         if self.options.with_kdiff3:
-            tools.download("https://datapacket.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self._kdiff_version, self._kdiff_version), "kdiff3-win64.exe")
+            self.download("https://netix.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self._kdiff_version, self._kdiff_version), "kdiff3-win64.exe")
         if self.options.with_winmerge:
-            tools.download("https://datapacket.dl.sourceforge.net/project/winmerge/stable/%s/winmerge-%s-x64-exe.zip" % (self._winmerge_version, self._winmerge_version), "winmerge-win64.exe.zip")
-            tools.download("https://bitbucket.org/winmerge/winmerge/raw/c1164661fef83403f91e93e4919801b3e7804df3/Docs/Users/GPL.rtf.txt", "winmerge-LICENSE.txt")
+            self.download("https://netix.dl.sourceforge.net/project/winmerge/stable/%s/winmerge-%s-x64-exe.zip" % (self._winmerge_version, self._winmerge_version), "winmerge-win64.exe.zip")
+            self.download("https://bitbucket.org/winmerge/winmerge/raw/33304826044b672a8d3d6b34a41a91ca4d6b7818/Docs/Users/GPL.rtf.txt", "winmerge-LICENSE.txt")
         if self.options.with_gitext:
-            tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version_build), "gitext.exe")
-            tools.download("https://raw.githubusercontent.com/gitextensions/gitextensions/master/LICENSE.md", "gitext-LICENSE.txt")
+            self.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version_build), "gitext.exe")
+            self.download("https://raw.githubusercontent.com/gitextensions/gitextensions/master/LICENSE.md", "gitext-LICENSE.txt")
         if self.options.with_graphviz:
-            tools.download("https://graphviz.gitlab.io/_pages/Download/windows/graphviz-%s.zip" % (self._graphviz_version), "graphviz.zip")
-            tools.download("https://gitlab.com/graphviz/graphviz/raw/master/COPYING", "graphviz-LICENSE.txt")
+            self.download("https://graphviz.gitlab.io/_pages/Download/windows/graphviz-%s.zip" % (self._graphviz_version), "graphviz.zip")
+            self.download("https://gitlab.com/graphviz/graphviz/raw/master/COPYING", "graphviz-LICENSE.txt")
         if self.options.with_doxygen:
-            tools.download("http://doxygen.nl/files/doxygen-%s-setup.exe" % (self._doxygen_version), "doxygen-win64.exe")
-            tools.download("https://raw.githubusercontent.com/doxygen/doxygen/master/LICENSE", "doxygen-LICENSE.txt")
-        if self.options.with_miktex:
-            tools.download("http://ftp.fau.de/ctan/systems/win32/miktex/setup/windows-x64/basic-miktex-%s-x64.exe" % (self._miktex_version), "miktex-win64.exe")
-            tools.download("https://raw.githubusercontent.com/MiKTeX/miktex/master/COPYING.md", "miktex-LICENSE.txt")
+            self.download("http://doxygen.nl/files/doxygen-%s-setup.exe" % (self._doxygen_version), "doxygen-win64.exe")
+            self.download("https://raw.githubusercontent.com/doxygen/doxygen/master/LICENSE", "doxygen-LICENSE.txt")
         if self.options.with_ninja:
-            tools.download("https://github.com/ninja-build/ninja/releases/download/v%s/ninja-win.zip" % (self._ninja_version), "ninja-win.zip")
-            tools.download("https://raw.githubusercontent.com/ninja-build/ninja/master/COPYING", "ninja-LICENSE.txt")
+            self.download("https://github.com/ninja-build/ninja/releases/download/v%s/ninja-win.zip" % (self._ninja_version), "ninja-win.zip")
+            self.download("https://raw.githubusercontent.com/ninja-build/ninja/master/COPYING", "ninja-LICENSE.txt")
         if self.options.with_npp:
-            tools.download("https://notepad-plus-plus.org/repository/7.x/%s/npp.%s.bin.x64.zip" % (self._npp_version, self._npp_version), "npp-win64.zip")
-            tools.download("https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/master/LICENSE", "npp-LICENSE.txt")
+            self.download("http://download.notepad-plus-plus.org/repository/7.x/%s/npp.%s.bin.x64.zip" % (self._npp_version, self._npp_version), "npp-win64.zip", verify=False)
+            self.download("https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/master/LICENSE", "npp-LICENSE.txt")
         if self.options.with_pandoc:
-            tools.download("https://github.com/jgm/pandoc/releases/download/%s/pandoc-%s-windows-x86_64.zip" % (self._pandoc_version, self._pandoc_version), "pandoc-win64.zip")
-            tools.download("https://raw.githubusercontent.com/jgm/pandoc/master/COPYRIGHT", "pandoc-LICENSE.txt")
+            self.download("https://github.com/jgm/pandoc/releases/download/%s/pandoc-%s-windows-x86_64.zip" % (self._pandoc_version, self._pandoc_version), "pandoc-win64.zip")
+            self.download("https://raw.githubusercontent.com/jgm/pandoc/master/COPYRIGHT", "pandoc-LICENSE.txt")
         if self.options.with_ruby:
-            tools.download("https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-%s/rubyinstaller-%s-x64.7z" % (self._ruby_version_build, self._ruby_version_build), "ruby-win64.7z")
-            tools.download("https://raw.githubusercontent.com/ruby/ruby/trunk/COPYING", "ruby-LICENSE.txt")
-            tools.download("https://raw.githubusercontent.com/asciidoctor/asciidoctor/master/LICENSE", "asciidoctor-LICENSE.txt")
-
+            self.download("https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-%s/rubyinstaller-%s-x64.7z" % (self._ruby_version_build, self._ruby_version_build), "ruby-win64.7z")
+            self.download("https://raw.githubusercontent.com/ruby/ruby/master/COPYING", "ruby-LICENSE.txt")
+            self.download("https://raw.githubusercontent.com/asciidoctor/asciidoctor/master/LICENSE", "asciidoctor-LICENSE.txt")
 
     def _append_to_license_txt(self, name, url, description, license_file):
         os.linesep= '\r\n'
@@ -301,16 +306,11 @@ class BarbarianConan(ConanFile):
 
         # 4. Python
         if self.options.with_python:
-            call(["innounp", "-q", "-x", os.path.join(self.source_folder, "winpython3-win64.exe")])
-            os.rename("{app}", os.path.join(self.name, "vendor", "python-for-windows"))
-            os.remove("install_script.iss")
-            shutil.rmtree(os.path.join(self.name, "vendor", "python-for-windows", "n", "node_modules", "npm", "test"))
-            shutil.copyfile(os.path.join(self.source_folder, "winpython3-LICENSE.txt"), os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
+            call(["7z", "x", os.path.join(self.source_folder, "winpython3-win64.exe"), "-o%s/vendor" % self.name ])
+            os.rename(os.path.join(self.name, "vendor", "WPy64-%s" % ("".join(self._winpython3_version.split(".")))), os.path.join(self.name, "vendor", "python-for-windows"))
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: python support\n')
-                #path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", "scripts")
-                #f.write('set "PATH={0};%PATH%"\n'.format(path))
                 path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", self._winpython3_subdirectory)
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
                 path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", self._winpython3_subdirectory, "Scripts")
@@ -318,8 +318,6 @@ class BarbarianConan(ConanFile):
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.ps1"), 'w') as f:
                 f.write('# Vendor: python support\n')
-                #path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", "scripts")
-                #f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
                 path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", self._winpython3_subdirectory)
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
                 path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", self._winpython3_subdirectory, "Scripts")
@@ -327,13 +325,11 @@ class BarbarianConan(ConanFile):
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: python support\n')
-                #path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", "scripts")
-                #f.write('export "PATH={0}:$PATH"\n'.format(path))
                 path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", self._winpython3_subdirectory)
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
                 path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", self._winpython3_subdirectory, "Scripts")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
-            self._append_to_license_txt("WinPython", "http://winpython.github.io/", "Portable distribution of the Python programming language for Windows", os.path.join(self.name, "vendor", "python-for-windows", "LICENSE.txt"))
+            self._append_to_license_txt("WinPython", "http://winpython.github.io/", "Portable distribution of the Python programming language for Windows", os.path.join(self.name, "vendor", "python-for-windows", "license.txt"))
             self._append_to_license_txt("Python", "https://www.python.org/", "Python programming language", os.path.join(self.source_folder, "cpython-LICENSE.txt"))
             # Additional python packages
             call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "openpyxl==%s" % self._openpyxl_version, "--no-warn-script-location"])
@@ -533,38 +529,7 @@ class BarbarianConan(ConanFile):
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("Doxygen", "http://www.doxygen.nl/", "Generate documentation from source code", os.path.join(self.source_folder, "doxygen-LICENSE.txt"))
 
-        # 12. MiKTex
-        if self.options.with_miktex:
-            call(["7z", "x", os.path.join(self.source_folder, "miktex-win64.exe"), "-o%s/%s/%s" % (self.name, "vendor", "miktex-for-windows") ])
-            tools.mkdir(os.path.join(self.build_folder, self.name, "vendor", "miktex-for-windows", "bin"))
-            # Create ghostscript hack script (Doxygen hardcoded gswin32c.exe for latex. MikTex uses mgs.exe)
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name,  "vendor", "miktex-for-windows", "bin", "gswin32c.exe.cmd"), 'w') as f:
-                f.write('@ECHO OFF\n')
-                f.write('"%~d0%~p0\\..\\texmfs\\install\\miktex\\bin\\mgs.exe" %*\n')
-            # Create install script
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "miktex-for-windows.cmd"), 'w') as f:
-                f.write(':: Vendor: miktex support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "miktex-for-windows", "bin")
-                f.write('set "PATH={0};%PATH%"\n'.format(path))
-                path = os.path.join("%CMDER_ROOT%", "vendor", "miktex-for-windows", "texmfs", "install", "miktex", "bin")
-                f.write('set "PATH={0};%PATH%"\n'.format(path))
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "miktex-for-windows.ps1"), 'w') as f:
-                f.write('# Vendor: miktex support\n')
-                path = os.path.join("$env:CMDER_ROOT", "vendor", "miktex-for-windows", "bin")
-                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
-                path = os.path.join("$env:CMDER_ROOT", "vendor", "miktex-for-windows", "texmfs", "install", "miktex", "bin")
-                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
-            os.linesep= '\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "miktex-for-windows.sh"), 'w') as f:
-                f.write('# Vendor: miktex support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "miktex-for-windows", "bin")
-                f.write('export "PATH={0}:$PATH"\n'.format(path))
-                path = os.path.join("$CMDER_ROOT", "vendor", "miktex-for-windows", "texmfs", "install", "miktex", "bin")
-                f.write('export "PATH={0}:$PATH"\n'.format(path))
-            self._append_to_license_txt("MiKTex", "https://miktex.org/", "MiKTeX is an implementation of TeX and related programs", os.path.join(self.source_folder, "miktex-LICENSE.txt"))
+        # 12. MiKTex ... REMOVED
 
         # 13. Ninja
         if self.options.with_ninja:
@@ -613,8 +578,7 @@ class BarbarianConan(ConanFile):
             
         # 15. Pandoc
         if self.options.with_pandoc:
-            tools.unzip(os.path.join(self.source_folder, "pandoc-win64.zip"))
-            os.rename("pandoc-%s-windows-x86_64" % self._pandoc_version, os.path.join(self.name, "vendor", "pandoc-for-windows"))
+            tools.unzip(os.path.join(self.source_folder, "pandoc-win64.zip"), destination=os.path.join(self.name, "vendor", "pandoc-for-windows"))
             # Create install script
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "pandoc-for-windows.cmd"), 'w') as f:
@@ -691,8 +655,6 @@ class BarbarianConan(ConanFile):
             iscc_command.append("/Dwith_graphviz")
         if self.options.with_doxygen:
             iscc_command.append("/Dwith_doxygen")
-        if self.options.with_miktex:
-            iscc_command.append("/Dwith_miktex")
         if self.options.with_ninja:
             iscc_command.append("/Dwith_ninja")
         if self.options.with_npp:

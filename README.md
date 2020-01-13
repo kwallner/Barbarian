@@ -17,7 +17,6 @@ Barbarian also contains:
 * [GitExtension](http://gitextensions.github.io): Graphical User Interface for Git
 * [Graphviz](https://www.graphviz.org): Graph Visualization Software
 * [Doxygen](http://www.doxygen.nl): Generate documentation from source code
-* [MiKTeX](https://miktex.org): MiKTeX is an implementation of TeX and related programs
 * [Ninja](https://ninja-build.org): Ninja is a small build system with a focus on speed
 * [Notepad++](https://notepad-plus-plus.org): Source code editor and Notepad replacement
 * [Pandoc](https://pandoc.org): Universal document converter
