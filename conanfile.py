@@ -303,6 +303,7 @@ class BarbarianConan(ConanFile):
             call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "pylint", "--no-warn-script-location"])
             call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "GitPython", "--no-warn-script-location"])
             call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "jira", "--no-warn-script-location"])
+            call(["%s/vendor/python-for-windows/%s/python.exe" % (self.name, self._winpython3_subdirectory), "-m", "pip", "install", "pylint", "--no-warn-script-location"])
 
         # 5. Conan.io
         if self.options.with_conanio:
