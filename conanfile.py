@@ -32,12 +32,12 @@ class BarbarianConan(ConanFile):
     version = "1.9.0"
     _cmder_version = "1.3.14"
     _cmder_version_build = "%s.982" % _cmder_version
-    _git_version = "2.24.1.2"
-    _cmake_version = "3.15.6"
+    _git_version = "2.25.0"
+    _cmake_version = "3.16.3"
     _winpython3_version = "3.7.6.0"
     _winpython3_version_build = "2.2.20191222"
     _winpython3_subdirectory = "python-3.7.6.amd64"
-    _conan_version = "1.20.5"
+    _conan_version = "1.21.1"
     _openpyxl_version = "3.0.3"
     _vscode_version = "1.41.1"
     _kdiff_version = "0.9.98"
@@ -73,6 +73,8 @@ class BarbarianConan(ConanFile):
             return "minimal"
         if self.options.with_git and self.options.with_cmake and self.options.with_python and self.options.with_conanio and not self.options.with_vscode and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_graphviz and not self.options.with_doxygen and not self.options.with_ninja and not self.options.with_npp:
             return "default"
+        if self.options.with_git and self.options.with_conanio and self.options.conanio_variant == "standalone" and self.options.with_vscode and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext:
+            return "developer"
         return "custom"
 
     @property
@@ -86,7 +88,7 @@ class BarbarianConan(ConanFile):
     def build_requirements(self):
         self.build_requires("7z_installer/1.0@conan/stable")
         self.build_requires("InnoSetup/5.6.1@kwallner/testing")
-        if self.options.with_python:
+        if self.options.with_python or (self.options.with_conanio and self.options.conanio_variant == "standalone"):
             self.build_requires("InnoSetupUnpacker/0.48@kwallner/testing")
 
     def download(self, url, filename, verify=True, retry=2, retry_wait=5, overwrite=False, auth=None, headers=None):
@@ -103,7 +105,7 @@ class BarbarianConan(ConanFile):
     def source(self):
         self.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self._cmder_version), "cmder_mini.zip")
         if self.options.with_git:
-            self.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.2/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version), "git-for-windows.7z.exe")
+            self.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.1/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version), "git-for-windows.7z.exe")
         if self.options.with_cmake:
             self.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self._cmake_version.split(".")[0], self._cmake_version.split(".")[1], self._cmake_version), "cmake-win64.zip")
         if self.options.with_python:
@@ -263,7 +265,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "cmake-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: cmake support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "cmake-for-windows", "bin")
+                path = os.path.join("$CMDER_ROOT", "vendor", "cmake-for-windows", "bin").replace("\\", "/")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("CMake", "https://cmake.org/", "Cross-Plattform Build System", os.path.join(self.build_folder, self.name, "vendor", "cmake-for-windows", "doc", "cmake", "Copyright.txt"))
 
@@ -290,9 +292,9 @@ class BarbarianConan(ConanFile):
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: python support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", self._winpython3_subdirectory)
+                path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", self._winpython3_subdirectory).replace("\\", "/")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
-                path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", self._winpython3_subdirectory, "Scripts")
+                path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", self._winpython3_subdirectory, "Scripts").replace("\\", "/")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("WinPython", "http://winpython.github.io/", "Portable distribution of the Python programming language for Windows", os.path.join(self.name, "vendor", "python-for-windows", "license.txt"))
             self._append_to_license_txt("Python", "https://www.python.org/", "Python programming language", os.path.join(self.source_folder, "cpython-LICENSE.txt"))
@@ -325,7 +327,7 @@ class BarbarianConan(ConanFile):
                 os.linesep= '\n'
                 with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "conan-for-windows.sh"), 'w') as f:
                     f.write('# Vendor: conan support\n')
-                    path = os.path.join("$CMDER_ROOT", "vendor", "conan-for-windows", "bin")
+                    path = os.path.join("$CMDER_ROOT", "vendor", "conan-for-windows", "bin").replace("\\", "/")
                     f.write('export "PATH={0}:$PATH"\n'.format(path))
             else:
                 # Integrate conan into python
@@ -380,7 +382,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "kdiff3-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: kdiff3 support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "kdiff3-for-windows")
+                path = os.path.join("$CMDER_ROOT", "vendor", "kdiff3-for-windows").replace("\\", "/")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("KDiff3", "http://kdiff3.sourceforge.net/", "Diff and Merge Program", os.path.join(self.name, "vendor", "kdiff3-for-windows", "COPYING.txt"))
 
@@ -407,7 +409,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: winmerge support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "winmerge-for-windows", "bin")
+                path = os.path.join("$CMDER_ROOT", "vendor", "winmerge-for-windows", "bin").replace("\\", "/")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
                 f.write('alias winmerge=WinMergeU.exe\n')
             self._append_to_license_txt("WinMerge", "http://winmerge.org/", "Open Source differencing and merging tool for Windows", os.path.join(self.source_folder, "winmerge-LICENSE.txt"))
@@ -434,7 +436,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: gitext support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "gitext-for-windows", "bin")
+                path = os.path.join("$CMDER_ROOT", "vendor", "gitext-for-windows", "bin").replace("\\", "/")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("Git Extensions", "http://gitextensions.github.io/", "Graphical user interface for Git", os.path.join(self.source_folder, "gitext-LICENSE.txt"))
 
@@ -456,7 +458,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "graphviz-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: graphviz support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "graphviz-for-windows", "bin")
+                path = os.path.join("$CMDER_ROOT", "vendor", "graphviz-for-windows", "bin").replace("\\", "/")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("Graphviz", "https://www.graphviz.org/", "Graph Visualization Software", os.path.join(self.source_folder, "graphviz-LICENSE.txt"))
 
@@ -490,7 +492,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "doxygen-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: doxygen support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "doxygen-for-windows", "bin")
+                path = os.path.join("$CMDER_ROOT", "vendor", "doxygen-for-windows", "bin").replace("\\", "/")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("Doxygen", "http://www.doxygen.nl/", "Generate documentation from source code", os.path.join(self.source_folder, "doxygen-LICENSE.txt"))
 
@@ -515,7 +517,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "ninja-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: ninja support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "ninja-for-windows")
+                path = os.path.join("$CMDER_ROOT", "vendor", "ninja-for-windows").replace("\\", "/")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("Ninja Build", "https://ninja-build.org/", "Small build system with a focus on speed", os.path.join(self.source_folder, "ninja-LICENSE.txt"))
 
@@ -536,7 +538,7 @@ class BarbarianConan(ConanFile):
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "npp-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: notepad++ support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "npp-for-windows")
+                path = os.path.join("$CMDER_ROOT", "vendor", "npp-for-windows").replace("\\", "/")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
                 f.write('alias npp=notepad++.exe\n')
             self._append_to_license_txt("Notepad++", "https://notepad-plus-plus.org/", "Source code editor and Notepad replacement", os.path.join(self.source_folder, "npp-LICENSE.txt"))

@@ -35,9 +35,9 @@ Name: python;                                   Description: "Python (https:://p
 #ifdef with_conanio_pip
 Name: python/conanio;                           Description: "Conan.io (https:://conan.io): C/C++ Package Manager";                                 Types: full custom
 #endif
+#endif
 #ifdef with_conanio_standalone
 Name: conanio;                                  Description: "Conan.io (https:://conan.io): C/C++ Package Manager (Standalone)";                                 Types: full custom
-#endif
 #endif
 #ifdef with_vscode
 Name: vscode;                                   Description: "Visual Studio Code (https://code.visualstudio.com): IDE and Code Editor";             Types: full
@@ -90,6 +90,9 @@ Source: "@name@\config\profile.d\winmerge-for-windows.*";  DestDir: "{app}\confi
 #endif
 #ifdef with_python
 Source: "@name@\config\profile.d\python-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: python
+#endif
+#ifdef with_conanio_standalone
+Source: "@name@\config\profile.d\conan-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: conanio
 #endif
 #ifdef with_vscode
 Source: "@name@\config\profile.d\vscode-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: vscode

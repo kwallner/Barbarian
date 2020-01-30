@@ -62,6 +62,11 @@ To build a minimal version
 conan create . user/channel -o with_cmake=False -o with_python=False -o with_conanio=False
 ```
 
+To build a developer version
+```
+conan create . user/channel -o with_git=True -o with_cmake=False -o with_python=False -o with_conanio=True -o conanio_variant=standalone -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True
+```
+
 ## Current Build commands
 
 ```
@@ -70,4 +75,5 @@ conan create . kwallner/testing -o with_vscode=True -o with_kdiff3=True -o with_
 conan create . kwallner/testing -o conanio_variant=standalone -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True -o with_graphviz=True -o with_doxygen=True -o with_ninja=True -o with_npp=True
 conan create . kwallner/testing 
 conan create . kwallner/testing -o with_cmake=False -o with_python=False -o with_conanio=False
+conan create . kwallner/testing -o with_git=True -o with_cmake=False -o with_python=False -o with_conanio=True -o conanio_variant=standalone -o with_vscode=True -o with_kdiff3=True -o with_winmerge=True -o with_gitext=True
 ```
