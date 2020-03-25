@@ -36,15 +36,15 @@ class BarbarianConan(ConanFile):
     _cmder_version = "1.3.14"
     _cmder_version_build = "%s.982" % _cmder_version
     _git_version = "2.25.1"
-    _cmake_version = "3.16.3"
-    _python_version = "3.7.6"
+    _cmake_version = "3.16.5"
+    _python_version = "3.7.7"
     _conan_version = "1.22.3"
     _vswhere_version = "2.8.4"
     _kdiff_version = "0.9.98"
-    _winmerge_version = "2.16.4"
+    _winmerge_version = "2.16.6"
     _gitext_version = "3.3.1"
     _gitext_version_build = "%s.7897" % _gitext_version
-    _npp_version = "7.8.2"
+    _npp_version = "7.8.5"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
     generators = "txt"
@@ -76,12 +76,11 @@ class BarbarianConan(ConanFile):
     def build_requirements(self):
         self.build_requires("7zip/19.00@%s/%s" % (self.user, self.channel))
         self.build_requires("InnoSetup/6.0.3@kwallner/testing")
-        self.build_requires("InnoSetupUnpacker/0.49@kwallner/testing")
 
-    def _url_download_to_temp(self, url):
-        tools.download(url, os.path.join("temp", os.path.basename(url)))
+    def _url_download_to_temp(self, url, temp_name):
+        tools.download(url, os.path.join(temp_name, os.path.basename(url)))
 
-    def _pip_download_to_temp(self, pkg_name):
+    def _pip_download_to_temp(self, pkg_name, temp_name):
         subprocess.run([
             "pip",
             "download",
@@ -93,11 +92,11 @@ class BarbarianConan(ConanFile):
             "--no-cache-dir",
             "--find-links=.", 
             "--isolated", 
-            pkg_name ], cwd="temp", check=True)
+            pkg_name ], cwd=temp_name, check=True)
     
-    def _pip_tar2whl_to_temp(self, pkg_name):
+    def _pip_tar2whl_to_temp(self, pkg_name, temp_name):
         with tempfile.TemporaryDirectory() as tmpdirname:
-            with tools.chdir(tmpdirname): #tools.chdir("C:\Temp\TEST"): # with tool
+            with tools.chdir(tmpdirname): 
                 subprocess.run([
                     "pip",
                     "download",
@@ -117,43 +116,43 @@ class BarbarianConan(ConanFile):
                         "python",
                         "setup.py",
                         "bdist_wheel",
-                        "-d", os.path.join(self.source_folder, "temp")], check=True)
+                        "-d", os.path.join(self.source_folder, temp_name)], check=True)
 
     def source(self):
         tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self._cmder_version), "cmder_mini.zip", sha256="5d5c05fb60404b819d0e2730c04bd1e0e5cb6ef1227b78a5790ed1b935687d84")
         tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.1/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version), "git-for-windows.7z.exe", sha256="a3f594440431bddbbc434afc88b8acef286c34dcaa20c150a884e274e8696b36")
         if self.options.with_cmake:
-            tools.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self._cmake_version.split(".")[0], self._cmake_version.split(".")[1], self._cmake_version), "cmake-win64.zip", sha256="4b1370b3252acda0850d26c75e9bc6b8e019daaa7978a19f5d8dc008450d3548")
-        tools.download("https://www.python.org/ftp/python/%s/python-%s-embed-amd64.zip" % (self._python_version, self._python_version), "python.zip", sha256="114638061d636285600cbc3d4def64b45c43da9b225cb9eeead30fe7fe7d60d4")
+            tools.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self._cmake_version.split(".")[0], self._cmake_version.split(".")[1], self._cmake_version), "cmake-win64.zip", sha256="70812d07a19d4e14a9e625fdd698f0dcd0c6f32d81d63979c645f5327e0772e2")
+        tools.download("https://www.python.org/ftp/python/%s/python-%s-embed-amd64.zip" % (self._python_version, self._python_version), "python.zip", sha256="705c03140cfd3372f27ee911db5f4eb1fc9b980c9e27544adbd1a6adf942a1b0")
         tools.download("https://raw.githubusercontent.com/python/cpython/master/LICENSE", "python-LICENSE.txt")
-        tools.download("https://github.com/microsoft/vswhere/releases/download/%s/vswhere.exe" % self._vswhere_version, "vswhere.exe")
+        tools.download("https://github.com/microsoft/vswhere/releases/download/%s/vswhere.exe" % self._vswhere_version, "vswhere.exe", sha256="e50a14767c27477f634a4c19709d35c27a72f541fb2ba5c3a446c80998a86419")
         if self.options.with_kdiff3:
-            tools.download("https://netix.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self._kdiff_version, self._kdiff_version), "kdiff3-win64.exe", sha256="XXXXXXXXXXXX")
+            tools.download("https://netix.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self._kdiff_version, self._kdiff_version), "kdiff3-win64.exe", sha256="d630ab0fdca3b4f1a85ab7e453f669fdc901cb81bb57f7e20de64c02ac9a1eeb")
         if self.options.with_winmerge:
-            tools.download("https://netix.dl.sourceforge.net/project/winmerge/stable/%s/winmerge-%s-x64-exe.zip" % (self._winmerge_version, self._winmerge_version), "winmerge-win64.exe.zip", sha256="XXXXXXXXXXXX")
-            tools.download("https://bitbucket.org/winmerge/winmerge/raw/33304826044b672a8d3d6b34a41a91ca4d6b7818/Docs/Users/GPL.rtf.txt", "winmerge-LICENSE.txt")
+            tools.download("https://netix.dl.sourceforge.net/project/winmerge/stable/%s/winmerge-%s-x64-exe.zip" % (self._winmerge_version, self._winmerge_version), "winmerge-win64.exe.zip", sha256="f7fcf1167c6332664eb1e75bcdd822369a0716cc1faae3fd4101a88a88fca963")
+            tools.download("https://raw.githubusercontent.com/WinMerge/winmerge/master/LICENSE.md", "winmerge-LICENSE.txt")
         if self.options.with_gitext:
-            tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version_build), "gitext.exe", sha256="XXXXXXXXXXXX")
+            tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version_build), "gitext.exe", sha256="8a2cf10a8d14444d60485a462c649c48d44f41ff1283b4e7e72a00165c19e54f")
             tools.download("https://raw.githubusercontent.com/gitextensions/gitextensions/master/LICENSE.md", "gitext-LICENSE.txt")
         if self.options.with_npp:
-            tools.download("http://download.notepad-plus-plus.org/repository/7.x/%s/npp.%s.bin.x64.zip" % (self._npp_version, self._npp_version), "npp-win64.zip", verify=False, sha256="XXXXXXXXXXXX")
+            tools.download("http://download.notepad-plus-plus.org/repository/7.x/%s/npp.%s.bin.x64.zip" % (self._npp_version, self._npp_version), "npp-win64.zip", verify=False, sha256="6938698d9b55cc23bf3a737c98258c59d2493599d0341c1e9221bb4f4e186c1e")
             tools.download("https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/master/LICENSE", "npp-LICENSE.txt")
         # Requirements for pip
-        self._url_download_to_temp("https://bootstrap.pypa.io/get-pip.py")
+        self._url_download_to_temp("https://bootstrap.pypa.io/get-pip.py", temp_name="python_temp")
         # Basic packages
-        self._pip_download_to_temp("pip")
-        self._pip_download_to_temp("wheel")
-        self._pip_download_to_temp("setuptools")
+        self._pip_download_to_temp("pip", temp_name="python_temp")
+        self._pip_download_to_temp("wheel", temp_name="python_temp")
+        self._pip_download_to_temp("setuptools", temp_name="python_temp")
         # Requirements for conan
-        self._pip_tar2whl_to_temp("conan==%s" % self._conan_version)
-        self._pip_tar2whl_to_temp("future==0.18.2")
-        self._pip_tar2whl_to_temp("patch-ng==1.17.2")
-        self._pip_tar2whl_to_temp("pluginbase==0.7")
-        self._pip_download_to_temp("conan==%s" % self._conan_version)
+        self._pip_tar2whl_to_temp("conan==%s" % self._conan_version, temp_name="conan_temp")
+        self._pip_tar2whl_to_temp("future==0.18.2", temp_name="conan_temp")
+        self._pip_tar2whl_to_temp("patch-ng==1.17.2", temp_name="conan_temp")
+        self._pip_tar2whl_to_temp("pluginbase==0.7", temp_name="conan_temp")
+        self._pip_download_to_temp("conan==%s" % self._conan_version, temp_name="conan_temp")
         tools.download("https://raw.githubusercontent.com/conan-io/conan/develop/LICENSE.md", "conanio-LICENSE.txt")
         # Requirements for pylint 
-        self._pip_tar2whl_to_temp("wrapt==1.11.2") 
-        self._pip_download_to_temp("pylint")
+        self._pip_tar2whl_to_temp("wrapt==1.11.2", temp_name="python_temp") 
+        self._pip_download_to_temp("pylint", temp_name="python_temp")
          
     def _append_to_license_txt(self, name, url, description, license_file):
         os.linesep= '\r\n'
@@ -369,24 +368,24 @@ class BarbarianConan(ConanFile):
             subprocess.call(["7z", "x", os.path.join(self.source_folder, "gitext.exe"), "-o%s/%s" % (self.name, "vendor/gitext-for-windows") ])
             tools.mkdir(os.path.join(self.build_folder, self.name, "vendor", "gitext-for-windows", "bin"))
             # Create run script
-            with open(os.path.join(self.build_folder, self.name, "vendor", "gitext-for-windows", "bin", "gitext.cmd"), 'w') as f:
-                f.write('@echo off\n')
-                f.write('call "%~dp0..\\GitExtensions.exe" %*\n')
+            #with open(os.path.join(self.build_folder, self.name, "vendor", "gitext-for-windows", "gitext.bat"), 'w') as f:
+            #    f.write('@echo off\n')
+            #    f.write('start "%~dp0GitExtensions.exe" %*\n')
             # Create install script
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.cmd"), 'w') as f:
                 f.write(':: Vendor: gitext support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "gitext-for-windows", "bin")
+                path = os.path.join("%CMDER_ROOT%", "vendor", "gitext-for-windows")
                 f.write('set "PATH={0};%PATH%"\n'.format(path))
             os.linesep= '\r\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.ps1"), 'w') as f:
                 f.write('# Vendor: gitext support\n')
-                path = os.path.join("$env:CMDER_ROOT", "vendor", "gitext-for-windows", "bin")
+                path = os.path.join("$env:CMDER_ROOT", "vendor", "gitext-for-windows")
                 f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
             os.linesep= '\n'
             with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.sh"), 'w') as f:
                 f.write('# Vendor: gitext support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "gitext-for-windows", "bin").replace("\\", "/")
+                path = os.path.join("$CMDER_ROOT", "vendor", "gitext-for-windows").replace("\\", "/")
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
             self._append_to_license_txt("Git Extensions", "http://gitextensions.github.io/", "Graphical user interface for Git", os.path.join(self.source_folder, "gitext-LICENSE.txt"))
 
@@ -419,6 +418,11 @@ class BarbarianConan(ConanFile):
                 f.write('export "PATH={0}:$PATH"\n'.format(path))
                 f.write('alias npp=notepad++.exe\n')
             self._append_to_license_txt("Notepad++", "https://notepad-plus-plus.org/", "Source code editor and Notepad replacement", os.path.join(self.source_folder, "npp-LICENSE.txt"))
+            # Create batch script
+            os.linesep= '\r\n'
+            with open(os.path.join(self.build_folder, self.name, "vendor", "npp-for-windows", "npp.bat"), 'w') as f:
+                f.write('@echo off\n')
+                f.write('start %~dp0notepad++.exe %*\n')
             
         # 15. Pandoc ... REMOVED
             
@@ -442,7 +446,8 @@ class BarbarianConan(ConanFile):
             'url' : self.url,   
             'output_dir' : self.package_folder,
             'output_base_name' : "%s-%s-%s-%s" % (self.name, self.version, self.settings.arch, self._installertype),
-            'temp' : os.path.join(self.source_folder, "temp")
+            'python_temp' : os.path.join(self.source_folder, "python_temp"),
+            'conan_temp' : os.path.join(self.source_folder, "conan_temp")
             }
 
         with open("package.iss", 'w') as f:

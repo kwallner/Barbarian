@@ -16,8 +16,8 @@ AllowNetworkDrive=no
 CloseApplications=yes
 OutputDir=.
 OutputBaseFilename={{output_base_name}}
-UninstallDisplayIcon={app}\Barbarian.ico
-SetupIconFile={{name}}\Barbarian.ico
+UninstallDisplayIcon={app}\{{name}}.ico
+SetupIconFile={{name}}\{{name}}.ico
 
 [Messages]
 WelcomeLabel1=Barbarian - A Software Development Environment for Conan.io
@@ -44,15 +44,15 @@ Name: npp;                                      Description: "Notepad++ (https:/
 {% endif %}
 
 [Files]
-Source: "{{name}}\Cmder.exe";                                DestDir: "{app}";                                           Flags: ignoreversion
-Source: "{{name}}\LICENSE.txt";                              DestDir: "{app}";                                           Flags: ignoreversion
-Source: "{{name}}\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion
-Source: "{{name}}\README.md";                                DestDir: "{app}";                                           Flags: ignoreversion
-Source: "{{name}}\Barbarian.ico";                            DestDir: "{app}";                                           Flags: ignoreversion
-Source: "{{name}}\Barbarian.png";                            DestDir: "{app}";                                           Flags: ignoreversion
-Source: "{{name}}\bin\*";                                    DestDir: "{app}\bin";                                       Flags: recursesubdirs createallsubdirs ignoreversion
-Source: "{{name}}\config\*.*";                               DestDir: "{app}\config";                                    Flags: ignoreversion;    Permissions: users-modify
-Source: "{{name}}\config\profile.d\git-for-windows.*";       DestDir: "{app}\config\profile.d";                          Flags: ignoreversion
+Source: "{{name}}\Cmder.exe";                                DestDir: "{app}"; DestName: "{{name}}.exe";                 Flags: ignoreversion;  Components: cmder
+Source: "{{name}}\LICENSE.txt";                              DestDir: "{app}";                                           Flags: ignoreversion;  Components: cmder
+Source: "{{name}}\README.txt";                               DestDir: "{app}";                                           Flags: ignoreversion;  Components: cmder
+Source: "{{name}}\README.md";                                DestDir: "{app}";                                           Flags: ignoreversion;  Components: cmder
+Source: "{{name}}\{{name}}.ico";                             DestDir: "{app}";                                           Flags: ignoreversion;  Components: cmder
+Source: "{{name}}\{{name}}.png";                             DestDir: "{app}";                                           Flags: ignoreversion;  Components: cmder
+Source: "{{name}}\bin\*";                                    DestDir: "{app}\bin";                                       Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
+Source: "{{name}}\config\*.*";                               DestDir: "{app}\config";                                    Flags: ignoreversion;    Permissions: users-modify;  Components: cmder
+Source: "{{name}}\config\profile.d\git-for-windows.*";       DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;  Components: git
 {% if options.with_cmake %}
 Source: "{{name}}\config\profile.d\cmake-for-windows.*";     DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: cmake
 {% endif %}
@@ -67,17 +67,17 @@ Source: "{{name}}\config\profile.d\winmerge-for-windows.*";  DestDir: "{app}\con
 {% endif %}
 Source: "{{name}}\config\profile.d\python-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: python
 {% if options.with_npp%}
-Source: "{{name}}\config\profile.d\npp-for-windows.*";    DestDir: "{app}\config\profile.d";                             Flags: ignoreversion;    Components: npp
+Source: "{{name}}\config\profile.d\npp-for-windows.*";       DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: npp
 {% endif %}
-Source: "{{name}}\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion
-Source: "{{name}}\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion
-Source: "{{name}}\vendor\bin\*";                             DestDir: "{app}\vendor\bin";                                Flags: recursesubdirs createallsubdirs ignoreversion;
-Source: "{{name}}\vendor\clink\*";                           DestDir: "{app}\vendor\clink";                              Flags: recursesubdirs createallsubdirs ignoreversion;
-Source: "{{name}}\vendor\conemu-maximus5\*";                 DestDir: "{app}\vendor\conemu-maximus5";                    Flags: recursesubdirs createallsubdirs ignoreversion;
-Source: "{{name}}\vendor\lib\*";                             DestDir: "{app}\vendor\lib";                                Flags: recursesubdirs createallsubdirs ignoreversion;
-Source: "{{name}}\vendor\psmodules\*";                       DestDir: "{app}\vendor\psmodules";                          Flags: recursesubdirs createallsubdirs ignoreversion;
-Source: "{{name}}\vendor\clink-completions\*";               DestDir: "{app}\vendor\clink-completions";                  Flags: recursesubdirs createallsubdirs ignoreversion;
-Source: "{{name}}\vendor\barbarian-extra\*";                 DestDir: "{app}\vendor\barbarian-extra";                    Flags: recursesubdirs createallsubdirs ignoreversion;
+Source: "{{name}}\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
+Source: "{{name}}\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion;  Components: cmder
+Source: "{{name}}\vendor\bin\*";                             DestDir: "{app}\vendor\bin";                                Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
+Source: "{{name}}\vendor\clink\*";                           DestDir: "{app}\vendor\clink";                              Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
+Source: "{{name}}\vendor\conemu-maximus5\*";                 DestDir: "{app}\vendor\conemu-maximus5";                    Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
+Source: "{{name}}\vendor\lib\*";                             DestDir: "{app}\vendor\lib";                                Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
+Source: "{{name}}\vendor\psmodules\*";                       DestDir: "{app}\vendor\psmodules";                          Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
+Source: "{{name}}\vendor\clink-completions\*";               DestDir: "{app}\vendor\clink-completions";                  Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
+Source: "{{name}}\vendor\barbarian-extra\*";                 DestDir: "{app}\vendor\barbarian-extra";                    Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
 {% if options.with_cmake %}
 Source: "{{name}}\vendor\cmake-for-windows\*";               DestDir: "{app}\vendor\cmake-for-windows";                  Flags: recursesubdirs createallsubdirs ignoreversion;    Components: cmake
 {% endif %}
@@ -95,7 +95,8 @@ Source: "{{name}}\vendor\python-for-windows\*";              DestDir: "{app}\ven
 {% if options.with_npp%}
 Source: "{{name}}\vendor\npp-for-windows\*";             DestDir: "{app}\vendor\npp-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion;    Components: npp; Permissions: users-modify
 {% endif %}
-Source: "{{temp}}\*";                                        DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion
+Source: "{{python_temp}}\*";                                        DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: python
+Source: "{{conan_temp}}\*";                                        DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: conan
 
 [Run]
 Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent unchecked
@@ -129,7 +130,7 @@ Type: dirifempty;       Name: "{app}\config\profile.d"
 Type: dirifempty;       Name: "{app}"
 
 [Icons]
-Name: "{group}\Cmder";                Filename: "{app}\Cmder.exe";                                    Parameters: ""; WorkingDir: "{userdocs}"
+Name: "{group}\{{name}} Shell";             Filename: "{app}\{{name}}.exe";                                    Parameters: ""; WorkingDir: "{userdocs}";     IconFilename: "{app}\{{name}}.ico"
 {% if options.with_kdiff3 %}
 Name: "{group}\KDiff3";               Filename: "{app}\vendor\kdiff3-for-windows\kdiff3.exe";         Parameters: ""; WorkingDir: "{userdocs}";    Components: kdiff3
 {% endif %}
@@ -142,4 +143,53 @@ Name: "{group}\GitExtensions";        Filename: "{app}\vendor\gitext-for-windows
 {% if options.with_npp %}
 Name: "{group}\Notepad++";              Filename: "{app}\vendor\npp-for-windows\notepad++.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: npp
 {% endif %}
-Name: "{group}\Uninstall {{name}}";     Filename: "{uninstallexe}"; IconFilename: "{app}\Barbarian.ico"
+Name: "{group}\Uninstall {{name}}";     Filename: "{uninstallexe}"; IconFilename: "{app}\{{name}}.ico"
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{{name}}"; Filename: "{app}\{{name}}.exe";     Parameters: ""; IconFilename: "{app}\{{name}}.ico"
+
+[Code]
+procedure CurStepChanged(CurStep: TSetupStep);
+var 
+    GitConfig: String;
+    S : String;
+begin
+  if CurStep = ssPostInstall then
+  begin
+    GitConfig := ExpandConstant('{app}\vendor\git-for-windows\etc\gitconfig');
+    // Setup git
+    SetIniString('credential', 'helper', 'wincred', GitConfig);
+
+    // Setup KDiff 3 ... seems not to work
+    //S := ExpandConstant('{app}\vendor\winmerge-for-windows\kdiff3-for-windows\kdiff3.exe');
+    //StringChangeEx(S, '\', '/', True);
+    //SetIniString('mergetool "kdiff3"', 'path', S, GitConfig); 
+    //SetIniString('difftool "kdiff3"', 'path', S, GitConfig); 
+
+    // Setup WinMerge ... seems not to work
+    //S := ExpandConstant('{app}\vendor\winmerge-for-windows\WinMergeU.exe');
+    //StringChangeEx(S, '\', '/', True);
+    //SetIniString('mergetool "winmerge"', 'path', S, GitConfig); 
+    //SetIniString('difftool "winmerge"', 'path', S, GitConfig); 
+
+    //S := '\"' + S + '\" -e -u  -wl -wr -fm -dl \"Mine: $LOCAL\" -dm \"Merged: $BASE\" -dr \"Theirs: $REMOTE\" \"$LOCAL\" \"$BASE\" \"$REMOTE\" -o \"$MERGED\"';
+    //StringChangeEx(S, '\', '/', True);
+    //SetIniString('mergetool "winmerge"', 'cmd', S, GitConfig); 
+    
+    // Configure Merge to Use ... seems not to work
+    //SetIniString('merge', 'tool', 'winmerge', GitConfig); 
+    //SetIniString('diff', 'guitool', 'winmerge', GitConfig); 
+   
+    // Setup core ... seems not to work
+    //S := ExpandConstant('{app}\vendor\gitext-for-windows\GitExtensions.exe');
+    //StringChangeEx(S, '\', '/', True);
+    //S := '\"' + S + '\" fileeditor';
+    //SetIniString('core', 'editor', S, GitConfig); 
+
+    // Configure Git Extensions
+    RegWriteStringValue(HKEY_AUTO, 'Software\GitExtensions', 'gitcommand', ExpandConstant('{app}\vendor\git-for-windows\bin\git.exe'));
+    RegWriteStringValue(HKEY_AUTO, 'Software\GitExtensions', 'ShowCurrentBranchInVS', 'true'); 
+    RegWriteStringValue(HKEY_AUTO, 'Software\GitExtensions', 'CascadeShellMenuItems', '110111000111111111');
+    RegWriteStringValue(HKEY_AUTO, 'Software\GitExtensions', 'gitssh', ExpandConstant('{app}\vendor\git-for-windows\usr\bin\ssh.exe'));
+    RegWriteStringValue(HKEY_AUTO, 'Software\GitExtensions', 'InstallDir', ExpandConstant('{app}\vendor\git-for-windows'));
+    RegWriteStringValue(HKEY_AUTO, 'Software\GitExtensions', 'AlwaysShowAllCommands', 'false'); 
+  end;
+end;
