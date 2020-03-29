@@ -260,7 +260,15 @@ class BarbarianConan(ConanFile):
             f.write('# Vendor: git support\n')
             # Pathes are already correct
         self._append_to_license_txt("Git", "https://git-scm.com", "Distributed version control system", os.path.join(self.build_folder, self.name, "vendor", "git-for-windows", "LICENSE.txt"))
-
+        # Git postinstall
+        os.linesep= '\r\n'
+        with open(os.path.join(self.build_folder, self.name, "vendor", "git-for-windows", "post-install.bat"), 'w') as f:
+            f.write('@echo off\n')
+            f.write('rem Git Postinstall\n')
+            f.write('\n')
+            f.write('rem Remove this script\n')
+            f.write('(goto) 2>nul & del "%~f0"\n')
+            
         # 3a. CMake
         if self.options.with_cmake:
             tools.unzip(os.path.join(self.source_folder, "cmake-win64.zip"), destination = os.path.join(self.name, "vendor"))
