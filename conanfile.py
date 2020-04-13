@@ -32,13 +32,13 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "2.0.0rc1"
+    version = "2.0.0-rc2"
     _cmder_version = "1.3.14"
     _cmder_version_build = "%s.982" % _cmder_version
-    _git_version = "2.25.1"
-    _cmake_version = "3.16.5"
+    _git_version = "2.26.0"
+    _cmake_version = "3.17.1"
     _python_version = "3.7.7"
-    _conan_version = "1.22.3"
+    _conan_version = "1.24.0"
     _vswhere_version = "2.8.4"
     _kdiff_version = "0.9.98"
     _winmerge_version = "2.16.6"
@@ -76,6 +76,7 @@ class BarbarianConan(ConanFile):
     def build_requirements(self):
         self.build_requires("7zip/19.00@%s/%s" % (self.user, self.channel))
         self.build_requires("InnoSetup/6.0.3@kwallner/testing")
+        self.build_requires("cpython/%s@%s/%s" % (self._python_version, self.user, self.channel))
 
     def _url_download_to_temp(self, url, temp_name):
         tools.download(url, os.path.join(temp_name, os.path.basename(url)))
@@ -89,7 +90,6 @@ class BarbarianConan(ConanFile):
             "--platform", "win_amd64", 
             "--python-version", "%s" % ("".join(self._python_version.split(".")[0:2])),
             "--implementation", "cp",
-            "--no-cache-dir",
             "--find-links=.", 
             "--isolated", 
             pkg_name ], cwd=temp_name, check=True)
@@ -103,8 +103,7 @@ class BarbarianConan(ConanFile):
                     "--no-deps",
                     "--platform", "win_amd64", 
                     "--python-version", "%s" % ("".join(self._python_version.split(".")[0:2])),
-                    #"--implementation", "cp",
-                    "--no-cache-dir",
+                    "--implementation", "cp",
                     "--find-links=.", 
                     "--isolated", 
                     pkg_name], check=True)
@@ -120,11 +119,9 @@ class BarbarianConan(ConanFile):
 
     def source(self):
         tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self._cmder_version), "cmder_mini.zip", sha256="5d5c05fb60404b819d0e2730c04bd1e0e5cb6ef1227b78a5790ed1b935687d84")
-        tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.1/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version), "git-for-windows.7z.exe", sha256="a3f594440431bddbbc434afc88b8acef286c34dcaa20c150a884e274e8696b36")
+        tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.1/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version), "git-for-windows.7z.exe", sha256="f14aeccf0b63700c13a9c3829c4b9a6d3933d6cc5adfbc52b5aa62921725fb73")
         if self.options.with_cmake:
-            tools.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self._cmake_version.split(".")[0], self._cmake_version.split(".")[1], self._cmake_version), "cmake-win64.zip", sha256="70812d07a19d4e14a9e625fdd698f0dcd0c6f32d81d63979c645f5327e0772e2")
-        tools.download("https://www.python.org/ftp/python/%s/python-%s-embed-amd64.zip" % (self._python_version, self._python_version), "python.zip", sha256="705c03140cfd3372f27ee911db5f4eb1fc9b980c9e27544adbd1a6adf942a1b0")
-        tools.download("https://raw.githubusercontent.com/python/cpython/master/LICENSE", "python-LICENSE.txt")
+            tools.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self._cmake_version.split(".")[0], self._cmake_version.split(".")[1], self._cmake_version), "cmake-win64.zip", sha256="a5af7a2fe73f34070456397e940042e4469f072126c82974f44333ac43d478b1")
         tools.download("https://github.com/microsoft/vswhere/releases/download/%s/vswhere.exe" % self._vswhere_version, "vswhere.exe", sha256="e50a14767c27477f634a4c19709d35c27a72f541fb2ba5c3a446c80998a86419")
         if self.options.with_kdiff3:
             tools.download("https://netix.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self._kdiff_version, self._kdiff_version), "kdiff3-win64.exe", sha256="d630ab0fdca3b4f1a85ab7e453f669fdc901cb81bb57f7e20de64c02ac9a1eeb")
@@ -146,7 +143,7 @@ class BarbarianConan(ConanFile):
         # Requirements for conan
         self._pip_tar2whl_to_temp("conan==%s" % self._conan_version, temp_name="conan_temp")
         self._pip_tar2whl_to_temp("future==0.18.2", temp_name="conan_temp")
-        self._pip_tar2whl_to_temp("patch-ng==1.17.2", temp_name="conan_temp")
+        self._pip_tar2whl_to_temp("patch-ng==1.17.4", temp_name="conan_temp")
         self._pip_tar2whl_to_temp("pluginbase==0.7", temp_name="conan_temp")
         self._pip_download_to_temp("conan==%s" % self._conan_version, temp_name="conan_temp")
         tools.download("https://raw.githubusercontent.com/conan-io/conan/develop/LICENSE.md", "conanio-LICENSE.txt")
@@ -294,30 +291,29 @@ class BarbarianConan(ConanFile):
         # 3b. Bazel ... REMOVED
 
         # 4. Python
-        tools.unzip(os.path.join(self.source_folder, "python.zip"), os.path.join(self.name, "vendor", "python-for-windows"))
-        os.remove(os.path.join(self.build_folder, self.name, "vendor", "python-for-windows", "python%s%s._pth" % (self._python_version.split(".")[0], self._python_version.split(".")[1])))
+        shutil.copytree(self.deps_cpp_info["cpython"].rootpath,  os.path.join(self.name, "vendor", "python-for-windows"))
         os.linesep= '\r\n'
         with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.cmd"), 'w') as f:
             f.write(':: Vendor: python support\n')
-            path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows")
+            path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "bin")
             f.write('set "PATH={0};%PATH%"\n'.format(path))
             path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "Scripts")
             f.write('set "PATH={0};%PATH%"\n'.format(path))
         os.linesep= '\r\n'
         with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.ps1"), 'w') as f:
             f.write('# Vendor: python support\n')
-            path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows")
+            path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", "bin")
             f.write('$env:PATH="{0};" + $env:PATH\n'.format(path))
             path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", "Scripts")
             f.write('$env:PATH="{0};" + $env:PATH\n'.format(path))
         os.linesep= '\n'
         with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.sh"), 'w') as f:
             f.write('# Vendor: python support\n')
-            path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows").replace("\\", "/")
+            path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", "bin").replace("\\", "/")
             f.write('export "PATH={0}:$PATH"\n'.format(path))
             path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", "Scripts").replace("\\", "/")
             f.write('export "PATH={0}:$PATH"\n'.format(path))
-        self._append_to_license_txt("Python", "https://python.org/", "Python Programming Language ", os.path.join(self.source_folder, "python-LICENSE.txt"))
+        self._append_to_license_txt("Python", "https://python.org/", "Python Programming Language ",os.path.join(self.name, "vendor", "python-for-windows", "LICENSE"))
 
         # 5. Conan.io
         self._append_to_license_txt("Conan.io", "https://conan.io/", "C/C++ Package Manager", os.path.join(self.source_folder, "conanio-LICENSE.txt"))

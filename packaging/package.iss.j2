@@ -93,10 +93,10 @@ Source: "{{name}}\vendor\winmerge-for-windows\*";            DestDir: "{app}\ven
 {% endif %}
 Source: "{{name}}\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;    Permissions: users-modify;    
 {% if options.with_npp%}
-Source: "{{name}}\vendor\npp-for-windows\*";             DestDir: "{app}\vendor\npp-for-windows";                Flags: recursesubdirs createallsubdirs ignoreversion;    Components: npp; Permissions: users-modify
+Source: "{{name}}\vendor\npp-for-windows\*";                 DestDir: "{app}\vendor\npp-for-windows";                    Flags: recursesubdirs createallsubdirs ignoreversion;    Components: npp; Permissions: users-modify
 {% endif %}
-Source: "{{python_temp}}\*";                                        DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: python
-Source: "{{conan_temp}}\*";                                        DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: conan
+Source: "{{python_temp}}\*";                                 DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: python
+Source: "{{conan_temp}}\*";                                  DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: conan
 
 [Run]
 Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent unchecked
@@ -105,7 +105,7 @@ Filename: "{app}\LICENSE.txt"; Description: "View the LICENSE file"; Flags: post
 Filename: "{sys}\regsvr32.exe"; Parameters: "/s /u GitExtensionsShellEx64.dll"; WorkingDir: "{app}\vendor\gitext-for-windows"; Flags: runhidden;  Components: gitext
 Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Description: "Start GitExtensions"; Flags: postinstall skipifsilent unchecked;  Components: gitext
 {% endif %}
-Filename: "{app}\vendor\python-for-windows\python.exe";         Parameters: "get-pip.py --no-index --no-cache-dir --isolated --force-reinstall --find-links=.";                 WorkingDir: "{tmp}"; StatusMsg: "Installing python/pip...";         Flags: RunHidden WaitUntilTerminated
+Filename: "{app}\vendor\python-for-windows\bin\python.exe";     Parameters: "get-pip.py --no-index --no-cache-dir --isolated --force-reinstall --find-links=.";                 WorkingDir: "{tmp}"; StatusMsg: "Installing python/pip...";         Flags: RunHidden WaitUntilTerminated
 Filename: "{app}\vendor\python-for-windows\Scripts\pip.exe";    Parameters: "install --no-index --no-cache-dir --isolated --force-reinstall --find-links=. conan";              WorkingDir: "{tmp}"; StatusMsg: "Installing python/conan...";       Flags: RunHidden WaitUntilTerminated
 Filename: "{app}\vendor\python-for-windows\Scripts\pip.exe";    Parameters: "install --no-index --no-cache-dir --isolated --force-reinstall --find-links=. pylint";             WorkingDir: "{tmp}"; StatusMsg: "Installing python/pylint...";      Flags: RunHidden WaitUntilTerminated
                         
