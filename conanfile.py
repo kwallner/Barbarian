@@ -291,7 +291,7 @@ class BarbarianConan(ConanFile):
         # 3b. Bazel ... REMOVED
 
         # 4. Python
-        shutil.copytree(self.deps_cpp_info["cpython"].rootpath,  os.path.join(self.name, "vendor", "python-for-windows"))
+        shutil.copytree(self.deps_cpp_info["cpython"].rootpath,  os.path.join(self.name, "vendor", "python-for-windows"), ignore = shutil.ignore_patterns('conan*.txt'))
         os.linesep= '\r\n'
         with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.cmd"), 'w') as f:
             f.write(':: Vendor: python support\n')
