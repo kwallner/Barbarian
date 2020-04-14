@@ -60,7 +60,7 @@ class BarbarianConan(ConanFile):
 
     @property
     def _installertype_set(self):
-        if self.options.with_cmake and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_npp:
+        if self.options.with_cmake and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext:
             return ""
         return "-custom"
 
