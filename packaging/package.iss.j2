@@ -39,9 +39,6 @@ Name: winmerge;                                 Description: "WinMerge (http://w
 {% if options.with_gitext %}
 Name: gitext;                                   Description: "GitExtensions (http://gitextensions.github.io): Graphical User Interface for Git";    Types: full
 {% endif %}
-{% if options.with_npp%}
-Name: npp;                                      Description: "Notepad++ (https://notepad-plus-plus.org): Source code editor and Notepad replacement";  Types: full
-{% endif %}
 
 [Files]
 Source: "{{name}}\Cmder.exe";                                DestDir: "{app}"; DestName: "{{name}}.exe";                 Flags: ignoreversion;  Components: cmder
@@ -66,9 +63,6 @@ Source: "{{name}}\config\profile.d\kdiff3-for-windows.*";    DestDir: "{app}\con
 Source: "{{name}}\config\profile.d\winmerge-for-windows.*";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: winmerge
 {% endif %}
 Source: "{{name}}\config\profile.d\python-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: python
-{% if options.with_npp%}
-Source: "{{name}}\config\profile.d\npp-for-windows.*";       DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: npp
-{% endif %}
 Source: "{{name}}\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
 Source: "{{name}}\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion;  Components: cmder
 Source: "{{name}}\vendor\bin\*";                             DestDir: "{app}\vendor\bin";                                Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
@@ -92,9 +86,6 @@ Source: "{{name}}\vendor\kdiff3-for-windows\*";              DestDir: "{app}\ven
 Source: "{{name}}\vendor\winmerge-for-windows\*";            DestDir: "{app}\vendor\winmerge-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: winmerge
 {% endif %}
 Source: "{{name}}\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;    Permissions: users-modify;    
-{% if options.with_npp%}
-Source: "{{name}}\vendor\npp-for-windows\*";                 DestDir: "{app}\vendor\npp-for-windows";                    Flags: recursesubdirs createallsubdirs ignoreversion;    Components: npp; Permissions: users-modify
-{% endif %}
 Source: "{{python_temp}}\*";                                 DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: python
 Source: "{{conan_temp}}\*";                                  DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: conan
 
@@ -139,9 +130,6 @@ Name: "{group}\WinMerge";             Filename: "{app}\vendor\winmerge-for-windo
 {% endif %}
 {% if options.with_gitext %}
 Name: "{group}\GitExtensions";        Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: gitext
-{% endif %}
-{% if options.with_npp %}
-Name: "{group}\Notepad++";              Filename: "{app}\vendor\npp-for-windows\notepad++.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: npp
 {% endif %}
 Name: "{group}\Uninstall {{name}}";     Filename: "{uninstallexe}"; IconFilename: "{app}\{{name}}.ico"
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{{name}}"; Filename: "{app}\{{name}}.exe";     Parameters: ""; IconFilename: "{app}\{{name}}.ico"

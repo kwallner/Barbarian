@@ -32,7 +32,7 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "2.0.0-rc2"
+    version = "2.0.0-rc3"
     _cmder_version = "1.3.14"
     _cmder_version_build = "%s.982" % _cmder_version
     _git_version = "2.26.0"
@@ -44,7 +44,6 @@ class BarbarianConan(ConanFile):
     _winmerge_version = "2.16.6"
     _gitext_version = "3.3.1"
     _gitext_version_build = "%s.7897" % _gitext_version
-    _npp_version = "7.8.5"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
     generators = "txt"
@@ -56,18 +55,14 @@ class BarbarianConan(ConanFile):
     scm = { "type": "git", "url": "auto", "revision": "auto" }
     no_copy_source = True
     short_paths = True
-    options = {"with_cmake": [True, False], "with_kdiff3" : [True, False], "with_winmerge" : [True, False], "with_gitext" : [True, False], "with_npp" : [True, False]}
-    default_options = {"with_cmake" : True, "with_kdiff3" : False, "with_winmerge" : False, "with_gitext" : False, "with_npp" : False}
+    options = {"with_cmake": [True, False], "with_kdiff3" : [True, False], "with_winmerge" : [True, False], "with_gitext" : [True, False]}
+    default_options = {"with_cmake" : True, "with_kdiff3" : True, "with_winmerge" : True, "with_gitext" : True}
 
     @property
     def _installertype_set(self):
         if self.options.with_cmake and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext and self.options.with_npp:
-            return "full"
-        if not self.options.with_cmake and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_npp:
-            return "minimal"
-        if self.options.with_cmake and not self.options.with_kdiff3 and not self.options.with_winmerge and not self.options.with_gitext and not self.options.with_npp:
-            return "default"
-        return "custom"
+            return ""
+        return "-custom"
 
     @property
     def _installertype(self):
@@ -131,9 +126,6 @@ class BarbarianConan(ConanFile):
         if self.options.with_gitext:
             tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version_build), "gitext.exe", sha256="8a2cf10a8d14444d60485a462c649c48d44f41ff1283b4e7e72a00165c19e54f")
             tools.download("https://raw.githubusercontent.com/gitextensions/gitextensions/master/LICENSE.md", "gitext-LICENSE.txt")
-        if self.options.with_npp:
-            tools.download("http://download.notepad-plus-plus.org/repository/7.x/%s/npp.%s.bin.x64.zip" % (self._npp_version, self._npp_version), "npp-win64.zip", verify=False, sha256="6938698d9b55cc23bf3a737c98258c59d2493599d0341c1e9221bb4f4e186c1e")
-            tools.download("https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/master/LICENSE", "npp-LICENSE.txt")
         # Requirements for pip
         self._url_download_to_temp("https://bootstrap.pypa.io/get-pip.py", temp_name="python_temp")
         # Basic packages
@@ -401,32 +393,7 @@ class BarbarianConan(ConanFile):
 
         # 13. Ninja ... REMOVED
 
-        # 14. Notepad++
-        if self.options.with_npp:
-            tools.unzip(os.path.join(self.source_folder, "npp-win64.zip"), destination=os.path.join(self.name, "vendor", "npp-for-windows"))
-            # Create install script
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "npp-for-windows.cmd"), 'w') as f:
-                f.write(':: Vendor: notepad++ support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "npp-for-windows")
-                f.write('set "PATH={0};%PATH%"\n'.format(path))
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "npp-for-windows.ps1"), 'w') as f:
-                f.write('# Vendor: notepad++ support\n')
-                path = os.path.join("$env:CMDER_ROOT", "vendor", "npp-for-windows")
-                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
-            os.linesep= '\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "npp-for-windows.sh"), 'w') as f:
-                f.write('# Vendor: notepad++ support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "npp-for-windows").replace("\\", "/")
-                f.write('export "PATH={0}:$PATH"\n'.format(path))
-                f.write('alias npp=notepad++.exe\n')
-            self._append_to_license_txt("Notepad++", "https://notepad-plus-plus.org/", "Source code editor and Notepad replacement", os.path.join(self.source_folder, "npp-LICENSE.txt"))
-            # Create batch script
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "vendor", "npp-for-windows", "npp.bat"), 'w') as f:
-                f.write('@echo off\n')
-                f.write('start %~dp0notepad++.exe %*\n')
+        # 14. Notepad ... REMOVED
             
         # 15. Pandoc ... REMOVED
             
@@ -449,7 +416,7 @@ class BarbarianConan(ConanFile):
             'options' : self.options,
             'url' : self.url,   
             'output_dir' : self.package_folder,
-            'output_base_name' : "%s-%s-%s-%s" % (self.name, self.version, self.settings.arch, self._installertype),
+            'output_base_name' : "%s-%s-%s%s" % (self.name, self.version, self.settings.arch, self._installertype),
             'python_temp' : os.path.join(self.source_folder, "python_temp"),
             'conan_temp' : os.path.join(self.source_folder, "conan_temp")
             }
@@ -465,4 +432,4 @@ class BarbarianConan(ConanFile):
         self.copy("README.md")
         self.copy("README.txt")
         self.copy("LICENSE.txt")
-        self.copy("%s-%s-%s-%s.exe" % (self.name, self.version, self.settings.arch, self._installertype))
+        self.copy("%s-%s-%s%s.exe" % (self.name, self.version, self.settings.arch, self._installertype))
