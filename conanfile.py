@@ -32,18 +32,25 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "2.0.0-rc3"
+    version = "2.0.0-rc4"
     _cmder_version = "1.3.14"
     _cmder_version_build = "%s.982" % _cmder_version
-    _git_version = "2.26.0"
-    _cmake_version = "3.17.1"
+    _cmder_sha256 = "5d5c05fb60404b819d0e2730c04bd1e0e5cb6ef1227b78a5790ed1b935687d84"
+    _git_version = "2.26.2"
+    _git_sha256 = "dd36f76a815b993165e67ad3cbc8f5b2976e5757a0c808a4a92fb72d1000e1c8"
+    _cmake_version = "3.17.2"
+    _cmake_sha256 = "cf82b1eb20b6fbe583487656fcd496490ffccdfbcbba0f26e19f1c9c63b0b041"
     _python_version = "3.7.7"
-    _conan_version = "1.24.0"
+    _conan_version = "1.24.1"
     _vswhere_version = "2.8.4"
+    _vswhere_sha256="e50a14767c27477f634a4c19709d35c27a72f541fb2ba5c3a446c80998a86419"
     _kdiff_version = "0.9.98"
+    _kdiff_sha256 = "d630ab0fdca3b4f1a85ab7e453f669fdc901cb81bb57f7e20de64c02ac9a1eeb"
     _winmerge_version = "2.16.6"
+    _winmerge_sha256 = "f7fcf1167c6332664eb1e75bcdd822369a0716cc1faae3fd4101a88a88fca963"
     _gitext_version = "3.3.1"
     _gitext_version_build = "%s.7897" % _gitext_version
+    _gitext_sha256 = "8a2cf10a8d14444d60485a462c649c48d44f41ff1283b4e7e72a00165c19e54f"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
     generators = "txt"
@@ -70,7 +77,7 @@ class BarbarianConan(ConanFile):
 
     def build_requirements(self):
         self.build_requires("7zip/19.00@%s/%s" % (self.user, self.channel))
-        self.build_requires("InnoSetup/6.0.3@kwallner/testing")
+        self.build_requires("InnoSetup/6.0.4@%s/%s" % (self.user, self.channel))
         self.build_requires("cpython/%s@%s/%s" % (self._python_version, self.user, self.channel))
 
     def _url_download_to_temp(self, url, temp_name):
@@ -113,18 +120,18 @@ class BarbarianConan(ConanFile):
                         "-d", os.path.join(self.source_folder, temp_name)], check=True)
 
     def source(self):
-        tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self._cmder_version), "cmder_mini.zip", sha256="5d5c05fb60404b819d0e2730c04bd1e0e5cb6ef1227b78a5790ed1b935687d84")
-        tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.1/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version), "git-for-windows.7z.exe", sha256="f14aeccf0b63700c13a9c3829c4b9a6d3933d6cc5adfbc52b5aa62921725fb73")
+        tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self._cmder_version), "cmder_mini.zip", sha256=self._cmder_sha256)
+        tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.1/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version), "git-for-windows.7z.exe", sha256=self._git_sha256)
         if self.options.with_cmake:
-            tools.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self._cmake_version.split(".")[0], self._cmake_version.split(".")[1], self._cmake_version), "cmake-win64.zip", sha256="a5af7a2fe73f34070456397e940042e4469f072126c82974f44333ac43d478b1")
-        tools.download("https://github.com/microsoft/vswhere/releases/download/%s/vswhere.exe" % self._vswhere_version, "vswhere.exe", sha256="e50a14767c27477f634a4c19709d35c27a72f541fb2ba5c3a446c80998a86419")
+            tools.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self._cmake_version.split(".")[0], self._cmake_version.split(".")[1], self._cmake_version), "cmake-win64.zip", sha256=self._cmake_sha256)
+        tools.download("https://github.com/microsoft/vswhere/releases/download/%s/vswhere.exe" % self._vswhere_version, "vswhere.exe", sha256=self._vswhere_sha256)
         if self.options.with_kdiff3:
-            tools.download("https://netix.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self._kdiff_version, self._kdiff_version), "kdiff3-win64.exe", sha256="d630ab0fdca3b4f1a85ab7e453f669fdc901cb81bb57f7e20de64c02ac9a1eeb")
+            tools.download("https://netix.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self._kdiff_version, self._kdiff_version), "kdiff3-win64.exe", sha256=self._kdiff_sha256)
         if self.options.with_winmerge:
-            tools.download("https://netix.dl.sourceforge.net/project/winmerge/stable/%s/winmerge-%s-x64-exe.zip" % (self._winmerge_version, self._winmerge_version), "winmerge-win64.exe.zip", sha256="f7fcf1167c6332664eb1e75bcdd822369a0716cc1faae3fd4101a88a88fca963")
+            tools.download("https://netix.dl.sourceforge.net/project/winmerge/stable/%s/winmerge-%s-x64-exe.zip" % (self._winmerge_version, self._winmerge_version), "winmerge-win64.exe.zip", sha256=self._winmerge_sha256)
             tools.download("https://raw.githubusercontent.com/WinMerge/winmerge/master/LICENSE.md", "winmerge-LICENSE.txt")
         if self.options.with_gitext:
-            tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version_build), "gitext.exe", sha256="8a2cf10a8d14444d60485a462c649c48d44f41ff1283b4e7e72a00165c19e54f")
+            tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version_build), "gitext.exe", sha256=self._gitext_sha256)
             tools.download("https://raw.githubusercontent.com/gitextensions/gitextensions/master/LICENSE.md", "gitext-LICENSE.txt")
         # Requirements for pip
         self._url_download_to_temp("https://bootstrap.pypa.io/get-pip.py", temp_name="python_temp")
