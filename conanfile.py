@@ -32,7 +32,7 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "2.0.0-rc4"
+    version = "2.0.0-rc5"
     _cmder_version = "1.3.14"
     _cmder_version_build = "%s.982" % _cmder_version
     _cmder_sha256 = "5d5c05fb60404b819d0e2730c04bd1e0e5cb6ef1227b78a5790ed1b935687d84"
@@ -41,7 +41,7 @@ class BarbarianConan(ConanFile):
     _cmake_version = "3.17.2"
     _cmake_sha256 = "cf82b1eb20b6fbe583487656fcd496490ffccdfbcbba0f26e19f1c9c63b0b041"
     _python_version = "3.7.7"
-    _conan_version = "1.24.1"
+    _conan_version = "1.25.2"
     _vswhere_version = "2.8.4"
     _vswhere_sha256="e50a14767c27477f634a4c19709d35c27a72f541fb2ba5c3a446c80998a86419"
     _kdiff_version = "0.9.98"
@@ -77,7 +77,7 @@ class BarbarianConan(ConanFile):
 
     def build_requirements(self):
         self.build_requires("7zip/19.00@%s/%s" % (self.user, self.channel))
-        self.build_requires("InnoSetup/6.0.4@%s/%s" % (self.user, self.channel))
+        self.build_requires("InnoSetup/6.0.5@%s/%s" % (self.user, self.channel))
         self.build_requires("cpython/%s@%s/%s" % (self._python_version, self.user, self.channel))
 
     def _url_download_to_temp(self, url, temp_name):
