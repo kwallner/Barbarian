@@ -27,18 +27,6 @@ Name: cmder;                                    Description: "Cmder (http://cmde
 Name: git;                                      Description: "Git (https://git-scm.com): Distributed version control system";                       Types: full compact custom;           Flags: fixed
 Name: python;                                   Description: "Python (https://www.python.org): Python programming language";                        Types: full compact custom;           Flags: fixed
 Name: conan;                                    Description: "Conan (https://conan.io): C/C++ Package Manager";                                     Types: full compact custom;           Flags: fixed
-{% if options.with_cmake %}
-Name: cmake;                                    Description: "CMake (https:://cmake.org): Cross-Plattform Build System";                            Types: full custom
-{% endif %}
-{% if options.with_kdiff3 %}
-Name: kdiff3;                                   Description: "KDiff3 (http://kdiff3.sourceforge.net): Diff and Merge Tool";                         Types: full
-{% endif %}
-{% if options.with_winmerge %}
-Name: winmerge;                                 Description: "WinMerge (http://winmerge.org): Another Diff and Merge Tool";                         Types: full
-{% endif %}
-{% if options.with_gitext %}
-Name: gitext;                                   Description: "GitExtensions (http://gitextensions.github.io): Graphical User Interface for Git";    Types: full
-{% endif %}
 
 [Files]
 Source: "{{name}}\Cmder.exe";                                DestDir: "{app}"; DestName: "{{name}}.exe";                 Flags: ignoreversion;  Components: cmder
@@ -50,18 +38,6 @@ Source: "{{name}}\{{name}}.png";                             DestDir: "{app}";  
 Source: "{{name}}\bin\*";                                    DestDir: "{app}\bin";                                       Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
 Source: "{{name}}\config\*.*";                               DestDir: "{app}\config";                                    Flags: ignoreversion;    Permissions: users-modify;  Components: cmder
 Source: "{{name}}\config\profile.d\git-for-windows.*";       DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;  Components: git
-{% if options.with_cmake %}
-Source: "{{name}}\config\profile.d\cmake-for-windows.*";     DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: cmake
-{% endif %}
-{% if options.with_gitext %}
-Source: "{{name}}\config\profile.d\gitext-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: gitext
-{% endif %}
-{% if options.with_kdiff3 %}
-Source: "{{name}}\config\profile.d\kdiff3-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: kdiff3
-{% endif %}
-{% if options.with_winmerge %}
-Source: "{{name}}\config\profile.d\winmerge-for-windows.*";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: winmerge
-{% endif %}
 Source: "{{name}}\config\profile.d\python-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: python
 Source: "{{name}}\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
 Source: "{{name}}\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion;  Components: cmder
@@ -72,19 +48,6 @@ Source: "{{name}}\vendor\lib\*";                             DestDir: "{app}\ven
 Source: "{{name}}\vendor\psmodules\*";                       DestDir: "{app}\vendor\psmodules";                          Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
 Source: "{{name}}\vendor\clink-completions\*";               DestDir: "{app}\vendor\clink-completions";                  Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
 Source: "{{name}}\vendor\barbarian-extra\*";                 DestDir: "{app}\vendor\barbarian-extra";                    Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
-{% if options.with_cmake %}
-Source: "{{name}}\vendor\cmake-for-windows\*";               DestDir: "{app}\vendor\cmake-for-windows";                  Flags: recursesubdirs createallsubdirs ignoreversion;    Components: cmake
-{% endif %}
-Source: "{{name}}\vendor\git-for-windows\*";                 DestDir: "{app}\vendor\git-for-windows";                    Flags: recursesubdirs createallsubdirs  ignoreversion;    Components: git
-{% if options.with_gitext %}
-Source: "{{name}}\vendor\gitext-for-windows\*";              DestDir: "{app}\vendor\gitext-for-windows";                 Flags: recursesubdirs createallsubdirs  ignoreversion;    Components: gitext
-{% endif %}
-{% if options.with_kdiff3 %}
-Source: "{{name}}\vendor\kdiff3-for-windows\*";              DestDir: "{app}\vendor\kdiff3-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: kdiff3
-{% endif %}
-{% if options.with_winmerge %}
-Source: "{{name}}\vendor\winmerge-for-windows\*";            DestDir: "{app}\vendor\winmerge-for-windows";               Flags: recursesubdirs createallsubdirs ignoreversion;    Components: winmerge
-{% endif %}
 Source: "{{name}}\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;    Permissions: users-modify;    
 Source: "{{python_temp}}\*";                                 DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: python
 Source: "{{conan_temp}}\*";                                  DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: conan
@@ -92,10 +55,6 @@ Source: "{{conan_temp}}\*";                                  DestDir: "{tmp}";  
 [Run]
 Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent unchecked
 Filename: "{app}\LICENSE.txt"; Description: "View the LICENSE file"; Flags: postinstall shellexec skipifsilent unchecked
-{% if options.with_gitext %}
-Filename: "{sys}\regsvr32.exe"; Parameters: "/s /u GitExtensionsShellEx64.dll"; WorkingDir: "{app}\vendor\gitext-for-windows"; Flags: runhidden;  Components: gitext
-Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Description: "Start GitExtensions"; Flags: postinstall skipifsilent unchecked;  Components: gitext
-{% endif %}
 Filename: "{app}\vendor\python-for-windows\bin\python.exe";     Parameters: "get-pip.py --no-index --no-cache-dir --isolated --force-reinstall --find-links=.";                 WorkingDir: "{tmp}"; StatusMsg: "Installing python/pip...";         Flags: RunHidden WaitUntilTerminated
 Filename: "{app}\vendor\python-for-windows\Scripts\pip.exe";    Parameters: "install --no-index --no-cache-dir --isolated --force-reinstall --find-links=. conan";              WorkingDir: "{tmp}"; StatusMsg: "Installing python/conan...";       Flags: RunHidden WaitUntilTerminated
 Filename: "{app}\vendor\python-for-windows\Scripts\pip.exe";    Parameters: "install --no-index --no-cache-dir --isolated --force-reinstall --find-links=. pylint";             WorkingDir: "{tmp}"; StatusMsg: "Installing python/pylint...";      Flags: RunHidden WaitUntilTerminated
@@ -104,11 +63,6 @@ Filename: "{app}\vendor\python-for-windows\Scripts\pip.exe";    Parameters: "ins
 Name: "{app}\config";                          Permissions: users-modify
 Name: "{app}\config\profile.d";                Permissions: users-modify
 Name: "{app}\vendor\python-for-windows";       Permissions: users-modify
-
-[UninstallRun]
-{% if options.with_gitext %}
-Filename: "{sys}\regsvr32.exe"; Parameters: "/s /u GitExtensionsShellEx64.dll"; WorkingDir: "{app}\vendor\gitext-for-windows"; Flags: runhidden;  Components: gitext
-{% endif %}
 
 [UninstallDelete]
 Type: files;            Name: "{app}\config\.history"
@@ -122,15 +76,6 @@ Type: dirifempty;       Name: "{app}"
 
 [Icons]
 Name: "{group}\{{name}} Shell";             Filename: "{app}\{{name}}.exe";                                    Parameters: ""; WorkingDir: "{userdocs}";     IconFilename: "{app}\{{name}}.ico"
-{% if options.with_kdiff3 %}
-Name: "{group}\KDiff3";               Filename: "{app}\vendor\kdiff3-for-windows\kdiff3.exe";         Parameters: ""; WorkingDir: "{userdocs}";    Components: kdiff3
-{% endif %}
-{% if options.with_winmerge %}
-Name: "{group}\WinMerge";             Filename: "{app}\vendor\winmerge-for-windows\WinMergeU.exe";    Parameters: ""; WorkingDir: "{userdocs}";    Components: kdiff3
-{% endif %}
-{% if options.with_gitext %}
-Name: "{group}\GitExtensions";        Filename: "{app}\vendor\gitext-for-windows\GitExtensions.exe";  Parameters: ""; WorkingDir: "{userdocs}";    Components: gitext
-{% endif %}
 Name: "{group}\Uninstall {{name}}";     Filename: "{uninstallexe}"; IconFilename: "{app}\{{name}}.ico"
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{{name}}"; Filename: "{app}\{{name}}.exe";     Parameters: ""; IconFilename: "{app}\{{name}}.ico"
 
@@ -145,39 +90,5 @@ begin
     GitConfig := ExpandConstant('{app}\vendor\git-for-windows\etc\gitconfig');
     // Setup git
     SetIniString('credential', 'helper', 'wincred', GitConfig);
-
-    // Setup KDiff 3 ... seems not to work
-    //S := ExpandConstant('{app}\vendor\winmerge-for-windows\kdiff3-for-windows\kdiff3.exe');
-    //StringChangeEx(S, '\', '/', True);
-    //SetIniString('mergetool "kdiff3"', 'path', S, GitConfig); 
-    //SetIniString('difftool "kdiff3"', 'path', S, GitConfig); 
-
-    // Setup WinMerge ... seems not to work
-    //S := ExpandConstant('{app}\vendor\winmerge-for-windows\WinMergeU.exe');
-    //StringChangeEx(S, '\', '/', True);
-    //SetIniString('mergetool "winmerge"', 'path', S, GitConfig); 
-    //SetIniString('difftool "winmerge"', 'path', S, GitConfig); 
-
-    //S := '\"' + S + '\" -e -u  -wl -wr -fm -dl \"Mine: $LOCAL\" -dm \"Merged: $BASE\" -dr \"Theirs: $REMOTE\" \"$LOCAL\" \"$BASE\" \"$REMOTE\" -o \"$MERGED\"';
-    //StringChangeEx(S, '\', '/', True);
-    //SetIniString('mergetool "winmerge"', 'cmd', S, GitConfig); 
-    
-    // Configure Merge to Use ... seems not to work
-    //SetIniString('merge', 'tool', 'winmerge', GitConfig); 
-    //SetIniString('diff', 'guitool', 'winmerge', GitConfig); 
-   
-    // Setup core ... seems not to work
-    //S := ExpandConstant('{app}\vendor\gitext-for-windows\GitExtensions.exe');
-    //StringChangeEx(S, '\', '/', True);
-    //S := '\"' + S + '\" fileeditor';
-    //SetIniString('core', 'editor', S, GitConfig); 
-
-    // Configure Git Extensions
-    RegWriteStringValue(HKEY_AUTO, 'Software\GitExtensions', 'gitcommand', ExpandConstant('{app}\vendor\git-for-windows\bin\git.exe'));
-    RegWriteStringValue(HKEY_AUTO, 'Software\GitExtensions', 'ShowCurrentBranchInVS', 'true'); 
-    RegWriteStringValue(HKEY_AUTO, 'Software\GitExtensions', 'CascadeShellMenuItems', '110111000111111111');
-    RegWriteStringValue(HKEY_AUTO, 'Software\GitExtensions', 'gitssh', ExpandConstant('{app}\vendor\git-for-windows\usr\bin\ssh.exe'));
-    RegWriteStringValue(HKEY_AUTO, 'Software\GitExtensions', 'InstallDir', ExpandConstant('{app}\vendor\git-for-windows'));
-    RegWriteStringValue(HKEY_AUTO, 'Software\GitExtensions', 'AlwaysShowAllCommands', 'false'); 
   end;
 end;

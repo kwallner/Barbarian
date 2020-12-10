@@ -31,26 +31,18 @@ class VsToolVersion:
         self.Active = "1"
 
 class BarbarianConan(ConanFile):
-    name = "Barbarian"
-    version = "2.0.0-rc5"
-    _cmder_version = "1.3.14"
-    _cmder_version_build = "%s.982" % _cmder_version
-    _cmder_sha256 = "5d5c05fb60404b819d0e2730c04bd1e0e5cb6ef1227b78a5790ed1b935687d84"
-    _git_version = "2.26.2"
-    _git_sha256 = "dd36f76a815b993165e67ad3cbc8f5b2976e5757a0c808a4a92fb72d1000e1c8"
-    _cmake_version = "3.17.2"
-    _cmake_sha256 = "cf82b1eb20b6fbe583487656fcd496490ffccdfbcbba0f26e19f1c9c63b0b041"
-    _python_version = "3.7.7"
-    _conan_version = "1.25.2"
+    name = "Valeria" 
+    #name = "Barbarian"
+    version = "2.0.0-rc6"
+    _cmder_version = "1.3.16"
+    _cmder_version_build = "%s.1035" % _cmder_version
+    _cmder_sha256 = "d27b38930bd02db02617952c7e49b3c22c4cae60e3494df40ed050318258f610"
+    _git_version = "2.29.2.3"
+    _git_sha256 = "47334810d3cc063d1111fac55e4645893bc8f758d3ebf571883749d90b3cd7b4"
+    _python_version = "3.7.9"
+    _conan_version = "1.32.0"
     _vswhere_version = "2.8.4"
     _vswhere_sha256="e50a14767c27477f634a4c19709d35c27a72f541fb2ba5c3a446c80998a86419"
-    _kdiff_version = "0.9.98"
-    _kdiff_sha256 = "d630ab0fdca3b4f1a85ab7e453f669fdc901cb81bb57f7e20de64c02ac9a1eeb"
-    _winmerge_version = "2.16.6"
-    _winmerge_sha256 = "f7fcf1167c6332664eb1e75bcdd822369a0716cc1faae3fd4101a88a88fca963"
-    _gitext_version = "3.3.1"
-    _gitext_version_build = "%s.7897" % _gitext_version
-    _gitext_sha256 = "8a2cf10a8d14444d60485a462c649c48d44f41ff1283b4e7e72a00165c19e54f"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
     generators = "txt"
@@ -62,22 +54,10 @@ class BarbarianConan(ConanFile):
     scm = { "type": "git", "url": "auto", "revision": "auto" }
     no_copy_source = True
     short_paths = True
-    options = {"with_cmake": [True, False], "with_kdiff3" : [True, False], "with_winmerge" : [True, False], "with_gitext" : [True, False]}
-    default_options = {"with_cmake" : True, "with_kdiff3" : True, "with_winmerge" : True, "with_gitext" : True}
-
-    @property
-    def _installertype_set(self):
-        if self.options.with_cmake and self.options.with_kdiff3 and self.options.with_winmerge and self.options.with_gitext:
-            return ""
-        return "-custom"
-
-    @property
-    def _installertype(self):
-        return self._installertype_set
 
     def build_requirements(self):
-        self.build_requires("7zip/19.00@%s/%s" % (self.user, self.channel))
-        self.build_requires("InnoSetup/6.0.5@%s/%s" % (self.user, self.channel))
+        self.build_requires("7zip/19.00")
+        self.build_requires("InnoSetup/6.1.2@%s/%s" % (self.user, self.channel))
         self.build_requires("cpython/%s@%s/%s" % (self._python_version, self.user, self.channel))
 
     def _url_download_to_temp(self, url, temp_name):
@@ -121,20 +101,11 @@ class BarbarianConan(ConanFile):
 
     def source(self):
         tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self._cmder_version), "cmder_mini.zip", sha256=self._cmder_sha256)
-        tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.1/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version), "git-for-windows.7z.exe", sha256=self._git_sha256)
-        if self.options.with_cmake:
-            tools.download("https://cmake.org/files/v%s.%s/cmake-%s-win64-x64.zip" % (self._cmake_version.split(".")[0], self._cmake_version.split(".")[1], self._cmake_version), "cmake-win64.zip", sha256=self._cmake_sha256)
-        tools.download("https://github.com/microsoft/vswhere/releases/download/%s/vswhere.exe" % self._vswhere_version, "vswhere.exe", sha256=self._vswhere_sha256)
-        if self.options.with_kdiff3:
-            tools.download("https://netix.dl.sourceforge.net/project/kdiff3/kdiff3/%s/KDiff3-64bit-Setup_%s-2.exe" % (self._kdiff_version, self._kdiff_version), "kdiff3-win64.exe", sha256=self._kdiff_sha256)
-        if self.options.with_winmerge:
-            tools.download("https://netix.dl.sourceforge.net/project/winmerge/stable/%s/winmerge-%s-x64-exe.zip" % (self._winmerge_version, self._winmerge_version), "winmerge-win64.exe.zip", sha256=self._winmerge_sha256)
-            tools.download("https://raw.githubusercontent.com/WinMerge/winmerge/master/LICENSE.md", "winmerge-LICENSE.txt")
-        if self.options.with_gitext:
-            tools.download("https://github.com/gitextensions/gitextensions/releases/download/v%s/GitExtensions-%s.msi" % (self._gitext_version, self._gitext_version_build), "gitext.exe", sha256=self._gitext_sha256)
-            tools.download("https://raw.githubusercontent.com/gitextensions/gitextensions/master/LICENSE.md", "gitext-LICENSE.txt")
+        tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.%s/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version.split(".")[3], self._git_version), "git-for-windows.7z.exe", sha256=self._git_sha256)
         # Requirements for pip
         self._url_download_to_temp("https://bootstrap.pypa.io/get-pip.py", temp_name="python_temp")
+        # Download vswhere
+        tools.download("https://github.com/microsoft/vswhere/releases/download/%s/vswhere.exe" % self._vswhere_version, "vswhere.exe", sha256=self._vswhere_sha256)
         # Basic packages
         self._pip_download_to_temp("pip", temp_name="python_temp")
         self._pip_download_to_temp("wheel", temp_name="python_temp")
@@ -143,12 +114,9 @@ class BarbarianConan(ConanFile):
         self._pip_tar2whl_to_temp("conan==%s" % self._conan_version, temp_name="conan_temp")
         self._pip_tar2whl_to_temp("future==0.18.2", temp_name="conan_temp")
         self._pip_tar2whl_to_temp("patch-ng==1.17.4", temp_name="conan_temp")
-        self._pip_tar2whl_to_temp("pluginbase==0.7", temp_name="conan_temp")
+        self._pip_tar2whl_to_temp("pluginbase==1.0.0", temp_name="conan_temp")
         self._pip_download_to_temp("conan==%s" % self._conan_version, temp_name="conan_temp")
         tools.download("https://raw.githubusercontent.com/conan-io/conan/develop/LICENSE.md", "conanio-LICENSE.txt")
-        # Requirements for pylint 
-        self._pip_tar2whl_to_temp("wrapt==1.11.2", temp_name="python_temp") 
-        self._pip_download_to_temp("pylint", temp_name="python_temp")
          
     def _append_to_license_txt(self, name, url, description, license_file):
         os.linesep= '\r\n'
@@ -174,11 +142,6 @@ class BarbarianConan(ConanFile):
         shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2017.bat"), os.path.join(output_dir, "vswhere_find_vs2017.bat"))
         shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2019.bat"), os.path.join(output_dir, "vswhere_find_vs2019.bat"))
         vs_versions = {
-            #"Windows SDK 7" : "WINDOWSSDK7", 
-            "VS 2010" : "VS100COMNTOOLS",
-            #"VS 2012" : "VS110COMNTOOLS",
-            #"VS 2013" : "VS120COMNTOOLS",
-            "VS 2015" : "VS140COMNTOOLS",
             "VS 2017" : "VS150COMNTOOLS",
             "VS 2019" : "VS160COMNTOOLS"
             }
@@ -214,8 +177,8 @@ class BarbarianConan(ConanFile):
         shutil.copyfile(os.path.join(self.source_folder, "LICENSE.txt"), os.path.join(self.build_folder, self.name, "LICENSE-barbarian.txt"))
         shutil.copyfile(os.path.join(self.source_folder, "README.txt"), os.path.join(self.build_folder, self.name, "README.txt"))
         shutil.copyfile(os.path.join(self.source_folder, "README.md"), os.path.join(self.build_folder, self.name, "README.md"))
-        shutil.copyfile(os.path.join(self.source_folder, "documentation", "logo", "Barbarian.ico"), os.path.join(self.build_folder, self.name, "Barbarian.ico"))
-        shutil.copyfile(os.path.join(self.source_folder, "documentation", "logo", "Barbarian128.png"), os.path.join(self.build_folder, self.name, "Barbarian.png"))
+        shutil.copyfile(os.path.join(self.source_folder, "documentation", "logo", "Barbarian.ico"), os.path.join(self.build_folder, self.name, "%s.ico" % self.name))
+        shutil.copyfile(os.path.join(self.source_folder, "documentation", "logo", "Barbarian128.png"), os.path.join(self.build_folder, self.name, "%s.png" % self.name))
 
         # 1c. Append to license
         self._append_to_license_txt("Barbarian", "https://github.com/kwallner/Barbarian", "A Software Development Environment for Conan.io", os.path.join(self.build_folder, self.name, "LICENSE.txt"))
@@ -236,8 +199,8 @@ class BarbarianConan(ConanFile):
         os.linesep= '\r\n'
         with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.cmd"), 'w') as f:
             f.write(':: Vendor: git support\n')
-            path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "cmd")
-            f.write('set "PATH={0};%PATH%"\n'.format(path))
+            #path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "cmd")
+            #f.write('set "PATH={0};%PATH%"\n'.format(path))
             path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "mingw64", "bin")
             f.write('set "PATH={0};%PATH%"\n'.format(path))
             path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "usr", "bin")
@@ -265,30 +228,6 @@ class BarbarianConan(ConanFile):
             f.write('rem Remove this script\n')
             f.write('(goto) 2>nul & del "%~f0"\n')
             
-        # 3a. CMake
-        if self.options.with_cmake:
-            tools.unzip(os.path.join(self.source_folder, "cmake-win64.zip"), destination = os.path.join(self.name, "vendor"))
-            os.rename(os.path.join(self.name, "vendor", "cmake-%s-win64-x64" % (self._cmake_version)), os.path.join(self.name, "vendor", "cmake-for-windows"))
-            # Create install script
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "cmake-for-windows.cmd"), 'w') as f:
-                f.write(':: Vendor: cmake support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "cmake-for-windows", "bin")
-                f.write('set "PATH={0};%PATH%"\n'.format(path))
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "cmake-for-windows.ps1"), 'w') as f:
-                f.write('# Vendor: cmake support\n')
-                path = os.path.join("$env:CMDER_ROOT", "vendor", "cmake-for-windows", "bin")
-                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
-            os.linesep= '\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "cmake-for-windows.sh"), 'w') as f:
-                f.write('# Vendor: cmake support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "cmake-for-windows", "bin").replace("\\", "/")
-                f.write('export "PATH={0}:$PATH"\n'.format(path))
-            self._append_to_license_txt("CMake", "https://cmake.org/", "Cross-Plattform Build System", os.path.join(self.build_folder, self.name, "vendor", "cmake-for-windows", "doc", "cmake", "Copyright.txt"))
-
-        # 3b. Bazel ... REMOVED
-
         # 4. Python
         shutil.copytree(self.deps_cpp_info["cpython"].rootpath,  os.path.join(self.name, "vendor", "python-for-windows"), ignore = shutil.ignore_patterns('conan*.txt'))
         os.linesep= '\r\n'
@@ -317,95 +256,6 @@ class BarbarianConan(ConanFile):
         # 5. Conan.io
         self._append_to_license_txt("Conan.io", "https://conan.io/", "C/C++ Package Manager", os.path.join(self.source_folder, "conanio-LICENSE.txt"))
 
-        # 7. KDiff3
-        if self.options.with_kdiff3:
-            subprocess.call(["7z", "x", os.path.join(self.source_folder, "kdiff3-win64.exe"), "-o%s/%s" % (self.name, "vendor/kdiff3-for-windows"), '-x!$PLUGINSDIR', '-x!Uninstall.exe' ])
-            # Create install script
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "kdiff3-for-windows.cmd"), 'w') as f:
-                f.write(':: Vendor: kdiff3 support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "kdiff3-for-windows")
-                f.write('set "PATH={0};%PATH%"\n'.format(path))
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "kdiff3-for-windows.ps1"), 'w') as f:
-                f.write('# Vendor: kdiff3 support\n')
-                path = os.path.join("$env:CMDER_ROOT", "vendor", "kdiff3-for-windows")
-                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
-            os.linesep= '\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "kdiff3-for-windows.sh"), 'w') as f:
-                f.write('# Vendor: kdiff3 support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "kdiff3-for-windows").replace("\\", "/")
-                f.write('export "PATH={0}:$PATH"\n'.format(path))
-            self._append_to_license_txt("KDiff3", "http://kdiff3.sourceforge.net/", "Diff and Merge Program", os.path.join(self.name, "vendor", "kdiff3-for-windows", "COPYING.txt"))
-
-        # 8. WinMerge
-        if self.options.with_winmerge:
-            tools.unzip(os.path.join(self.source_folder, "winmerge-win64.exe.zip"))
-            os.rename("WinMerge", os.path.join(self.name, "vendor", "winmerge-for-windows"))
-            tools.mkdir(os.path.join(self.build_folder, self.name, "vendor", "winmerge-for-windows", "bin"))
-            # Create run script
-            with open(os.path.join(self.build_folder, self.name, "vendor", "winmerge-for-windows", "bin", "winmerge.cmd"), 'w') as f:
-                f.write('@echo off\n')
-                f.write('call "%~dp0..\\WinMergeU.exe" %*\n')
-            # Create install script
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.cmd"), 'w') as f:
-                f.write(':: Vendor: winmerge support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "winmerge-for-windows", "bin")
-                f.write('set "PATH={0};%PATH%"\n'.format(path))
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.ps1"), 'w') as f:
-                f.write('# Vendor: winmerge support\n')
-                path = os.path.join("$env:CMDER_ROOT", "vendor", "winmerge-for-windows", "bin")
-                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
-            os.linesep= '\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "winmerge-for-windows.sh"), 'w') as f:
-                f.write('# Vendor: winmerge support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "winmerge-for-windows", "bin").replace("\\", "/")
-                f.write('export "PATH={0}:$PATH"\n'.format(path))
-                f.write('alias winmerge=WinMergeU.exe\n')
-            self._append_to_license_txt("WinMerge", "http://winmerge.org/", "Open Source differencing and merging tool for Windows", os.path.join(self.source_folder, "winmerge-LICENSE.txt"))
-
-        # 9. GitExt
-        if self.options.with_gitext:
-            subprocess.call(["7z", "x", os.path.join(self.source_folder, "gitext.exe"), "-o%s/%s" % (self.name, "vendor/gitext-for-windows") ])
-            tools.mkdir(os.path.join(self.build_folder, self.name, "vendor", "gitext-for-windows", "bin"))
-            # Create run script
-            #with open(os.path.join(self.build_folder, self.name, "vendor", "gitext-for-windows", "gitext.bat"), 'w') as f:
-            #    f.write('@echo off\n')
-            #    f.write('start "%~dp0GitExtensions.exe" %*\n')
-            # Create install script
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.cmd"), 'w') as f:
-                f.write(':: Vendor: gitext support\n')
-                path = os.path.join("%CMDER_ROOT%", "vendor", "gitext-for-windows")
-                f.write('set "PATH={0};%PATH%"\n'.format(path))
-            os.linesep= '\r\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.ps1"), 'w') as f:
-                f.write('# Vendor: gitext support\n')
-                path = os.path.join("$env:CMDER_ROOT", "vendor", "gitext-for-windows")
-                f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
-            os.linesep= '\n'
-            with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "gitext-for-windows.sh"), 'w') as f:
-                f.write('# Vendor: gitext support\n')
-                path = os.path.join("$CMDER_ROOT", "vendor", "gitext-for-windows").replace("\\", "/")
-                f.write('export "PATH={0}:$PATH"\n'.format(path))
-            self._append_to_license_txt("Git Extensions", "http://gitextensions.github.io/", "Graphical user interface for Git", os.path.join(self.source_folder, "gitext-LICENSE.txt"))
-
-        # 10. Graphviz ... REMOVED
-
-        # 11. Doxygen ... REMOVED
-
-        # 12. MiKTex ... REMOVED
-
-        # 13. Ninja ... REMOVED
-
-        # 14. Notepad ... REMOVED
-            
-        # 15. Pandoc ... REMOVED
-            
-        # 16. Ruby ... REMOVED
-
         # Final. Pack everything
         os.makedirs(self.package_folder, exist_ok=True)
         jinja2_env = jinja2.Environment(
@@ -423,7 +273,7 @@ class BarbarianConan(ConanFile):
             'options' : self.options,
             'url' : self.url,   
             'output_dir' : self.package_folder,
-            'output_base_name' : "%s-%s-%s%s" % (self.name, self.version, self.settings.arch, self._installertype),
+            'output_base_name' : "%s-%s-%s" % (self.name, self.version, self.settings.arch),
             'python_temp' : os.path.join(self.source_folder, "python_temp"),
             'conan_temp' : os.path.join(self.source_folder, "conan_temp")
             }
@@ -439,4 +289,4 @@ class BarbarianConan(ConanFile):
         self.copy("README.md")
         self.copy("README.txt")
         self.copy("LICENSE.txt")
-        self.copy("%s-%s-%s%s.exe" % (self.name, self.version, self.settings.arch, self._installertype))
+        self.copy("%s-%s-%s.exe" % (self.name, self.version, self.settings.arch))
