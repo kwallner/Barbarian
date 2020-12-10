@@ -23,10 +23,11 @@ SetupIconFile={{name}}\{{name}}.ico
 WelcomeLabel1=Barbarian - A Software Development Environment for Conan.io
 
 [Components]
-Name: cmder;                                    Description: "Cmder (http://cmder.net/): Console emulator for Windows";                             Types: full compact custom;           Flags: fixed
-Name: git;                                      Description: "Git (https://git-scm.com): Distributed version control system";                       Types: full compact custom;           Flags: fixed
-Name: python;                                   Description: "Python (https://www.python.org): Python programming language";                        Types: full compact custom;           Flags: fixed
-Name: conan;                                    Description: "Conan (https://conan.io): C/C++ Package Manager";                                     Types: full compact custom;           Flags: fixed
+Name: cmder;                                    Description: "Cmder (http://cmder.net/): Console emulator for Windows";                             Types: compact full custom;   Flags: fixed
+Name: git;                                      Description: "Git (https://git-scm.com): Distributed version control system";                       Types: compact full custom;   Flags: fixed
+Name: python;                                   Description: "Python (https://www.python.org): Python programming language";                        Types: full custom;           
+Name: conan;                                    Description: "Conan (https://conan.io): C/C++ Package Manager";                                     Types: full custom;           
+
 
 [Files]
 Source: "{{name}}\Cmder.exe";                                DestDir: "{app}"; DestName: "{{name}}.exe";                 Flags: ignoreversion;  Components: cmder
@@ -48,16 +49,16 @@ Source: "{{name}}\vendor\lib\*";                             DestDir: "{app}\ven
 Source: "{{name}}\vendor\psmodules\*";                       DestDir: "{app}\vendor\psmodules";                          Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
 Source: "{{name}}\vendor\clink-completions\*";               DestDir: "{app}\vendor\clink-completions";                  Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
 Source: "{{name}}\vendor\barbarian-extra\*";                 DestDir: "{app}\vendor\barbarian-extra";                    Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
-Source: "{{name}}\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;    Components: python;    Permissions: users-modify;    
+Source: "{{name}}\vendor\git-for-windows\*";                 DestDir: "{app}\vendor\git-for-windows";                    Flags: recursesubdirs createallsubdirs ignoreversion;  Components: git;    Permissions: users-modify;    
+Source: "{{name}}\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;  Components: python;    Permissions: users-modify;    
 Source: "{{python_temp}}\*";                                 DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: python
 Source: "{{conan_temp}}\*";                                  DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: conan
 
 [Run]
 Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent unchecked
 Filename: "{app}\LICENSE.txt"; Description: "View the LICENSE file"; Flags: postinstall shellexec skipifsilent unchecked
-Filename: "{app}\vendor\python-for-windows\bin\python.exe";     Parameters: "get-pip.py --no-index --no-cache-dir --isolated --force-reinstall --find-links=.";                 WorkingDir: "{tmp}"; StatusMsg: "Installing python/pip...";         Flags: RunHidden WaitUntilTerminated
-Filename: "{app}\vendor\python-for-windows\Scripts\pip.exe";    Parameters: "install --no-index --no-cache-dir --isolated --force-reinstall --find-links=. conan";              WorkingDir: "{tmp}"; StatusMsg: "Installing python/conan...";       Flags: RunHidden WaitUntilTerminated
-Filename: "{app}\vendor\python-for-windows\Scripts\pip.exe";    Parameters: "install --no-index --no-cache-dir --isolated --force-reinstall --find-links=. pylint";             WorkingDir: "{tmp}"; StatusMsg: "Installing python/pylint...";      Flags: RunHidden WaitUntilTerminated
+Filename: "{app}\vendor\python-for-windows\python.exe";         Parameters: "get-pip.py --no-index --no-cache-dir --isolated --force-reinstall --find-links=.";                        WorkingDir: "{tmp}"; StatusMsg: "Installing python/pip...";         Flags: RunHidden WaitUntilTerminated; Components: python
+Filename: "{app}\vendor\python-for-windows\python.exe";         Parameters: "-m pip install --no-index --no-cache-dir --isolated --force-reinstall --find-links=. conan";              WorkingDir: "{tmp}"; StatusMsg: "Installing python/conan...";       Flags: RunHidden WaitUntilTerminated; Components: conan
                         
 [Dirs]
 Name: "{app}\config";                          Permissions: users-modify
@@ -75,9 +76,9 @@ Type: dirifempty;       Name: "{app}\config\profile.d"
 Type: dirifempty;       Name: "{app}"
 
 [Icons]
-Name: "{group}\{{name}} Shell";             Filename: "{app}\{{name}}.exe";                                    Parameters: ""; WorkingDir: "{userdocs}";     IconFilename: "{app}\{{name}}.ico"
-Name: "{group}\Uninstall {{name}}";     Filename: "{uninstallexe}"; IconFilename: "{app}\{{name}}.ico"
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{{name}}"; Filename: "{app}\{{name}}.exe";     Parameters: ""; IconFilename: "{app}\{{name}}.ico"
+Name: "{group}\{{name}} Shell";                                           Filename: "{app}\{{name}}.exe";     IconFilename: "{app}\{{name}}.ico";     Parameters: "";     WorkingDir: "{userdocs}";     
+Name: "{group}\Uninstall {{name}}";                                       Filename: "{uninstallexe}";         IconFilename: "{app}\{{name}}.ico"
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{{name}}";  Filename: "{app}\{{name}}.exe";     IconFilename: "{app}\{{name}}.ico";     Parameters: "" 
 
 [Code]
 procedure CurStepChanged(CurStep: TSetupStep);

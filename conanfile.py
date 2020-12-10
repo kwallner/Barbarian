@@ -31,8 +31,7 @@ class VsToolVersion:
         self.Active = "1"
 
 class BarbarianConan(ConanFile):
-    name = "Valeria" 
-    #name = "Barbarian"
+    name = "Barbarian"
     version = "2.0.0-rc6"
     _cmder_version = "1.3.16"
     _cmder_version_build = "%s.1035" % _cmder_version
@@ -199,8 +198,8 @@ class BarbarianConan(ConanFile):
         os.linesep= '\r\n'
         with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.cmd"), 'w') as f:
             f.write(':: Vendor: git support\n')
-            #path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "cmd")
-            #f.write('set "PATH={0};%PATH%"\n'.format(path))
+            path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "cmd")
+            f.write('set "PATH={0};%PATH%"\n'.format(path))
             path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "mingw64", "bin")
             f.write('set "PATH={0};%PATH%"\n'.format(path))
             path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "usr", "bin")
@@ -233,21 +232,21 @@ class BarbarianConan(ConanFile):
         os.linesep= '\r\n'
         with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.cmd"), 'w') as f:
             f.write(':: Vendor: python support\n')
-            path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "bin")
+            path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows")
             f.write('set "PATH={0};%PATH%"\n'.format(path))
             path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "Scripts")
             f.write('set "PATH={0};%PATH%"\n'.format(path))
         os.linesep= '\r\n'
         with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.ps1"), 'w') as f:
             f.write('# Vendor: python support\n')
-            path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", "bin")
+            path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows")
             f.write('$env:PATH="{0};" + $env:PATH\n'.format(path))
             path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", "Scripts")
             f.write('$env:PATH="{0};" + $env:PATH\n'.format(path))
         os.linesep= '\n'
         with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.sh"), 'w') as f:
             f.write('# Vendor: python support\n')
-            path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", "bin").replace("\\", "/")
+            path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows").replace("\\", "/")
             f.write('export "PATH={0}:$PATH"\n'.format(path))
             path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", "Scripts").replace("\\", "/")
             f.write('export "PATH={0}:$PATH"\n'.format(path))
