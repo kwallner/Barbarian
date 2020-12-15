@@ -2,7 +2,6 @@ Barbarian - A Software Development Environment for Conan.io
 
 Barbarian is an all in one package for everybody developing software with:
 * [Conan.io](https:://conan.io): C/C++ Package Manager
-* [CMake](https:://cmake.org): Cross-Plattform Build System
 * [Git](https://git-scm.com): Distributed version control system
 
 Barbarian is based on:
@@ -10,10 +9,6 @@ Barbarian is based on:
 
 Barbarian also contains:
 * [Python](https://www.python.org): Python Programming Language
-* [KDiff3](http://kdiff3.sourceforge.net): Diff and Merge Tool
-* [WinMerge](http://winmerge.org): Diff and Merge Tool
-* [GitExtension](http://gitextensions.github.io): Graphical User Interface for Git
-* [Notepad++](https://notepad-plus-plus.org): Source code editor and Notepad replacement
 
 Barbarian Logo is based on:
 * [Barba Rossa](https://openclipart.org/detail/299925/barba-rossa): 
