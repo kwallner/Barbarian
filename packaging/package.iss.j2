@@ -27,7 +27,7 @@ Name: cmder;                                    Description: "Cmder (http://cmde
 Name: git;                                      Description: "Git (https://git-scm.com): Distributed version control system";                       Types: compact full custom;   Flags: fixed
 Name: python;                                   Description: "Python (https://www.python.org): Python programming language";                        Types: full custom;           
 Name: conan;                                    Description: "Conan (https://conan.io): C/C++ Package Manager";                                     Types: full custom;           
-
+Name: conan_env;                                Description: "Conan Environment: Activate/Use conan packages";                                      Types: full custom;           
 
 [Files]
 Source: "{{name}}\Cmder.exe";                                DestDir: "{app}"; DestName: "{{name}}.exe";                 Flags: ignoreversion;  Components: cmder
@@ -38,8 +38,9 @@ Source: "{{name}}\{{name}}.ico";                             DestDir: "{app}";  
 Source: "{{name}}\{{name}}.png";                             DestDir: "{app}";                                           Flags: ignoreversion;  Components: cmder
 Source: "{{name}}\bin\*";                                    DestDir: "{app}\bin";                                       Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
 Source: "{{name}}\config\*.*";                               DestDir: "{app}\config";                                    Flags: ignoreversion;    Permissions: users-modify;  Components: cmder
-Source: "{{name}}\config\profile.d\git-for-windows.*";       DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;  Components: git
-Source: "{{name}}\config\profile.d\python-for-windows.*";    DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: python
+Source: "{{name}}\config\profile.d\*git-for-windows.*";      DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;  Components: git
+Source: "{{name}}\config\profile.d\*python-for-windows.*";   DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: python
+Source: "{{name}}\config\profile.d\*barbarian-conan_env.*";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: conan_env
 Source: "{{name}}\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
 Source: "{{name}}\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion;  Components: cmder
 Source: "{{name}}\vendor\bin\*";                             DestDir: "{app}\vendor\bin";                                Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
@@ -51,6 +52,7 @@ Source: "{{name}}\vendor\clink-completions\*";               DestDir: "{app}\ven
 Source: "{{name}}\vendor\barbarian-extra\*";                 DestDir: "{app}\vendor\barbarian-extra";                    Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
 Source: "{{name}}\vendor\git-for-windows\*";                 DestDir: "{app}\vendor\git-for-windows";                    Flags: recursesubdirs createallsubdirs ignoreversion;  Components: git;    Permissions: users-modify;    
 Source: "{{name}}\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;  Components: python;    Permissions: users-modify;    
+Source: "{{name}}\vendor\barbarian-conan_env\*";             DestDir: "{app}\vendor\barbarian-conan_env";                Flags: recursesubdirs createallsubdirs ignoreversion;  Components: conan_env;    Permissions: users-modify;    
 Source: "{{python_temp}}\*";                                 DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: python
 Source: "{{conan_temp}}\*";                                  DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: conan
 
@@ -64,6 +66,7 @@ Filename: "{app}\vendor\python-for-windows\python.exe";         Parameters: "-m 
 Name: "{app}\config";                          Permissions: users-modify
 Name: "{app}\config\profile.d";                Permissions: users-modify
 Name: "{app}\vendor\python-for-windows";       Permissions: users-modify
+Name: "{app}\vendor\barbarian-conan_env";       Permissions: users-modify
 
 [UninstallDelete]
 Type: files;            Name: "{app}\config\.history"

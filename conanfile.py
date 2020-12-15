@@ -21,10 +21,7 @@ class VsToolVersion:
         elif CommonToolsEnv == "VS160COMNTOOLS":
             extra_call = "call \"%ConEmuDir%\\..\\barbarian-extra\\vswhere_find_vs2019.bat\" &amp; "
             extra_path = "Auxiliary\\Build\\"
-        if CommonToolsEnv == "WINDOWSSDK7":
-            self.Cmd1 = "call \"C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Bin\\SetEnv.cmd\" &amp; cmd /k \"\"%ConEmuDir%\\..\\init.bat\"\""
-        else:
-            self.Cmd1 = extra_call + "call \"%" + CommonToolsEnv + "%..\\..\\VC\\" + extra_path + "vcvarsall.bat\" " + Architecture + " &amp; cmd /k \"\"%ConEmuDir%\\..\\init.bat\"\""
+        self.Cmd1 = extra_call + "call \"%" + CommonToolsEnv + "%..\\..\\VC\\" + extra_path + "vcvarsall.bat\" " + Architecture + " &amp; cmd /k \"\"%ConEmuDir%\\..\\init.bat\"\""
         self.Count = "1"
         self.Hotkey = "0"
         self.Flags = "0"
@@ -32,7 +29,7 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "2.0.0-rc6"
+    version = "2.0.0-rc7"
     _cmder_version = "1.3.16"
     _cmder_version_build = "%s.1035" % _cmder_version
     _cmder_sha256 = "d27b38930bd02db02617952c7e49b3c22c4cae60e3494df40ed050318258f610"
@@ -196,7 +193,7 @@ class BarbarianConan(ConanFile):
         subprocess.call(["7z", "x", os.path.join(self.source_folder, "git-for-windows.7z.exe"), "-o%s/%s" % (self.name, "vendor/git-for-windows") ])
         # No need for install script. Git is already included (so do not change name)
         os.linesep= '\r\n'
-        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.cmd"), 'w') as f:
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "02_git-for-windows.cmd"), 'w') as f:
             f.write(':: Vendor: git support\n')
             path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "cmd")
             f.write('set "PATH={0};%PATH%"\n'.format(path))
@@ -205,7 +202,7 @@ class BarbarianConan(ConanFile):
             path = os.path.join("%CMDER_ROOT%", "vendor", "git-for-windows", "usr", "bin")
             f.write('set "PATH={0};%PATH%"\n'.format(path))
         os.linesep= '\r\n'
-        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.ps1"), 'w') as f:
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "02_git-for-windows.ps1"), 'w') as f:
             f.write('# Vendor: git support\n')
             path = os.path.join("$env:CMDER_ROOT", "vendor", "git-for-windows", "cmd")
             f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
@@ -214,7 +211,7 @@ class BarbarianConan(ConanFile):
             path = os.path.join("$env:CMDER_ROOT", "vendor", "git-for-windows", "usr", "bin")
             f.write('$env:PATH="PATH={0};" + $env:PATH\n'.format(path))
         os.linesep= '\n'
-        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "git-for-windows.sh"), 'w') as f:
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "02_git-for-windows.sh"), 'w') as f:
             f.write('# Vendor: git support\n')
             # Pathes are already correct
         self._append_to_license_txt("Git", "https://git-scm.com", "Distributed version control system", os.path.join(self.build_folder, self.name, "vendor", "git-for-windows", "LICENSE.txt"))
@@ -224,27 +221,27 @@ class BarbarianConan(ConanFile):
             f.write('@echo off\n')
             f.write('rem Git Postinstall\n')
             f.write('\n')
-            f.write('rem Remove this script\n')
+            f.write('rem Removing this script\n')
             f.write('(goto) 2>nul & del "%~f0"\n')
-            
-        # 4. Python
+        
+        # 3. Python
         shutil.copytree(self.deps_cpp_info["cpython"].rootpath,  os.path.join(self.name, "vendor", "python-for-windows"), ignore = shutil.ignore_patterns('conan*.txt'))
         os.linesep= '\r\n'
-        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.cmd"), 'w') as f:
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "03_python-for-windows.cmd"), 'w') as f:
             f.write(':: Vendor: python support\n')
             path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows")
             f.write('set "PATH={0};%PATH%"\n'.format(path))
             path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "Scripts")
             f.write('set "PATH={0};%PATH%"\n'.format(path))
         os.linesep= '\r\n'
-        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.ps1"), 'w') as f:
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "03_python-for-windows.ps1"), 'w') as f:
             f.write('# Vendor: python support\n')
             path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows")
             f.write('$env:PATH="{0};" + $env:PATH\n'.format(path))
             path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", "Scripts")
             f.write('$env:PATH="{0};" + $env:PATH\n'.format(path))
         os.linesep= '\n'
-        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "python-for-windows.sh"), 'w') as f:
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "03_python-for-windows.sh"), 'w') as f:
             f.write('# Vendor: python support\n')
             path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows").replace("\\", "/")
             f.write('export "PATH={0}:$PATH"\n'.format(path))
@@ -252,8 +249,53 @@ class BarbarianConan(ConanFile):
             f.write('export "PATH={0}:$PATH"\n'.format(path))
         self._append_to_license_txt("Python", "https://python.org/", "Python Programming Language ",os.path.join(self.name, "vendor", "python-for-windows", "LICENSE"))
 
-        # 5. Conan.io
+        # 4. Conan.io
         self._append_to_license_txt("Conan.io", "https://conan.io/", "C/C++ Package Manager", os.path.join(self.source_folder, "conanio-LICENSE.txt"))
+
+        # 5. Conan Environment Activate
+        os.mkdir(os.path.join(self.build_folder, self.name, "vendor", "barbarian-conan_env"))
+        # Create conanfile.txt
+        os.linesep= '\r\n'
+        with open(os.path.join(self.build_folder, self.name, "config", "conan_env.txt"), 'wt') as f:
+            f.write('[generators]\n')
+            f.write('virtualenv\n')
+            f.write('[build_requires]\n')
+        shutil.copyfile(
+            os.path.join(self.build_folder, self.name, "config", "conan_env.txt"), 
+            os.path.join(self.build_folder, self.name, "vendor", "barbarian-conan_env", "conanfile.txt"))
+        # Create automation script
+        os.linesep= '\r\n'
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "05_barbarian-conan_env.cmd"), 'w') as f:
+            f.write(':: Vendor: conan activate support\n')
+            conan_env_path = os.path.join("%CMDER_ROOT%", "vendor", "barbarian-conan_env")
+            f.write('pushd "{0}"\n'.format(conan_env_path))
+            f.write('copy ..\\..\\config\\conan_env.txt conanfile.txt\n')
+            #f.write('"%CMDER_ROOT%\\vendor\\python-for-windows\\Scripts\\conan" install --update .\n')
+            f.write('conan install --update .\n')
+            f.write('call activate.bat\n')
+            f.write('set "PROMPT=%CONAN_OLD_PROMPT%"\n')
+            f.write('popd\n')
+        os.linesep= '\r\n'
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "05_barbarian-conan_env.ps1"), 'w') as f:
+            f.write('# Vendor: conan activate support\n')
+            conan_env_path = os.path.join("$env:CMDER_ROOT", "vendor", "barbarian-conan_env")
+            f.write('copy ..\\..\\config\\conan_env.txt conanfile.txt\n')
+            f.write('pushd "{0}"\n'.format(conan_env_path))
+            #f.write('"%CMDER_ROOT%\\vendor\\python-for-windows\\Scripts\\conan" install --update .\n')
+            f.write('conan install --update .\n')
+            f.write('. .\\activate.ps1\n')
+            f.write('popd\n')
+        os.linesep= '\n'
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "05_barbarian-conan_env.sh"), 'w') as f:
+            f.write('# Vendor: conan activate support\n')
+            conan_env_path = os.path.join("$CMDER_ROOT", "vendor", "barbarian-conan_env").replace("\\", "/")
+            f.write('pushd "{0}"\n'.format(conan_env_path))
+            f.write('cp -f ../../config/conan_env.txt conanfile.txt\n')
+            #f.write('"%CMDER_ROOT%/vendor/python-for-windows/Scripts/conan" install --update .\n')
+            f.write('conan install --update .\n')
+            f.write('. ./activate.sh\n')
+            f.write('export PS1="$CONAN_OLD_PS1"\n')
+            f.write('popd\n')
 
         # Final. Pack everything
         os.makedirs(self.package_folder, exist_ok=True)
