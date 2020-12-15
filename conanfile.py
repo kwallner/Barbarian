@@ -29,7 +29,7 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "2.0.0"
+    version = "1.9.0"
     _cmder_version = "1.3.16"
     _cmder_version_build = "%s.1035" % _cmder_version
     _cmder_sha256 = "d27b38930bd02db02617952c7e49b3c22c4cae60e3494df40ed050318258f610"
