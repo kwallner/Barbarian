@@ -29,14 +29,14 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.9.1"
-    _cmder_version = "1.3.17"
-    _cmder_version_build = "%s.1082" % _cmder_version
-    _cmder_sha256 = "a0b6539943489d559e920d320ada9468ab62f215e7218b5075d913b3687069d5"
-    _git_version = "2.30.0"
-    _git_sha256 = "6497e30fc6141e3c27af6cc3a081861043a7666dd54f395d47184e8eb75f5d61"
+    version = "1.9.2"
+    _cmder_version = "1.3.18"
+    _cmder_version_build = "%s.1106" % _cmder_version
+    _cmder_sha256 = "2196bc1880a711c72f2b86df07f7533b72b085fb167d8566d941f0b9a41b5510"
+    _git_version = "2.31.1"
+    _git_sha256 = "fce2161a8891c4deefdb8d215ab76498c245072f269843ef1a489c4312baef52"
     _python_version = "3.7.9"
-    _conan_version = "1.32.1"
+    _conan_version = "1.31.4"
     _vswhere_version = "2.8.4"
     _vswhere_sha256="e50a14767c27477f634a4c19709d35c27a72f541fb2ba5c3a446c80998a86419"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
