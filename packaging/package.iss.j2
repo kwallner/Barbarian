@@ -53,20 +53,18 @@ Source: "{{name}}\vendor\barbarian-extra\*";                 DestDir: "{app}\ven
 Source: "{{name}}\vendor\git-for-windows\*";                 DestDir: "{app}\vendor\git-for-windows";                    Flags: recursesubdirs createallsubdirs ignoreversion;  Components: git;    Permissions: users-modify;    
 Source: "{{name}}\vendor\python-for-windows\*";              DestDir: "{app}\vendor\python-for-windows";                 Flags: recursesubdirs createallsubdirs ignoreversion;  Components: python;    Permissions: users-modify;    
 Source: "{{name}}\vendor\barbarian-conan_env\*";             DestDir: "{app}\vendor\barbarian-conan_env";                Flags: recursesubdirs createallsubdirs ignoreversion;  Components: conan_env;    Permissions: users-modify;    
-Source: "{{python_temp}}\*";                                 DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: python
 Source: "{{conan_temp}}\*";                                  DestDir: "{tmp}";                                           Flags: deleteafterinstall ignoreversion; Components: conan
 
 [Run]
 Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent unchecked
 Filename: "{app}\LICENSE.txt"; Description: "View the LICENSE file"; Flags: postinstall shellexec skipifsilent unchecked
-Filename: "{app}\vendor\python-for-windows\python.exe";         Parameters: "get-pip.py --no-index --no-cache-dir --isolated --force-reinstall --find-links=.";                        WorkingDir: "{tmp}"; StatusMsg: "Installing python/pip...";         Flags: RunHidden WaitUntilTerminated; Components: python
 Filename: "{app}\vendor\python-for-windows\python.exe";         Parameters: "-m pip install --no-index --no-cache-dir --isolated --force-reinstall --find-links=. conan";              WorkingDir: "{tmp}"; StatusMsg: "Installing python/conan...";       Flags: RunHidden WaitUntilTerminated; Components: conan
                         
 [Dirs]
 Name: "{app}\config";                          Permissions: users-modify
 Name: "{app}\config\profile.d";                Permissions: users-modify
 Name: "{app}\vendor\python-for-windows";       Permissions: users-modify
-Name: "{app}\vendor\barbarian-conan_env";       Permissions: users-modify
+Name: "{app}\vendor\barbarian-conan_env";      Permissions: users-modify
 
 [UninstallDelete]
 Type: files;            Name: "{app}\config\.history"

@@ -1,4 +1,5 @@
 from conans import ConanFile, tools
+from conans.errors import ConanInvalidConfiguration
 import os
 import shutil
 import jinja2
@@ -28,17 +29,15 @@ class VsToolVersion:
         self.Active = "1"
 
 class BarbarianConan(ConanFile):
-    name = "Barbarian"
-    version = "1.9.2"
+    name = "BarbarianTest"
+    version = "2.0.0"
     _cmder_version = "1.3.18"
     _cmder_version_build = "%s.1106" % _cmder_version
-    _cmder_sha256 = "2196bc1880a711c72f2b86df07f7533b72b085fb167d8566d941f0b9a41b5510"
-    _git_version = "2.31.1"
-    _git_sha256 = "fce2161a8891c4deefdb8d215ab76498c245072f269843ef1a489c4312baef52"
+    _git_version = "2.33.0"
     _python_version = "3.7.9"
-    _conan_version = "1.31.4"
+    _miniconda_version = "4.9.2-py%s" % "".join(_python_version.split(".")[0:2])
+    _conan_version = "1.36.0"
     _vswhere_version = "2.8.4"
-    _vswhere_sha256="e50a14767c27477f634a4c19709d35c27a72f541fb2ba5c3a446c80998a86419"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "180318"
     generators = "txt"
@@ -51,10 +50,15 @@ class BarbarianConan(ConanFile):
     no_copy_source = True
     short_paths = True
 
+    def _extract_from_data(self, package, version):
+        data = self.conan_data["sources"][package][version][str(self.settings.os) + "-" + str(self.settings.arch)]
+        url, sha256 =data['url'], data['sha256']
+        filename = os.path.basename(url)
+        return url, filename, sha256
+
     def build_requirements(self):
         self.build_requires("7zip/19.00")
         self.build_requires("InnoSetup/6.1.2@%s/%s" % (self.user, self.channel))
-        self.build_requires("cpython/%s@%s/%s" % (self._python_version, self.user, self.channel))
 
     def _url_download_to_temp(self, url, temp_name):
         tools.download(url, os.path.join(temp_name, os.path.basename(url)))
@@ -96,20 +100,18 @@ class BarbarianConan(ConanFile):
                         "-d", os.path.join(self.source_folder, temp_name)], check=True)
 
     def source(self):
-        tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self._cmder_version), "cmder_mini.zip", sha256=self._cmder_sha256)
-        #tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.%s/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version.split(".")[3], self._git_version), "git-for-windows.7z.exe", sha256=self._git_sha256)
-        git_versions = self._git_version.split(".")
-        if len(git_versions) < 4:
-            git_versions.append("1")
-        tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.%s/PortableGit-%s-64-bit.7z.exe" % (".".join(git_versions[0:3]), git_versions[3],  self._git_version), "git-for-windows.7z.exe", sha256=self._git_sha256)
-        # Requirements for pip
-        self._url_download_to_temp("https://bootstrap.pypa.io/get-pip.py", temp_name="python_temp")
+        # 1. Download cmder
+        cmder_url, cmder_filename, cmder_sha256 = self._extract_from_data("cmder", self._cmder_version)
+        tools.download(cmder_url, cmder_filename, sha256=cmder_sha256)
+        # 2. Download git
+        git_url, git_filename, git_sha256 = self._extract_from_data("git", self._git_version)
+        tools.download(git_url, git_filename, sha256=git_sha256)
+        # 3. Download miniconda
+        miniconda_url, miniconda_filename, miniconda_sha256 = self._extract_from_data("miniconda", self._miniconda_version)
+        tools.download(miniconda_url, miniconda_filename, sha256=miniconda_sha256)
         # Download vswhere
-        tools.download("https://github.com/microsoft/vswhere/releases/download/%s/vswhere.exe" % self._vswhere_version, "vswhere.exe", sha256=self._vswhere_sha256)
-        # Basic packages
-        self._pip_download_to_temp("pip", temp_name="python_temp")
-        self._pip_download_to_temp("wheel", temp_name="python_temp")
-        self._pip_download_to_temp("setuptools", temp_name="python_temp")
+        vswhere_url, vswhere_filename, vswhere_sha256 = self._extract_from_data("vswhere", self._vswhere_version)
+        tools.download(vswhere_url, vswhere_filename, sha256=vswhere_sha256)
         # Requirements for conan
         self._pip_tar2whl_to_temp("conan==%s" % self._conan_version, temp_name="conan_temp")
         self._pip_tar2whl_to_temp("future==0.18.2", temp_name="conan_temp")
@@ -138,7 +140,8 @@ class BarbarianConan(ConanFile):
     def _update_conemu_xml_config(self):
         output_dir = output = os.path.join(self.build_folder, self.name, "vendor", "barbarian-extra")
         os.mkdir(output_dir)
-        shutil.copyfile(os.path.join(self.source_folder, "vswhere.exe"), os.path.join(output_dir, "vswhere.exe"))
+        _, vswhere_filename, _ = self._extract_from_data("vswhere", self._vswhere_version)
+        shutil.copyfile(os.path.join(self.source_folder, vswhere_filename), os.path.join(output_dir, "vswhere.exe"))
         shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2017.bat"), os.path.join(output_dir, "vswhere_find_vs2017.bat"))
         shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2019.bat"), os.path.join(output_dir, "vswhere_find_vs2019.bat"))
         vs_versions = {
@@ -164,7 +167,8 @@ class BarbarianConan(ConanFile):
 
     def build(self):
         # 0. Cmder
-        tools.unzip(os.path.join(self.source_folder, "cmder_mini.zip"), destination = self.name)
+        _, cmder_filename, _ = self._extract_from_data("cmder", self._cmder_version)
+        tools.unzip(os.path.join(self.source_folder, cmder_filename), destination = self.name)
 
         # 0b. Setup docs
         os.remove(os.path.join(self.build_folder, self.name, "Version %s" % self._cmder_version_build))
@@ -193,7 +197,8 @@ class BarbarianConan(ConanFile):
         self._update_conemu_xml_config()
 
         # 2. Git
-        subprocess.call(["7z", "x", os.path.join(self.source_folder, "git-for-windows.7z.exe"), "-o%s/%s" % (self.name, "vendor/git-for-windows") ])
+        _, git_filename, _ = self._extract_from_data("git", self._git_version)
+        subprocess.call(["7z", "x", os.path.join(self.source_folder, git_filename), "-o%s/%s" % (self.name, "vendor/git-for-windows") ])
         # No need for install script. Git is already included (so do not change name)
         os.linesep= '\r\n'
         with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "02_git-for-windows.cmd"), 'w') as f:
@@ -227,12 +232,23 @@ class BarbarianConan(ConanFile):
             f.write('rem Removing this script\n')
             f.write('(goto) 2>nul & del "%~f0"\n')
         
-        # 3. Python
-        shutil.copytree(self.deps_cpp_info["cpython"].rootpath,  os.path.join(self.name, "vendor", "python-for-windows"), ignore = shutil.ignore_patterns('conan*.txt'))
+        # 3. Install miniconda
+        _, miniconda_filename, _ = self._extract_from_data("miniconda", self._miniconda_version)
+        if self.settings.os == "Windows":
+            subprocess.run([os.path.join(self.source_folder, miniconda_filename), "/InstallationType=JustMe", "/RegisterPython=0", "/NoRegistry=1", "/NoScripts=1", "/S", "/D=%s" % os.path.join(self.build_folder, self.name, "vendor", "python-for-windows")], check=True)
+        elif self.settings.os == "Linux":
+            subprocess.run(["bash", os.path.join(self.source_folder, miniconda_filename), "-b", "-f", "-s", "-p", os.path.join(self.build_folder, self.name, "vendor", "python-for-windows")], check=True)
+            invalid_link_file = os.path.join(self.build_folder, self.name, "vendor", "python-for-windows", "pkgs", "python-3.7.9-h7579374_0", "compiler_compat", "ld")
+            if os.path.islink(invalid_link_file) and not  os.path.exists(invalid_link_file):
+                os.remove(invalid_link_file)
+        else:
+            raise ConanInvalidConfiguration(f'Operating system \"{self.settings.os}\" is not supported.')
         os.linesep= '\r\n'
         with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "03_python-for-windows.cmd"), 'w') as f:
             f.write(':: Vendor: python support\n')
             path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows")
+            f.write('set "PATH={0};%PATH%"\n'.format(path))
+            path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "Library", "bin")
             f.write('set "PATH={0};%PATH%"\n'.format(path))
             path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "Scripts")
             f.write('set "PATH={0};%PATH%"\n'.format(path))
@@ -241,6 +257,8 @@ class BarbarianConan(ConanFile):
             f.write('# Vendor: python support\n')
             path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows")
             f.write('$env:PATH="{0};" + $env:PATH\n'.format(path))
+            path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "Library", "bin")
+            f.write('$env:PATH="{0};" + $env:PATH\n'.format(path))
             path = os.path.join("$env:CMDER_ROOT", "vendor", "python-for-windows", "Scripts")
             f.write('$env:PATH="{0};" + $env:PATH\n'.format(path))
         os.linesep= '\n'
@@ -248,9 +266,11 @@ class BarbarianConan(ConanFile):
             f.write('# Vendor: python support\n')
             path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows").replace("\\", "/")
             f.write('export "PATH={0}:$PATH"\n'.format(path))
+            path = os.path.join("%CMDER_ROOT%", "vendor", "python-for-windows", "Library", "bin").replace("\\", "/")
+            f.write('export "PATH={0}:$PATH"\n'.format(path))
             path = os.path.join("$CMDER_ROOT", "vendor", "python-for-windows", "Scripts").replace("\\", "/")
             f.write('export "PATH={0}:$PATH"\n'.format(path))
-        self._append_to_license_txt("Python", "https://python.org/", "Python Programming Language ",os.path.join(self.name, "vendor", "python-for-windows", "LICENSE"))
+        self._append_to_license_txt("Python", "https://python.org/", "Python Programming Language ",os.path.join(self.name, "vendor", "python-for-windows", "LICENSE_PYTHON.txt"))
 
         # 4. Conan.io
         self._append_to_license_txt("Conan.io", "https://conan.io/", "C/C++ Package Manager", os.path.join(self.source_folder, "conanio-LICENSE.txt"))
@@ -318,7 +338,6 @@ class BarbarianConan(ConanFile):
             'url' : self.url,   
             'output_dir' : self.package_folder,
             'output_base_name' : "%s-%s-%s" % (self.name, self.version, self.settings.arch),
-            'python_temp' : os.path.join(self.source_folder, "python_temp"),
             'conan_temp' : os.path.join(self.source_folder, "conan_temp")
             }
 
