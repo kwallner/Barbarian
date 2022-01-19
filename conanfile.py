@@ -29,18 +29,18 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.9.2"
-    _cmder_version = "1.3.18"
-    _cmder_version_build = "%s.1106" % _cmder_version
-    _cmder_sha256 = "2196bc1880a711c72f2b86df07f7533b72b085fb167d8566d941f0b9a41b5510"
-    _git_version = "2.31.1"
-    _git_sha256 = "fce2161a8891c4deefdb8d215ab76498c245072f269843ef1a489c4312baef52"
+    version = "1.9.3"
+    _cmder_version = "1.3.19"
+    _cmder_version_build = "%s.1181" % _cmder_version
+    _cmder_sha256 = "624c1486c17a1499e2b4a554b1d623c1aa82be1db9488eca8ded950a72dcb187"
+    _git_version = "2.34.1"
+    _git_sha256 = "dbf63703f7a37a374591450f1b1466b83ceccb724067521786bf8c5f69ed3ced"
     _python_version = "3.7.9"
-    _conan_version = "1.31.4"
+    _conan_version = "1.44.1"
     _vswhere_version = "2.8.4"
     _vswhere_sha256="e50a14767c27477f634a4c19709d35c27a72f541fb2ba5c3a446c80998a86419"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    _conemu_xml_buildnummer = "180318"
+    _conemu_xml_buildnummer = "171109"
     generators = "txt"
     url = "http://github.com/kwallner/Barbarian"
     author = "Karl Wallner <kwallner@mail.de>"
@@ -96,8 +96,9 @@ class BarbarianConan(ConanFile):
                         "-d", os.path.join(self.source_folder, temp_name)], check=True)
 
     def source(self):
+        # Download Cmder
         tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self._cmder_version), "cmder_mini.zip", sha256=self._cmder_sha256)
-        #tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.%s/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version.split(".")[3], self._git_version), "git-for-windows.7z.exe", sha256=self._git_sha256)
+        # Download git
         git_versions = self._git_version.split(".")
         if len(git_versions) < 4:
             git_versions.append("1")
