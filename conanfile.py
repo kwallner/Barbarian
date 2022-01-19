@@ -29,17 +29,19 @@ class VsToolVersion:
         self.Active = "1"
 
 class BarbarianConan(ConanFile):
-    name = "BarbarianTest"
-    version = "2.0.0"
-    _cmder_version = "1.3.18"
-    _cmder_version_build = "%s.1106" % _cmder_version
-    _git_version = "2.33.0"
+    name = "Barbarian"
+    version = "2.0.0-rc1"
+    _cmder_version = "1.3.19"
+    _cmder_version_build = "%s.1181" % _cmder_version
+    _cmder_sha256 = "624c1486c17a1499e2b4a554b1d623c1aa82be1db9488eca8ded950a72dcb187"
+    _git_version = "2.34.1"
+    _git_sha256 = "dbf63703f7a37a374591450f1b1466b83ceccb724067521786bf8c5f69ed3ced"
     _python_version = "3.7.9"
     _miniconda_version = "4.9.2-py%s" % "".join(_python_version.split(".")[0:2])
-    _conan_version = "1.36.0"
+    _conan_version = "1.44.1"
     _vswhere_version = "2.8.4"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    _conemu_xml_buildnummer = "180318"
+    _conemu_xml_buildnummer = "171109"
     generators = "txt"
     url = "http://github.com/kwallner/Barbarian"
     author = "Karl Wallner <kwallner@mail.de>"
@@ -58,7 +60,7 @@ class BarbarianConan(ConanFile):
 
     def build_requirements(self):
         self.build_requires("7zip/19.00")
-        self.build_requires("InnoSetup/6.1.2@%s/%s" % (self.user, self.channel))
+        self.build_requires("InnoSetup/6.2.0@%s/%s" % (self.user, self.channel))
 
     def _url_download_to_temp(self, url, temp_name):
         tools.download(url, os.path.join(temp_name, os.path.basename(url)))
