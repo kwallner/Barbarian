@@ -53,7 +53,7 @@ class BarbarianConan(ConanFile):
 
     def build_requirements(self):
         self.build_requires("7zip/19.00")
-        self.build_requires("InnoSetup/6.1.2@%s/%s" % (self.user, self.channel))
+        self.build_requires("InnoSetup/6.2.0@%s/%s" % (self.user, self.channel))
         self.build_requires("cpython/%s@%s/%s" % (self._python_version, self.user, self.channel))
 
     def _url_download_to_temp(self, url, temp_name):
