@@ -36,8 +36,8 @@ class BarbarianConan(ConanFile):
     _cmder_sha256 = "624c1486c17a1499e2b4a554b1d623c1aa82be1db9488eca8ded950a72dcb187"
     _git_version = "2.34.1"
     _git_sha256 = "dbf63703f7a37a374591450f1b1466b83ceccb724067521786bf8c5f69ed3ced"
-    _python_version = "3.7.9"
-    _miniconda_version = "4.9.2-py%s" % "".join(_python_version.split(".")[0:2])
+    _miniconda_version = "4.10.3"
+    _python_version = "39"
     _conan_version = "1.44.1"
     _vswhere_version = "2.8.4"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -52,8 +52,11 @@ class BarbarianConan(ConanFile):
     no_copy_source = True
     short_paths = True
 
-    def _extract_from_data(self, package, version):
-        data = self.conan_data["sources"][package][version][str(self.settings.os) + "-" + str(self.settings.arch)]
+    def _extract_from_data(self, package, version, subversion=None):
+        if subversion is None:
+            data = self.conan_data["sources"][package][version][str(self.settings.os) + "-" + str(self.settings.arch)]
+        else:
+            data = self.conan_data["sources"][package][version][subversion][str(self.settings.os) + "-" + str(self.settings.arch)]
         url, sha256 =data['url'], data['sha256']
         filename = os.path.basename(url)
         return url, filename, sha256
@@ -72,7 +75,7 @@ class BarbarianConan(ConanFile):
             "--only-binary=:all:",
             "--no-binary=:none:",
             "--platform", "win_amd64", 
-            "--python-version", "%s" % ("".join(self._python_version.split(".")[0:2])),
+            "--python-version", self._python_version,
             "--implementation", "cp",
             "--find-links=.", 
             "--isolated", 
@@ -86,7 +89,7 @@ class BarbarianConan(ConanFile):
                     "download",
                     "--no-deps",
                     "--platform", "win_amd64", 
-                    "--python-version", "%s" % ("".join(self._python_version.split(".")[0:2])),
+                    "--python-version", self._python_version,
                     "--implementation", "cp",
                     "--find-links=.", 
                     "--isolated", 
@@ -109,7 +112,7 @@ class BarbarianConan(ConanFile):
         git_url, git_filename, git_sha256 = self._extract_from_data("git", self._git_version)
         tools.download(git_url, git_filename, sha256=git_sha256)
         # 3. Download miniconda
-        miniconda_url, miniconda_filename, miniconda_sha256 = self._extract_from_data("miniconda", self._miniconda_version)
+        miniconda_url, miniconda_filename, miniconda_sha256 = self._extract_from_data("miniconda", self._miniconda_version, "py" + self._python_version)
         tools.download(miniconda_url, miniconda_filename, sha256=miniconda_sha256)
         # Download vswhere
         vswhere_url, vswhere_filename, vswhere_sha256 = self._extract_from_data("vswhere", self._vswhere_version)
@@ -235,7 +238,7 @@ class BarbarianConan(ConanFile):
             f.write('(goto) 2>nul & del "%~f0"\n')
         
         # 3. Install miniconda
-        _, miniconda_filename, _ = self._extract_from_data("miniconda", self._miniconda_version)
+        _, miniconda_filename, _ = self._extract_from_data("miniconda", self._miniconda_version, "py" + self._python_version)
         if self.settings.os == "Windows":
             subprocess.run([os.path.join(self.source_folder, miniconda_filename), "/InstallationType=JustMe", "/RegisterPython=0", "/NoRegistry=1", "/NoScripts=1", "/S", "/D=%s" % os.path.join(self.build_folder, self.name, "vendor", "python-for-windows")], check=True)
         elif self.settings.os == "Linux":
