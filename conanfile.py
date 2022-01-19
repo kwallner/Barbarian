@@ -29,14 +29,14 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "Barbarian"
-    version = "1.9.0"
-    _cmder_version = "1.3.16"
-    _cmder_version_build = "%s.1035" % _cmder_version
-    _cmder_sha256 = "d27b38930bd02db02617952c7e49b3c22c4cae60e3494df40ed050318258f610"
-    _git_version = "2.29.2.3"
-    _git_sha256 = "47334810d3cc063d1111fac55e4645893bc8f758d3ebf571883749d90b3cd7b4"
+    version = "1.9.2"
+    _cmder_version = "1.3.18"
+    _cmder_version_build = "%s.1106" % _cmder_version
+    _cmder_sha256 = "2196bc1880a711c72f2b86df07f7533b72b085fb167d8566d941f0b9a41b5510"
+    _git_version = "2.31.1"
+    _git_sha256 = "fce2161a8891c4deefdb8d215ab76498c245072f269843ef1a489c4312baef52"
     _python_version = "3.7.9"
-    _conan_version = "1.32.0"
+    _conan_version = "1.31.4"
     _vswhere_version = "2.8.4"
     _vswhere_sha256="e50a14767c27477f634a4c19709d35c27a72f541fb2ba5c3a446c80998a86419"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -53,7 +53,7 @@ class BarbarianConan(ConanFile):
 
     def build_requirements(self):
         self.build_requires("7zip/19.00")
-        self.build_requires("InnoSetup/6.1.2@%s/%s" % (self.user, self.channel))
+        self.build_requires("InnoSetup/6.2.0@%s/%s" % (self.user, self.channel))
         self.build_requires("cpython/%s@%s/%s" % (self._python_version, self.user, self.channel))
 
     def _url_download_to_temp(self, url, temp_name):
@@ -97,7 +97,11 @@ class BarbarianConan(ConanFile):
 
     def source(self):
         tools.download("https://github.com/cmderdev/cmder/releases/download/v%s/cmder_mini.zip" % (self._cmder_version), "cmder_mini.zip", sha256=self._cmder_sha256)
-        tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.%s/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version.split(".")[3], self._git_version), "git-for-windows.7z.exe", sha256=self._git_sha256)
+        #tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.%s/PortableGit-%s-64-bit.7z.exe" % (".".join(self._git_version.split(".")[0:3]), self._git_version.split(".")[3], self._git_version), "git-for-windows.7z.exe", sha256=self._git_sha256)
+        git_versions = self._git_version.split(".")
+        if len(git_versions) < 4:
+            git_versions.append("1")
+        tools.download("https://github.com/git-for-windows/git/releases/download/v%s.windows.%s/PortableGit-%s-64-bit.7z.exe" % (".".join(git_versions[0:3]), git_versions[3],  self._git_version), "git-for-windows.7z.exe", sha256=self._git_sha256)
         # Requirements for pip
         self._url_download_to_temp("https://bootstrap.pypa.io/get-pip.py", temp_name="python_temp")
         # Download vswhere
@@ -182,7 +186,6 @@ class BarbarianConan(ConanFile):
         # 1c. Append License of cmder
         self._append_to_license_txt("Cmder", "http://cmder.net/", "Console emulator for Windows", os.path.join(self.build_folder, self.name, "LICENSE-cmder.txt"))
         os.remove(os.path.join(self.build_folder, self.name, "LICENSE-cmder.txt"))
-        self._append_to_license_txt("Clink", "http://mridgers.github.io/clink/", "Powerful Bash-style command line editing for cmd.exe", os.path.join(self.build_folder, self.name, "vendor", "clink", "LICENSE"))
         self._append_to_license_txt("clink-completions", "https://github.com/vladimir-kotikov/clink-completions", "Completion files to clink util", os.path.join(self.build_folder, self.name, "vendor", "clink-completions", "LICENSE"))
         self._append_to_license_txt("ConEmu", "https://conemu.github.io/", "Handy Windows Terminal", os.path.join(self.build_folder, self.name, "vendor", "conemu-maximus5", "ConEmu", "License.txt"))
 
