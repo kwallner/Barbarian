@@ -1,5 +1,9 @@
-from conans import ConanFile, tools
-from conans.errors import ConanInvalidConfiguration
+from conan import ConanFile
+from conan.tools.files import save, load, download, chdir, unzip, replace_in_file, mkdir, copy
+from conan.tools.gnu import AutotoolsToolchain, AutotoolsDeps
+from conan.tools.microsoft import unix_path, VCVars, is_msvc
+from conan.errors import ConanInvalidConfiguration
+from conan.errors import ConanException
 import os
 import shutil
 import jinja2
@@ -29,8 +33,8 @@ class VsToolVersion:
         self.Active = "1"
 
 class BarbarianConan(ConanFile):
-    name = "Barbarian"
-    version = "2.0.0-rc1"
+    name = "barbarian"
+    version = "2.0.1-beta1"
     _cmder_version = "1.3.19"
     _cmder_version_build = "%s.1181" % _cmder_version
     _cmder_sha256 = "624c1486c17a1499e2b4a554b1d623c1aa82be1db9488eca8ded950a72dcb187"
@@ -42,31 +46,34 @@ class BarbarianConan(ConanFile):
     _vswhere_version = "2.8.4"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _conemu_xml_buildnummer = "171109"
-    generators = "txt"
+    _os = "Windows"
+    _arch = "x86_64"
     url = "http://github.com/kwallner/Barbarian"
     author = "Karl Wallner <kwallner@mail.de>"
     license = "https://raw.githubusercontent.com/kwallner/Barbarian/develop/LICENSE.txt"
     description = "Software Development Environment for Conan.io"
-    settings = {"os": ["Windows"], "arch": ["x86_64"]}
+    settings = "os", "arch"
     scm = { "type": "git", "url": "auto", "revision": "auto" }
     no_copy_source = True
     short_paths = True
+    exports_sources = "LICENSE.txt", "README.txt", "README.md", "configuration*", "documentation*", "packaging*"
+
 
     def _extract_from_data(self, package, version, subversion=None):
         if subversion is None:
-            data = self.conan_data["sources"][package][version][str(self.settings.os) + "-" + str(self.settings.arch)]
+            data = self.conan_data["sources"][package][version][str(self._os) + "-" + str(self._arch)]
         else:
-            data = self.conan_data["sources"][package][version][subversion][str(self.settings.os) + "-" + str(self.settings.arch)]
+            data = self.conan_data["sources"][package][version][subversion][str(self._os) + "-" + str(self._arch)]
         url, sha256 =data['url'], data['sha256']
         filename = os.path.basename(url)
         return url, filename, sha256
 
     def build_requirements(self):
-        self.build_requires("7zip/19.00")
-        self.build_requires("InnoSetup/6.2.0@%s/%s" % (self.user, self.channel))
+        self.build_requires("7zip/25.01@%s/%s" % (self.user, self.channel))
+        self.build_requires("innosetup/6.2.2@%s/%s" % (self.user, self.channel))
 
     def _url_download_to_temp(self, url, temp_name):
-        tools.download(url, os.path.join(temp_name, os.path.basename(url)))
+        download(self, url, os.path.join(temp_name, os.path.basename(url)))
 
     def _pip_download_to_temp(self, pkg_name, temp_name):
         subprocess.run([
@@ -83,8 +90,8 @@ class BarbarianConan(ConanFile):
     
     def _pip_tar2whl_to_temp(self, pkg_name, temp_name):
         with tempfile.TemporaryDirectory() as tmpdirname:
-            with tools.chdir(tmpdirname): 
-                subprocess.run([
+            with chdir(self, tmpdirname): 
+                res = subprocess.run([
                     "pip",
                     "download",
                     "--no-deps",
@@ -93,11 +100,15 @@ class BarbarianConan(ConanFile):
                     "--implementation", "cp",
                     "--find-links=.", 
                     "--isolated", 
-                    pkg_name], check=True)
+                    pkg_name],  capture_output=True)
+                if res.returncode != 0:
+                    self.output.error(res.stdout)
+                    self.output.error(res.stderr)
+                    raise ConanException("Failed to download pip")
                 (tar_file,)= [ filename for filename in os.listdir(".") if filename.endswith(".tar.gz") ]
-                tools.untargz(tar_file)
-                with tools.chdir(tar_file.replace(".tar.gz", "")): 
-                    tools.replace_in_file("setup.py", "from distutils.core import setup", "from setuptools import setup", strict=False)
+                unzip(self, tar_file)
+                with chdir(self, tar_file.replace(".tar.gz", "")): 
+                    replace_in_file(self, "setup.py", "from distutils.core import setup", "from setuptools import setup", strict=False)
                     subprocess.run([
                         "python",
                         "setup.py",
@@ -107,23 +118,23 @@ class BarbarianConan(ConanFile):
     def source(self):
         # 1. Download cmder
         cmder_url, cmder_filename, cmder_sha256 = self._extract_from_data("cmder", self._cmder_version)
-        tools.download(cmder_url, cmder_filename, sha256=cmder_sha256)
+        download(self, cmder_url, cmder_filename, sha256=cmder_sha256)
         # 2. Download git
         git_url, git_filename, git_sha256 = self._extract_from_data("git", self._git_version)
-        tools.download(git_url, git_filename, sha256=git_sha256)
+        download(self, git_url, git_filename, sha256=git_sha256)
         # 3. Download miniconda
         miniconda_url, miniconda_filename, miniconda_sha256 = self._extract_from_data("miniconda", self._miniconda_version, "py" + self._python_version)
-        tools.download(miniconda_url, miniconda_filename, sha256=miniconda_sha256)
+        download(self, miniconda_url, miniconda_filename, sha256=miniconda_sha256)
         # Download vswhere
         vswhere_url, vswhere_filename, vswhere_sha256 = self._extract_from_data("vswhere", self._vswhere_version)
-        tools.download(vswhere_url, vswhere_filename, sha256=vswhere_sha256)
+        download(self, vswhere_url, vswhere_filename, sha256=vswhere_sha256)
         # Requirements for conan
         self._pip_tar2whl_to_temp("conan==%s" % self._conan_version, temp_name="conan_temp")
         self._pip_tar2whl_to_temp("future==0.18.2", temp_name="conan_temp")
         self._pip_tar2whl_to_temp("patch-ng==1.17.4", temp_name="conan_temp")
         self._pip_tar2whl_to_temp("pluginbase==1.0.0", temp_name="conan_temp")
         self._pip_download_to_temp("conan==%s" % self._conan_version, temp_name="conan_temp")
-        tools.download("https://raw.githubusercontent.com/conan-io/conan/develop/LICENSE.md", "conanio-LICENSE.txt")
+        download(self, "https://raw.githubusercontent.com/conan-io/conan/develop/LICENSE.md", "conanio-LICENSE.txt")
          
     def _append_to_license_txt(self, name, url, description, license_file):
         os.linesep= '\r\n'
@@ -173,14 +184,14 @@ class BarbarianConan(ConanFile):
     def build(self):
         # 0. Cmder
         _, cmder_filename, _ = self._extract_from_data("cmder", self._cmder_version)
-        tools.unzip(os.path.join(self.source_folder, cmder_filename), destination = self.name)
+        unzip(self, os.path.join(self.source_folder, cmder_filename), destination = self.name)
 
         # 0b. Setup docs
         os.remove(os.path.join(self.build_folder, self.name, "Version %s" % self._cmder_version_build))
         os.rename(os.path.join(self.build_folder, self.name, "LICENSE"), os.path.join(self.build_folder, self.name, "LICENSE-cmder.txt"))
 
         # 1. Create profile directory
-        tools.mkdir(os.path.join(self.build_folder, self.name, "config", "profile.d"))
+        mkdir(self, os.path.join(self.build_folder, self.name, "config", "profile.d"))
 
         # 1b. Copy LICENSE and README files, and icons
         shutil.copyfile(os.path.join(self.source_folder, "LICENSE.txt"), os.path.join(self.build_folder, self.name, "LICENSE-barbarian.txt"))
@@ -203,7 +214,7 @@ class BarbarianConan(ConanFile):
 
         # 2. Git
         _, git_filename, _ = self._extract_from_data("git", self._git_version)
-        subprocess.call(["7z", "x", os.path.join(self.source_folder, git_filename), "-o%s/%s" % (self.name, "vendor/git-for-windows") ])
+        self.run(" ".join(["7z", "x", os.path.join(self.source_folder, git_filename), "-o%s/%s" % (self.name, "vendor/git-for-windows") ]))
         # No need for install script. Git is already included (so do not change name)
         os.linesep= '\r\n'
         with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "02_git-for-windows.cmd"), 'w') as f:
@@ -351,10 +362,10 @@ class BarbarianConan(ConanFile):
 
         iscc_command= ["iscc", "/Q"]
         iscc_command.append("package.iss")
-        subprocess.call(iscc_command)
+        self.run(" ".join(iscc_command))
 
     def package(self):
-        self.copy("README.md")
-        self.copy("README.txt")
-        self.copy("LICENSE.txt")
-        self.copy("%s-%s-%s.exe" % (self.name, self.version, self.settings.arch))
+        copy(self, src="README.md", dst=self.package_folder)
+        copy(self, src="README.txt", dst=self.package_folder)
+        copy(self, src="LICENSE.txt", dst=self.package_folder)
+        copy(self, src="%s-%s-%s.exe" % (self.name, self.version, self.settings.arch), dst=self.package_folder)
