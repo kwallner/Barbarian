@@ -34,7 +34,7 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "barbarian"
-    version = "2.0.1-beta1"
+    version = "2.0.1-beta2"
     _cmder_version = "1.3.19"
     _cmder_version_build = "%s.1181" % _cmder_version
     _cmder_sha256 = "624c1486c17a1499e2b4a554b1d623c1aa82be1db9488eca8ded950a72dcb187"
@@ -365,7 +365,7 @@ class BarbarianConan(ConanFile):
         self.run(" ".join(iscc_command))
 
     def package(self):
-        copy(self, src="README.md", dst=self.package_folder)
-        copy(self, src="README.txt", dst=self.package_folder)
-        copy(self, src="LICENSE.txt", dst=self.package_folder)
-        copy(self, src="%s-%s-%s.exe" % (self.name, self.version, self.settings.arch), dst=self.package_folder)
+        copy(self, pattern="README.md", src=self.source_folder, dst=self.package_folder)
+        copy(self, pattern="README.txt", src=self.source_folder, dst=self.package_folder)
+        copy(self, pattern="LICENSE.txt", src=self.source_folder, dst=self.package_folder)
+        copy(self, pattern="%s-%s-%s.exe" % (self.name, self.version, self.settings.arch), src=self.build_folder, dst=self.package_folder)
