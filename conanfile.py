@@ -35,17 +35,15 @@ class VsToolVersion:
 class BarbarianConan(ConanFile):
     name = "barbarian"
     version = "2.0.1-beta2"
-    _cmder_version = "1.3.19"
-    _cmder_version_build = "%s.1181" % _cmder_version
-    _cmder_sha256 = "624c1486c17a1499e2b4a554b1d623c1aa82be1db9488eca8ded950a72dcb187"
-    _git_version = "2.34.1"
-    _git_sha256 = "dbf63703f7a37a374591450f1b1466b83ceccb724067521786bf8c5f69ed3ced"
-    _miniconda_version = "4.10.3"
-    _python_version = "39"
-    _conan_version = "1.44.1"
-    _vswhere_version = "2.8.4"
+    _cmder_version = "1.3.25"
+    _cmder_version_build = "%s.328" % _cmder_version
+    _git_version = "2.52.0"
+    _miniconda_version = "25.9.1.3"
+    _python_version = "313"
+    _conan_version = "2.23.0"
+    _vswhere_version = "3.1.7"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    _conemu_xml_buildnummer = "171109"
+    _conemu_xml_buildnummer = "150224a"
     _os = "Windows"
     _arch = "x86_64"
     url = "http://github.com/kwallner/Barbarian"
@@ -130,9 +128,7 @@ class BarbarianConan(ConanFile):
         download(self, vswhere_url, vswhere_filename, sha256=vswhere_sha256)
         # Requirements for conan
         self._pip_tar2whl_to_temp("conan==%s" % self._conan_version, temp_name="conan_temp")
-        self._pip_tar2whl_to_temp("future==0.18.2", temp_name="conan_temp")
-        self._pip_tar2whl_to_temp("patch-ng==1.17.4", temp_name="conan_temp")
-        self._pip_tar2whl_to_temp("pluginbase==1.0.0", temp_name="conan_temp")
+        self._pip_tar2whl_to_temp("patch-ng==1.18.1", temp_name="conan_temp")
         self._pip_download_to_temp("conan==%s" % self._conan_version, temp_name="conan_temp")
         download(self, "https://raw.githubusercontent.com/conan-io/conan/develop/LICENSE.md", "conanio-LICENSE.txt")
          
