@@ -26,6 +26,12 @@ class VsToolVersion:
         elif CommonToolsEnv == "VS160COMNTOOLS":
             extra_call = "call \"%ConEmuDir%\\..\\barbarian-extra\\vswhere_find_vs2019.bat\" &amp; "
             extra_path = "Auxiliary\\Build\\"
+        elif CommonToolsEnv == "VS170COMNTOOLS":
+            extra_call = "call \"%ConEmuDir%\\..\\barbarian-extra\\vswhere_find_vs2022.bat\" &amp; "
+            extra_path = "Auxiliary\\Build\\"
+        elif CommonToolsEnv == "VS180COMNTOOLS":
+            extra_call = "call \"%ConEmuDir%\\..\\barbarian-extra\\vswhere_find_vs2026.bat\" &amp; "
+            extra_path = "Auxiliary\\Build\\"
         self.Cmd1 = extra_call + "call \"%" + CommonToolsEnv + "%..\\..\\VC\\" + extra_path + "vcvarsall.bat\" " + Architecture + " &amp; cmd /k \"\"%ConEmuDir%\\..\\init.bat\"\""
         self.Count = "1"
         self.Hotkey = "0"
@@ -34,7 +40,7 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "barbarian"
-    version = "2.0.1-beta2"
+    version = "2.0.1-beta3"
     _cmder_version = "1.3.25"
     _cmder_version_build = "%s.328" % _cmder_version
     _git_version = "2.52.0"
@@ -156,9 +162,13 @@ class BarbarianConan(ConanFile):
         shutil.copyfile(os.path.join(self.source_folder, vswhere_filename), os.path.join(output_dir, "vswhere.exe"))
         shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2017.bat"), os.path.join(output_dir, "vswhere_find_vs2017.bat"))
         shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2019.bat"), os.path.join(output_dir, "vswhere_find_vs2019.bat"))
+        shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2022.bat"), os.path.join(output_dir, "vswhere_find_vs2022.bat"))
+        shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2026.bat"), os.path.join(output_dir, "vswhere_find_vs2026.bat"))
         vs_versions = {
             "VS 2017" : "VS150COMNTOOLS",
-            "VS 2019" : "VS160COMNTOOLS"
+            "VS 2019" : "VS160COMNTOOLS",
+            "VS 2022" : "VS170COMNTOOLS",
+            "VS 2026" : "VS180COMNTOOLS"
             }
         template_dir = os.path.join(self.source_folder, "configuration")
         env = jinja2.Environment(loader= jinja2.FileSystemLoader(template_dir), trim_blocks=True, lstrip_blocks=True, undefined=jinja2.StrictUndefined)
@@ -293,8 +303,11 @@ class BarbarianConan(ConanFile):
         os.linesep= '\r\n'
         with open(os.path.join(self.build_folder, self.name, "config", "conan_env.txt"), 'wt') as f:
             f.write('[generators]\n')
-            f.write('virtualenv\n')
-            f.write('[build_requires]\n')
+            f.write('VirtualBuildEnv\n')
+            f.write('VirtualRunEnv\n')
+            f.write('[requires]\n')
+            f.write('#7zip/25.01@kwallner/testing\n')
+            f.write('#innosetup/6.2.2@kwallner/testing\n')
         shutil.copyfile(
             os.path.join(self.build_folder, self.name, "config", "conan_env.txt"), 
             os.path.join(self.build_folder, self.name, "vendor", "barbarian-conan_env", "conanfile.txt"))
@@ -307,7 +320,8 @@ class BarbarianConan(ConanFile):
             f.write('copy ..\\..\\config\\conan_env.txt conanfile.txt\n')
             #f.write('"%CMDER_ROOT%\\vendor\\python-for-windows\\Scripts\\conan" install --update .\n')
             f.write('conan install --update .\n')
-            f.write('call activate.bat\n')
+            f.write('call conanrun.bat\n')
+            f.write('call conanbuild.bat\n')
             f.write('set "PROMPT=%CONAN_OLD_PROMPT%"\n')
             f.write('popd\n')
         os.linesep= '\r\n'
@@ -318,7 +332,8 @@ class BarbarianConan(ConanFile):
             f.write('pushd "{0}"\n'.format(conan_env_path))
             #f.write('"%CMDER_ROOT%\\vendor\\python-for-windows\\Scripts\\conan" install --update .\n')
             f.write('conan install --update .\n')
-            f.write('. .\\activate.ps1\n')
+            f.write('. .\\conanrun.ps1\n')
+            f.write('. .\\conanbuild.ps1\n')
             f.write('popd\n')
         os.linesep= '\n'
         with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "05_barbarian-conan_env.sh"), 'w') as f:
@@ -328,7 +343,8 @@ class BarbarianConan(ConanFile):
             f.write('cp -f ../../config/conan_env.txt conanfile.txt\n')
             #f.write('"%CMDER_ROOT%/vendor/python-for-windows/Scripts/conan" install --update .\n')
             f.write('conan install --update .\n')
-            f.write('. ./activate.sh\n')
+            f.write('. ./conanrun.sh\n')
+            f.write('. ./conanbuild.sh\n')
             f.write('export PS1="$CONAN_OLD_PS1"\n')
             f.write('popd\n')
 
