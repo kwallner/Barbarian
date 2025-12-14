@@ -40,7 +40,7 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "barbarian"
-    version = "2.0.1-beta3"
+    version = "2.0.1-beta4"
     _cmder_version = "1.3.25"
     _cmder_version_build = "%s.328" % _cmder_version
     _git_version = "2.52.0"
@@ -180,8 +180,9 @@ class BarbarianConan(ConanFile):
         vs_tool_prompts = [ ]
         Count = 9
         for vs_version,vs_common_tools in vs_versions.items():
-            Count = Count + 1
-            vs_tool_prompts.append(VsToolVersion("Task%d" % Count, self._conemu_xml_creation_datetime, self._conemu_xml_buildnummer, "%s-32Bit" % vs_version, vs_common_tools, "x86"))
+            if vs_version in ["VS 2017", "VS 2019"]:
+                Count = Count + 1
+                vs_tool_prompts.append(VsToolVersion("Task%d" % Count, self._conemu_xml_creation_datetime, self._conemu_xml_buildnummer, "%s-32Bit" % vs_version, vs_common_tools, "x86"))
             Count = Count + 1
             vs_tool_prompts.append(VsToolVersion("Task%d" % Count, self._conemu_xml_creation_datetime, self._conemu_xml_buildnummer, "%s-64Bit" % vs_version, vs_common_tools, "x86_amd64"))
         f.write(conemu_xml_template.render(vs_tool_prompts = vs_tool_prompts, Count = Count))
