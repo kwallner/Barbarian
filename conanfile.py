@@ -38,9 +38,23 @@ class VsToolVersion:
         self.Flags = "0"
         self.Active = "1"
 
+class MingwVersion:
+    def __init__(self, name, modified, build, Name):
+        self.name = name
+        self.modified = modified
+        self.build = build
+        self.Name = Name
+        self.GuiArgs = "" # No icon yet
+        extra_call = "call \"%ConEmuDir%\\..\\barbarian-extra\\mingw64_find.bat\" &amp; "
+        self.Cmd1 = extra_call + "cmd /k \"\"%ConEmuDir%\\..\\init.bat\"\""
+        self.Count = "1"
+        self.Hotkey = "0"
+        self.Flags = "0"
+        self.Active = "1"
+
 class BarbarianConan(ConanFile):
     name = "barbarian"
-    version = "2.0.1-beta5"
+    version = "2.0.1-beta6"
     _cmder_version = "1.3.25"
     _cmder_version_build = "%s.328" % _cmder_version
     _git_version = "2.53.0"
@@ -164,12 +178,13 @@ class BarbarianConan(ConanFile):
         shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2019.bat"), os.path.join(output_dir, "vswhere_find_vs2019.bat"))
         shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2022.bat"), os.path.join(output_dir, "vswhere_find_vs2022.bat"))
         shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "vswhere_find_vs2026.bat"), os.path.join(output_dir, "vswhere_find_vs2026.bat"))
+        shutil.copyfile(os.path.join(self.source_folder, "configuration", "helpers", "mingw64_find.bat"), os.path.join(output_dir, "mingw64_find.bat"))
         vs_versions = {
             "VS 2017" : "VS150COMNTOOLS",
             "VS 2019" : "VS160COMNTOOLS",
             "VS 2022" : "VS170COMNTOOLS",
             "VS 2026" : "VS180COMNTOOLS"
-            }
+        }
         template_dir = os.path.join(self.source_folder, "configuration")
         env = jinja2.Environment(loader= jinja2.FileSystemLoader(template_dir), trim_blocks=True, lstrip_blocks=True, undefined=jinja2.StrictUndefined)
         conemu_xml_template = env.get_template("ConEmu.xml.default.j2")
@@ -185,6 +200,8 @@ class BarbarianConan(ConanFile):
                 vs_tool_prompts.append(VsToolVersion("Task%d" % Count, self._conemu_xml_creation_datetime, self._conemu_xml_buildnummer, "%s-32Bit" % vs_version, vs_common_tools, "x86"))
             Count = Count + 1
             vs_tool_prompts.append(VsToolVersion("Task%d" % Count, self._conemu_xml_creation_datetime, self._conemu_xml_buildnummer, "%s-64Bit" % vs_version, vs_common_tools, "x86_amd64"))
+        Count = Count + 1
+        vs_tool_prompts.append(MingwVersion("Task%d" % Count, self._conemu_xml_creation_datetime, self._conemu_xml_buildnummer, "MinGW64"))
         f.write(conemu_xml_template.render(vs_tool_prompts = vs_tool_prompts, Count = Count))
         f.close()
 
@@ -348,6 +365,37 @@ class BarbarianConan(ConanFile):
             f.write('. ./conanbuild.sh\n')
             f.write('export PS1="$CONAN_OLD_PS1"\n')
             f.write('popd\n')
+
+        # 6. Rustup/Cargo
+        os.linesep= '\r\n'
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "11_rustup-cargo.cmd"), 'w') as f:
+            f.write(':: Vendor: rustup & cargo support\n')
+            f.write('set "PATH=%USERPROFILE%\\.cargo\\bin;%PATH%\n')
+        os.linesep= '\r\n'
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "11_rustup-cargo.ps1"), 'w') as f:
+            f.write('# Vendor: rustup & cargo support\n')
+            f.write('$env:PATH=$env:USERPROFILE%\\.cargo\\bin;" + $env:PATH\n')
+        os.linesep= '\n'
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "11_rustup-cargo.sh"), 'w') as f:
+            f.write('# Vendor: rustup & cargo support\n')
+            f.write('PATH=~/.cargo/bin:$PATH; export PATH\n')
+
+        # 7. vcpkg
+        os.linesep= '\r\n'
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "12_vcpkg_root.cmd"), 'w') as f:
+            f.write(':: Vendor: vcpkg support\n')
+            f.write('set "VCPKG_ROOT=C:\\vcpkg\n')
+            f.write('set "PATH=%VCPKG_ROOT%;%PATH%\n')
+        os.linesep= '\r\n'
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "12_vcpkg_root.ps1"), 'w') as f:
+            f.write('# Vendor: vcpkg support\n')
+            f.write('$env:VCPKG_ROOT="C:\\vcpkg"\n')
+            f.write('$env:PATH=$env:VCPKG_ROOT%;" + $env:PATH\n')
+        os.linesep= '\n'
+        with open(os.path.join(self.build_folder, self.name, "config", "profile.d", "12_vcpkg_root.sh"), 'w') as f:
+            f.write('# Vendor: vcpkg support\n')
+            f.write('VCPKG_ROOT="C:\\vcpkg"; export VCPKG_ROOT\n')
+            f.write('PATH=$(cygpath $VCPKG_ROOT):$PATH; export PATH\n')
 
         # Final. Pack everything
         os.makedirs(self.package_folder, exist_ok=True)
