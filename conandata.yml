@@ -31,6 +31,11 @@ sources:
         "Windows-x86_64":
           url: "https://repo.anaconda.com/miniconda/Miniconda3-py313_25.9.1-3-Windows-x86_64.exe"
           sha256: "1ff9042360900be894efb7c11d6b2348b7a7a58c4ad4415c6ac2b60c58fff1c2"  
+    "25.11.1.1":
+      "py312":
+        "Windows-x86_64":
+          url: "https://repo.anaconda.com/miniconda/Miniconda3-py312_25.11.1-1-Windows-x86_64.exe"
+          sha256: "1f10de1cacfb8dfc1be6e8b90214c60b69ba5e50c47e8f70cb412a980be62198"  
   git:
     "2.34.1":
       "Windows-x86_64":
@@ -40,6 +45,10 @@ sources:
       "Windows-x86_64":
         url: "https://github.com/git-for-windows/git/releases/download/v2.52.0.windows.1/PortableGit-2.52.0-64-bit.7z.exe"
         sha256: "1dc4046dcfb138f62aa04a46b5529adc8abed5033b2af29bb60b66872a836cf8"
+    "2.53.0":
+      "Windows-x86_64":
+        url: "https://github.com/git-for-windows/git/releases/download/v2.53.0.windows.1/PortableGit-2.53.0-64-bit.7z.exe"
+        sha256: "08713a710ec91ac90de1c09f861289a3b103175f098676e5e664c04dd6c6bf23"
   vswhere:
     "2.8.4":
        "Windows-x86_64":

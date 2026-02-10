@@ -40,12 +40,12 @@ class VsToolVersion:
 
 class BarbarianConan(ConanFile):
     name = "barbarian"
-    version = "2.0.1-beta4"
+    version = "2.0.1-beta5"
     _cmder_version = "1.3.25"
     _cmder_version_build = "%s.328" % _cmder_version
-    _git_version = "2.52.0"
-    _miniconda_version = "25.9.1.3"
-    _python_version = "313"
+    _git_version = "2.53.0"
+    _miniconda_version = "25.11.1.1"
+    _python_version = "312"
     _conan_version = "2.23.0"
     _vswhere_version = "3.1.7"
     _conemu_xml_creation_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
