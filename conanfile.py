@@ -54,7 +54,7 @@ class MingwVersion:
 
 class BarbarianConan(ConanFile):
     name = "barbarian"
-    version = "2.0.1-beta6"
+    version = "2.0.1-beta7"
     _cmder_version = "1.3.25"
     _cmder_version_build = "%s.328" % _cmder_version
     _git_version = "2.53.0"
@@ -317,6 +317,7 @@ class BarbarianConan(ConanFile):
 
         # 5. Conan Environment Activate
         os.mkdir(os.path.join(self.build_folder, self.name, "vendor", "barbarian-conan_env"))
+
         # Create conanfile.txt
         os.linesep= '\r\n'
         with open(os.path.join(self.build_folder, self.name, "config", "conan_env.txt"), 'wt') as f:
@@ -336,7 +337,6 @@ class BarbarianConan(ConanFile):
             conan_env_path = os.path.join("%CMDER_ROOT%", "vendor", "barbarian-conan_env")
             f.write('pushd "{0}"\n'.format(conan_env_path))
             f.write('copy ..\\..\\config\\conan_env.txt conanfile.txt\n')
-            #f.write('"%CMDER_ROOT%\\vendor\\python-for-windows\\Scripts\\conan" install --update .\n')
             f.write('conan install --update .\n')
             f.write('call conanrun.bat\n')
             f.write('call conanbuild.bat\n')
@@ -348,7 +348,6 @@ class BarbarianConan(ConanFile):
             conan_env_path = os.path.join("$env:CMDER_ROOT", "vendor", "barbarian-conan_env")
             f.write('copy ..\\..\\config\\conan_env.txt conanfile.txt\n')
             f.write('pushd "{0}"\n'.format(conan_env_path))
-            #f.write('"%CMDER_ROOT%\\vendor\\python-for-windows\\Scripts\\conan" install --update .\n')
             f.write('conan install --update .\n')
             f.write('. .\\conanrun.ps1\n')
             f.write('. .\\conanbuild.ps1\n')
@@ -359,7 +358,6 @@ class BarbarianConan(ConanFile):
             conan_env_path = os.path.join("$CMDER_ROOT", "vendor", "barbarian-conan_env").replace("\\", "/")
             f.write('pushd "{0}"\n'.format(conan_env_path))
             f.write('cp -f ../../config/conan_env.txt conanfile.txt\n')
-            #f.write('"%CMDER_ROOT%/vendor/python-for-windows/Scripts/conan" install --update .\n')
             f.write('conan install --update .\n')
             f.write('. ./conanrun.sh\n')
             f.write('. ./conanbuild.sh\n')

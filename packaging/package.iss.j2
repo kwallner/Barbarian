@@ -28,6 +28,8 @@ Name: git;                                      Description: "Git (https://git-s
 Name: python;                                   Description: "Python (https://www.python.org): Python programming language";                        Types: full custom;           
 Name: conan;                                    Description: "Conan (https://conan.io): C/C++ Package Manager";                                     Types: full custom;           
 Name: conan_env;                                Description: "Conan Environment: Activate/Use conan packages";                                      Types: full custom;           
+Name: rustup;                                   Description: "Add cargo/rust (~/.cargo) to path";                                                   Types: full custom;           
+Name: vcpkg;                                    Description: "Add vcpkg (C:/vcpkg) as vcpkg-root and to path";                                      Types: full custom;           
 
 [Files]
 Source: "{{name}}\Cmder.exe";                                DestDir: "{app}"; DestName: "{{name}}.exe";                 Flags: ignoreversion;  Components: cmder
@@ -41,6 +43,8 @@ Source: "{{name}}\config\*.*";                               DestDir: "{app}\con
 Source: "{{name}}\config\profile.d\*git-for-windows.*";      DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;  Components: git
 Source: "{{name}}\config\profile.d\*python-for-windows.*";   DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: python
 Source: "{{name}}\config\profile.d\*barbarian-conan_env.*";  DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;    Components: conan_env
+Source: "{{name}}\config\profile.d\*rustup-cargo.*";         DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;   Components: rustup
+Source: "{{name}}\config\profile.d\*vcpkg_root.*";           DestDir: "{app}\config\profile.d";                          Flags: ignoreversion;   Components: vcpkg
 Source: "{{name}}\icons\*";                                  DestDir: "{app}\icons";                                     Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
 Source: "{{name}}\vendor\*.*";                               DestDir: "{app}\vendor";                                    Flags: ignoreversion;  Components: cmder
 Source: "{{name}}\vendor\bin\*";                             DestDir: "{app}\vendor\bin";                                Flags: recursesubdirs createallsubdirs ignoreversion;  Components: cmder
